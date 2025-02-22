@@ -1,6 +1,18 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const admin = require('firebase-admin');
+
+// Carga las credenciales de la cuenta de servicio
+const serviceAccount = require('./config/Service_account.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+// Inicializa Firestore
+const db = admin.firestore();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -13,35 +25,74 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Ruta para la página de login
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 // Procesamiento del login
 app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    if (username === 'admin' && password === 'admin123') {
-        // Login correcto, redirige al dashboard
-        res.redirect('/dashboard');
-    } else {
-        // Login fallido, redirige a login con mensaje de error
-        res.redirect('/?error=invalid');
-    }
+  const { username, password } = req.body;
+  if (username === 'admin' && password === 'admin123') {
+    res.redirect('/dashboard');
+  } else {
+    res.redirect('/?error=invalid');
+  }
 });
 
-// Ruta para el dashboard (pantalla inicial tras el login)
+// Ruta para el dashboard
 app.get('/dashboard', (req, res) => {
-    // En un sistema real se debería verificar la sesión
-    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-
-// Endpoint para guardar datos del vehículo
+// Endpoint para guardar datos del vehículo (ejemplo)
 app.post('/saveCar', (req, res) => {
-    // Aquí se procesarían y almacenarían los datos (por ejemplo, en una base de datos)
-    console.log('Datos del vehículo recibidos:', req.body);
-    res.json({ success: true, message: 'Datos guardados correctamente' });
+  console.log('Datos del vehículo recibidos:', req.body);
+  res.json({ success: true, message: 'Datos guardados correctamente' });
+});
+
+// Endpoint para crear un cliente
+app.post('/crearCliente', (req, res) => {
+  const clienteData = req.body; // Debe incluir: empresa, nombre, telefono, cedula, rut, direccion, vehiculos, etc.
+  db.collection("clientes").add(clienteData)
+    .then(docRef => {
+      console.log("Cliente guardado con ID: ", docRef.id);
+      res.json({ success: true, id: docRef.id });
+    })
+    .catch(err => {
+      console.error("Error agregando cliente: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Endpoint para obtener la lista de clientes
+app.get('/clientes', (req, res) => {
+  db.collection("clientes").get()
+    .then(snapshot => {
+      let clientes = [];
+      snapshot.forEach(doc => {
+        clientes.push({ id: doc.id, ...doc.data() });
+      });
+      res.json({ success: true, clientes });
+    })
+    .catch(err => {
+      console.error("Error obteniendo clientes: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Endpoint para actualizar un cliente
+app.put('/clientes/:id', (req, res) => {
+  const clienteId = req.params.id;
+  const updatedData = req.body;
+  db.collection("clientes").doc(clienteId).update(updatedData)
+    .then(() => {
+      res.json({ success: true });
+    })
+    .catch(err => {
+      console.error("Error actualizando cliente:", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
