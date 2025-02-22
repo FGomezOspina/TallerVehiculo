@@ -1,10 +1,11 @@
+require('dotenv').config(); // Carga las variables de entorno
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 
-// Carga las credenciales de la cuenta de servicio
-const serviceAccount = require('./config/Service_account.json');
+// Carga las credenciales desde las variables de entorno
+const serviceAccount = JSON.parse(process.env.GOOGLE_CREDENTIALS);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -51,7 +52,7 @@ app.post('/saveCar', (req, res) => {
 
 // Endpoint para crear un cliente
 app.post('/crearCliente', (req, res) => {
-  const clienteData = req.body; // Debe incluir: empresa, nombre, telefono, cedula, rut, direccion, vehiculos, etc.
+  const clienteData = req.body;
   db.collection("clientes").add(clienteData)
     .then(docRef => {
       console.log("Cliente guardado con ID: ", docRef.id);
@@ -93,6 +94,7 @@ app.put('/clientes/:id', (req, res) => {
     });
 });
 
+// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

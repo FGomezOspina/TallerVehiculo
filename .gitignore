@@ -1,1 +1,2 @@
-config/Service_account.json
+.env
+./config/Service_account.json
