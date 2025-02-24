@@ -4,123 +4,111 @@
   <meta charset="UTF-8" />
   <title>Recibo de Servicios - Argos</title>
   <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons (opcional) -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
   <link rel="stylesheet" href="css/styles.css" />
-  
 </head>
 <body>
 
-    <!--NAVBAR-->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/dashboard">Taller Admin</a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-      
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-              <!-- Vehículo: Dropdown -->
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle active"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="bi bi-car-front-fill"></i>
-                </a>
-                <ul class="dropdown-menu">
-                  <!-- Ajusta las rutas según tu proyecto -->
-                  <li>
-                    <a class="dropdown-item" href="/detallevehiculoTodos.html">Todos</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="/detalleVehiculoArgos.html">ARGOS</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="/fichaVehiculosClientes.html">
-                      Ficha de Vehículos x Clientes
-                    </a>
-                  </li>
-                </ul>
+  <!-- Navbar-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/dashboard">Taller Admin</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <!-- Vehículo: Dropdown -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle active"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-car-front-fill"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- Ajusta las rutas según tu proyecto -->
+              <li>
+                <a class="dropdown-item" href="/detallevehiculoTodos.html">Todos</a>
               </li>
-      
-              <!-- Proveedores: enlace simple -->
-              <li class="nav-item">
-                <a
-                  class="nav-link active"
-                  aria-current="page"
-                  href="/proveedores.html"
-                >
-                  <i class="bi bi-truck"></i>
-                </a>
+              <li>
+                <a class="dropdown-item" href="/detalleVehiculoArgos.html">ARGOS</a>
               </li>
-      
-              <!-- Inventario: enlace simple -->
-              <li class="nav-item">
-                <a
-                  class="nav-link active"
-                  aria-current="page"
-                  href="/inventario.html"
-                >
-                  <i class="bi bi-box-seam"></i>
+              <li>
+                <a class="dropdown-item" href="/historialVehicular.html">
+                  Historial Vehicular
                 </a>
-              </li>
-      
-              <!-- Clientes: Dropdown -->
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle active"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="bi bi-people"></i>
-                </a>
-                <ul class="dropdown-menu">
-                  <!-- Ajusta las rutas según tu proyecto -->
-                  <li>
-                    <a class="dropdown-item" href="/crearClientes.html">Crear Clientes</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="/fichaClientes.html">Ficha de Clientes</a>
-                  </li>
-                </ul>
               </li>
             </ul>
-          </div>
-        </div>
-    </nav>
-
+          </li>
+  
+          <!-- Proveedores: enlace simple -->
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/proveedores.html"
+            >
+              <i class="bi bi-truck"></i>
+            </a>
+          </li>
+  
+          <!-- Inventario: enlace simple -->
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/inventario.html"
+            >
+              <i class="bi bi-box-seam"></i>
+            </a>
+          </li>
+  
+          <!-- Clientes: Dropdown -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle active"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-people"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- Ajusta las rutas según tu proyecto -->
+              <li>
+                <a class="dropdown-item" href="/crearClientes.html">Crear Clientes</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/fichaClientes.html">Ficha de Clientes</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   <div class="container my-4">
     <!-- Encabezado principal -->
     <div class="text-center mb-3">
-      <!-- Logo Argos (reemplaza la URL por la tuya) -->
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cementos_Argos_logo.svg/800px-Cementos_Argos_logo.svg.png"
-        alt="Logo Argos"
-        class="argos-logo"
-      />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cementos_Argos_logo.svg/800px-Cementos_Argos_logo.svg.png"
+           alt="Logo Argos" class="argos-logo" />
       <h4 class="mt-2">RECIBO DE SERVICIOS DE MANTENIMIENTO</h4>
       <h5 class="text-muted">CONCRETOS Y AGREGADOS</h5>
     </div>
@@ -140,15 +128,11 @@
           <input type="text" class="form-control" id="equipo" />
         </div>
         <div class="col-md-3">
-          <label for="fechaProgramada" class="form-label fw-bold"
-            >Fecha Programada Entrega</label
-          >
+          <label for="fechaProgramada" class="form-label fw-bold">Fecha Programada Entrega</label>
           <input type="date" class="form-control" id="fechaProgramada" />
         </div>
         <div class="col-md-3">
-          <label for="horaProgramada" class="form-label fw-bold"
-            >Hora Programada Entrega</label
-          >
+          <label for="horaProgramada" class="form-label fw-bold">Hora Programada Entrega</label>
           <input type="time" class="form-control" id="horaProgramada" />
         </div>
       </div>
@@ -269,7 +253,8 @@
                 </div>
                 <div class="mb-2">
                   <label class="form-label">Firma</label>
-                  <div class="signature-box"></div>
+                  <!-- Se asigna el ID para usar la misma lógica de firma -->
+                  <div class="signature-box" id="signatureBoxEjecutor" style="cursor:pointer;"></div>
                 </div>
                 <div class="mb-2">
                   <label class="form-label">Hora real entrega</label>
@@ -289,7 +274,8 @@
                 </div>
                 <div class="mb-2">
                   <label class="form-label">Firma</label>
-                  <div class="signature-box"></div>
+                  <!-- Se asigna el ID para usar la misma lógica de firma -->
+                  <div class="signature-box" id="signatureBoxRecibe" style="cursor:pointer;"></div>
                 </div>
                 <div class="mb-2">
                   <label class="form-label">Hora real entrega</label>
@@ -305,21 +291,15 @@
                 <h6 class="fw-bold">Evaluación del servicio</h6>
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="checkSeguridad" />
-                  <label class="form-check-label" for="checkSeguridad"
-                    >Seguridad Industrial</label
-                  >
+                  <label class="form-check-label" for="checkSeguridad">Seguridad Industrial</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="checkAmbiente" />
-                  <label class="form-check-label" for="checkAmbiente"
-                    >Cuidado Ambiental</label
-                  >
+                  <label class="form-check-label" for="checkAmbiente">Cuidado Ambiental</label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="checkCalidad" />
-                  <label class="form-check-label" for="checkCalidad"
-                    >Calidad</label
-                  >
+                  <label class="form-check-label" for="checkCalidad">Calidad</label>
                 </div>
               </div>
             </div>
@@ -336,10 +316,49 @@
     </div>
   </div>
 
+  <!-- MODALES PARA FIRMA DIGITAL -->
+  <!-- Modal para Firma Digital del Ejecutor -->
+  <div class="modal fade" id="signatureModalEjecutor" tabindex="-1" aria-labelledby="signatureModalEjecutorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signatureModalEjecutorLabel">Firma Digital - Ejecutor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <canvas id="signatureCanvasEjecutor" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+        </div>
+        <div class="modal-footer">
+          <button id="btnClearSignatureEjecutor" type="button" class="btn btn-warning">Limpiar</button>
+          <button id="btnSaveSignatureEjecutor" type="button" class="btn btn-primary">Guardar Firma</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Firma Digital del Recibe -->
+  <div class="modal fade" id="signatureModalRecibe" tabindex="-1" aria-labelledby="signatureModalRecibeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signatureModalRecibeLabel">Firma Digital - Recibe</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <canvas id="signatureCanvasRecibe" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+        </div>
+        <div class="modal-footer">
+          <button id="btnClearSignatureRecibe" type="button" class="btn btn-warning">Limpiar</button>
+          <button id="btnSaveSignatureRecibe" type="button" class="btn btn-primary">Guardar Firma</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Signature Pad JS -->
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
   <!-- Script propio -->
   <script src="js/detalleVehiculoArgos.js"></script>
 </body>
