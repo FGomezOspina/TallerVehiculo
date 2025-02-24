@@ -296,6 +296,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const signaturePadCliente = new SignaturePad(signatureCanvasCliente);
     const signatureModalClienteEl = document.getElementById('signatureModalCliente');
     const signatureModalCliente = new bootstrap.Modal(signatureModalClienteEl);
+
+    signatureModalClienteEl.addEventListener('shown.bs.modal', () => {
+        signatureCanvasCliente.width = signatureCanvasCliente.offsetWidth;
+        signatureCanvasCliente.height = signatureCanvasCliente.offsetHeight;
+        signaturePadCliente.clear();
+    });
     
     document.getElementById('btnClearSignatureCliente').addEventListener('click', () => {
       signaturePadCliente.clear();
@@ -326,6 +332,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const signaturePadTaller = new SignaturePad(signatureCanvasTaller);
     const signatureModalTallerEl = document.getElementById('signatureModalTaller');
     const signatureModalTaller = new bootstrap.Modal(signatureModalTallerEl);
+
+    signatureModalTallerEl.addEventListener('shown.bs.modal', () => {
+        signatureCanvasTaller.width = signatureCanvasTaller.offsetWidth;
+        signatureCanvasTaller.height = signatureCanvasTaller.offsetHeight;
+        signaturePadTaller.clear();
+    });
     
     document.getElementById('btnClearSignatureTaller').addEventListener('click', () => {
       signaturePadTaller.clear();
