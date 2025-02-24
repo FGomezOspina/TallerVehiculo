@@ -52,7 +52,7 @@ app.post('/saveCar', (req, res) => {
 
 // Endpoint para crear un cliente
 app.post('/crearCliente', (req, res) => {
-  const clienteData = req.body;
+  const clienteData = req.body; // Debe incluir: empresa, nombre, teléfono, cédula, rut, dirección, vehiculos, etc.
   db.collection("clientes").add(clienteData)
     .then(docRef => {
       console.log("Cliente guardado con ID: ", docRef.id);
@@ -94,7 +94,20 @@ app.put('/clientes/:id', (req, res) => {
     });
 });
 
-// Iniciar servidor
+// Endpoint para eliminar un cliente
+app.delete('/clientes/:id', (req, res) => {
+    const clienteId = req.params.id;
+    db.collection("clientes").doc(clienteId).delete()
+      .then(() => {
+        res.json({ success: true });
+      })
+      .catch(err => {
+        console.error("Error eliminando cliente:", err);
+        res.status(500).json({ success: false, error: err.message });
+      });
+});  
+
+// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

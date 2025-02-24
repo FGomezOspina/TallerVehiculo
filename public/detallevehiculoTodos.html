@@ -4,20 +4,14 @@
   <meta charset="UTF-8" />
   <title>Detalle del Vehículo</title>
   <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-  />
-  <!-- Tu hoja de estilos principal -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <!-- Hoja de estilos principal -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!-- Navbar -->
+  <!--NAVBAR-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/dashboard">Taller Admin</a>
@@ -56,7 +50,7 @@
               </li>
               <li>
                 <a class="dropdown-item" href="/fichaVehiculosClientes.html">
-                Ficha de Vehículos x Clientes
+                  Ficha de Vehículos x Clientes
                 </a>
               </li>
             </ul>
@@ -110,52 +104,45 @@
     </div>
   </nav>
 
-  <!-- Contenido principal -->
-  <div class="container-fluid my-4">
+  <div class="container my-4">
+    <h2 class="mb-4">Detalle del Vehículo</h2>
+
+    <!-- Buscador de Clientes -->
+    <div class="mb-4">
+      <label for="clientSearch" class="form-label">Buscar Cliente</label>
+      <div class="input-group">
+        <input type="text" class="form-control" id="clientSearch" placeholder="Ingrese nombre, cédula o placa">
+        <button class="btn btn-primary" id="btnClientSearch">
+          <i class="bi bi-search"></i> Buscar
+        </button>
+      </div>
+      <div id="searchResults" class="list-group mt-2"></div>
+      <div id="clientVehicleSelectContainer" class="mt-2" style="display:none;">
+        <label for="clientVehicleSelect" class="form-label">Seleccione el Vehículo</label>
+        <select id="clientVehicleSelect" class="form-select"></select>
+      </div>
+      <div id="noClientMessage" class="mt-2" style="display:none;">
+        <p class="text-warning">No se encontró el cliente. ¿Desea agregarlo?</p>
+        <a href="/crearClientes.html" class="btn btn-outline-primary">Crear Cliente</a>
+      </div>
+    </div>
+
+    <!-- Sección de Detalle del Vehículo -->
     <div class="row">
-      <!-- COLUMNA IZQUIERDA: Datos del cliente y servicios -->
+      <!-- Columna Izquierda: Información adicional y tabla de servicios -->
       <div class="col-lg-8 mb-4">
-        <!-- Datos del cliente -->
+        <!-- Información del Cliente -->
         <div class="card mb-3">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <!-- Nombre y teléfono -->
-              <div class="flex-grow-1 me-3">
-                <h6>Nombre</h6>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  id="clienteNombre"
-                  placeholder="Nombre"
-                />
-              </div>
-              <div>
-                <h6>Teléfono</h6>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="clienteTelefono"
-                  placeholder="Teléfono"
-                />
-              </div>
-            </div>
+            <h6>Información del Cliente:</h6>
+            <p class="mb-0"><strong>Nombre:</strong> <span id="clienteNombreDisplay"></span></p>
+            <p class="mb-0"><strong>Cédula:</strong> <span id="clienteCedulaDisplay"></span></p>
+            <p class="mb-0"><strong>Teléfono:</strong> <span id="clienteTelefonoDisplay"></span></p>
           </div>
         </div>
 
-        <!-- Falla o requerimiento -->
-        <div class="mb-3">
-          <label for="fallaRequerimiento" class="form-label"
-            >Falla o Requerimiento:</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="fallaRequerimiento"
-            placeholder="Descripción actual del vehículo"
-          />
-        </div>
 
-        <!-- Tabla de servicios o productos -->
+        <!-- Tabla de Servicios / Productos -->
         <div class="card">
           <div class="card-header">
             <h5 class="mb-0">Servicios o Productos</h5>
@@ -173,29 +160,9 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Nuevo servicio"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      class="form-control"
-                      value="1"
-                      min="1"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      class="form-control"
-                      value="100"
-                      min="0"
-                    />
-                  </td>
+                  <td><input type="text" class="form-control" placeholder="Nuevo servicio" /></td>
+                  <td><input type="number" class="form-control" value="1" min="1" /></td>
+                  <td><input type="number" class="form-control" value="100" min="0" /></td>
                   <td class="align-middle text-end">$100.00</td>
                   <td class="text-center align-middle">
                     <button class="btn btn-sm btn-danger eliminarFila">
@@ -218,135 +185,65 @@
         </div>
       </div>
 
-      <!-- COLUMNA DERECHA: Tabs: Vehículo / Fotos -->
+      <!-- Columna Derecha: Información del Vehículo y Fotos -->
       <div class="col-lg-4">
-        <!-- Barra de pestañas -->
+        <!-- Tabs para Vehículo / Fotos -->
         <ul class="nav nav-tabs" id="vehTabs" role="tablist">
           <li class="nav-item" role="presentation">
-            <button
-              class="nav-link active"
-              id="vehiculo-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#vehiculoTabContent"
-              type="button"
-              role="tab"
-              aria-controls="vehiculoTabContent"
-              aria-selected="true"
-            >
-              Vehículo
-            </button>
+            <button class="nav-link active" id="vehiculo-tab" data-bs-toggle="tab" data-bs-target="#vehiculoTabContent" type="button" role="tab" aria-controls="vehiculoTabContent" aria-selected="true">Vehículo</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="fotos-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#fotosTabContent"
-              type="button"
-              role="tab"
-              aria-controls="fotosTabContent"
-              aria-selected="false"
-            >
-              Fotos
-            </button>
+            <button class="nav-link" id="fotos-tab" data-bs-toggle="tab" data-bs-target="#fotosTabContent" type="button" role="tab" aria-controls="fotosTabContent" aria-selected="false">Fotos</button>
           </li>
         </ul>
-
-        <!-- Contenido de las pestañas -->
         <div class="tab-content" id="vehTabsContent">
           <!-- TAB Vehículo -->
-          <div
-            class="tab-pane fade show active p-3"
-            id="vehiculoTabContent"
-            role="tabpanel"
-            aria-labelledby="vehiculo-tab"
-          >
+          <div class="tab-pane fade show active p-3" id="vehiculoTabContent" role="tabpanel" aria-labelledby="vehiculo-tab">
             <div class="card">
               <div class="card-body">
                 <div class="d-flex align-items-center">
                   <div>
                     <!-- Título y subtítulo del vehículo -->
                     <h6 id="vehTitle" class="mb-0"></h6>
-                    <p class="mb-0 text-muted" id="vehSubtitle">
-                      JNBY67 - 2021 - Gris
-                    </p>
+                    <p class="mb-0 text-muted" id="vehSubtitle"></p>
                   </div>
                   <!-- Botón Editar (abre el modal) -->
-                  <button
-                    class="btn btn-sm btn-outline-primary ms-auto"
-                    id="btnEditarVehiculo"
-                  >
+                  <button class="btn btn-sm btn-outline-primary ms-auto" id="btnEditarVehiculo">
                     <i class="bi bi-pencil"></i> Editar
                   </button>
                 </div>
                 <hr />
-                <!-- Kilometraje -->
                 <div class="mb-3">
                   <label class="form-label">Kilometraje actual</label>
-                  <p id="vehKilometrajeDisplay" class="mb-1">51,000 Kms</p>
+                  <p id="vehKilometrajeDisplay" class="mb-1">0 Kms</p>
                 </div>
-                <!-- Nivel de combustible con barra de progreso -->
                 <div class="mb-3">
                   <label class="form-label">Nivel de combustible</label>
                   <div class="progress progress-fuel">
-                    <div
-                      class="progress-bar fuel-progress-bar"
-                      role="progressbar"
-                      aria-valuenow="25"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                      id="fuelProgress"
-                    >
-                      25%
-                    </div>
+                    <div class="progress-bar fuel-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="fuelProgress">0%</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           <!-- TAB Fotos -->
-          <div
-            class="tab-pane fade p-3"
-            id="fotosTabContent"
-            role="tabpanel"
-            aria-labelledby="fotos-tab"
-          >
+          <div class="tab-pane fade p-3" id="fotosTabContent" role="tabpanel" aria-labelledby="fotos-tab">
             <div class="card">
               <div class="card-header">
                 <h5 class="mb-0">Fotos del Vehículo</h5>
               </div>
               <div class="card-body">
-                <!-- Sección Foto Antes -->
                 <div class="mb-3">
                   <label for="fotoAntes" class="form-label">Foto Antes</label>
-                  <!-- multiple para subir varias fotos -->
-                  <input
-                    class="form-control"
-                    type="file"
-                    id="fotoAntes"
-                    multiple
-                  />
-                  <small class="text-muted"
-                    >Puedes seleccionar varias imágenes</small
-                  >
+                  <input class="form-control" type="file" id="fotoAntes" multiple>
+                  <small class="text-muted">Puedes seleccionar varias imágenes</small>
                 </div>
                 <div class="row preview-container" id="previewFotosAntes"></div>
-
-                <hr />
-
-                <!-- Sección Foto Después -->
+                <hr>
                 <div class="mb-3">
                   <label for="fotoDespues" class="form-label">Foto Después</label>
-                  <input
-                    class="form-control"
-                    type="file"
-                    id="fotoDespues"
-                    multiple
-                  />
-                  <small class="text-muted"
-                    >Puedes seleccionar varias imágenes</small
-                  >
+                  <input class="form-control" type="file" id="fotoDespues" multiple>
+                  <small class="text-muted">Puedes seleccionar varias imágenes</small>
                 </div>
                 <div class="row preview-container" id="previewFotosDespues"></div>
               </div>
@@ -367,7 +264,7 @@
         <div class="signature-box"></div>
       </div>
     </div>
-    <!-- Botón de Guardar / Imprimir (opcional) -->
+    <!-- Botón de Guardar / Imprimir -->
     <div class="text-end mt-4">
       <button id="btnGuardar" class="btn btn-success">
         <i class="bi bi-check-circle"></i> Guardar / Imprimir
@@ -375,88 +272,54 @@
     </div>
   </div>
 
-  <!-- Modal SOLO para editar datos del vehículo -->
-  <div
-    class="modal fade"
-    id="editVehicleModal"
-    tabindex="-1"
-    aria-labelledby="editVehicleModalLabel"
-    aria-hidden="true"
-  >
+  <!-- Modal para editar datos del vehículo -->
+  <div class="modal fade" id="editVehicleModal" tabindex="-1" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="editVehicleModalLabel">Editar Vehículo</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Cerrar"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <form id="editVehicleForm">
             <div class="mb-3">
               <label for="modalVehMarca" class="form-label">Marca</label>
-              <input type="text" class="form-control" id="modalVehMarca" />
+              <input type="text" class="form-control" id="modalVehMarca">
             </div>
             <div class="mb-3">
               <label for="modalVehModelo" class="form-label">Modelo</label>
-              <input type="text" class="form-control" id="modalVehModelo" />
+              <input type="text" class="form-control" id="modalVehModelo">
             </div>
             <div class="mb-3">
               <label for="modalVehAnio" class="form-label">Año</label>
-              <input type="number" class="form-control" id="modalVehAnio" />
+              <input type="number" class="form-control" id="modalVehAnio">
             </div>
             <div class="mb-3">
               <label for="modalVehColor" class="form-label">Color</label>
-              <input type="text" class="form-control" id="modalVehColor" />
+              <input type="text" class="form-control" id="modalVehColor">
             </div>
             <div class="mb-3">
               <label for="modalVehPlaca" class="form-label">Placa</label>
-              <input type="text" class="form-control" id="modalVehPlaca" />
+              <input type="text" class="form-control" id="modalVehPlaca">
             </div>
             <div class="mb-3">
-              <label for="modalVehKilometraje" class="form-label"
-                >Kilometraje</label
-              >
-              <input
-                type="number"
-                class="form-control"
-                id="modalVehKilometraje"
-              />
+              <label for="modalVehKilometraje" class="form-label">Kilometraje</label>
+              <input type="number" class="form-control" id="modalVehKilometraje">
             </div>
             <div class="mb-3">
-              <label for="modalVehCombustible" class="form-label"
-                >Nivel de Combustible (%)</label
-              >
-              <input
-                type="number"
-                class="form-control"
-                id="modalVehCombustible"
-              />
+              <label for="modalVehCombustible" class="form-label">Nivel de Combustible (%)</label>
+              <input type="number" class="form-control" id="modalVehCombustible">
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Cerrar
-          </button>
-          <button class="btn btn-primary" id="btnGuardarVehiculo">
-            Guardar
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button class="btn btn-primary" id="btnGuardarVehiculo">Guardar</button>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Scripts de Bootstrap -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Script propio -->
   <script src="js/detallevehiculoTodos.js"></script>
 </body>
 </html>

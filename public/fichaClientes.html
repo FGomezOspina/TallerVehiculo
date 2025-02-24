@@ -4,28 +4,123 @@
   <meta charset="UTF-8">
   <title>Ficha de Clientes - Taller</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Firebase SDK no es necesario aquí, usamos fetch -->
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/dashboard">Taller Admin</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <!-- Vehículo: Dropdown -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle active"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-car-front-fill"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- Ajusta las rutas según tu proyecto -->
+              <li>
+                <a class="dropdown-item" href="/detallevehiculoTodos.html">Todos</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/detalleVehiculoArgos.html">ARGOS</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/fichaVehiculosClientes.html">
+                  Ficha de Vehículos x Clientes
+                </a>
+              </li>
+            </ul>
+          </li>
+  
+          <!-- Proveedores: enlace simple -->
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/proveedores.html"
+            >
+              <i class="bi bi-truck"></i>
+            </a>
+          </li>
+  
+          <!-- Inventario: enlace simple -->
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/inventario.html"
+            >
+              <i class="bi bi-box-seam"></i>
+            </a>
+          </li>
+  
+          <!-- Clientes: Dropdown -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle active"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-people"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- Ajusta las rutas según tu proyecto -->
+              <li>
+                <a class="dropdown-item" href="/crearClientes.html">Crear Clientes</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/fichaClientes.html">Ficha de Clientes</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
+  
   <div class="container my-4">
-    <h2>Ficha de Clientes</h2>
-    <div id="clientesContainer" class="list-group mt-4">
-      <!-- Los items de clientes se generarán aquí -->
+    <h2 class="mb-4">Ficha de Clientes</h2>
+    
+    <!-- Buscador único -->
+    <div class="input-group mb-4">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" id="searchQuery" class="form-control" placeholder="Buscar por nombre, cédula o placa">
+      <button id="btnBuscar" class="btn btn-primary">Buscar</button>
+    </div>
+    
+    <!-- Listado de Clientes -->
+    <div id="clientesContainer" class="list-group">
+      <!-- Se generarán los items de clientes aquí -->
     </div>
   </div>
 
-  <!-- Modal para editar cliente -->
+  <!-- Modal para editar cliente y sus vehículos -->
   <div class="modal fade" id="editClienteModal" tabindex="-1" aria-labelledby="editClienteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="editClienteModalLabel">Editar Cliente</h5>
@@ -33,30 +128,40 @@
         </div>
         <div class="modal-body">
           <form id="editClienteForm">
-            <div class="mb-3">
-              <label for="editEmpresa" class="form-label">Empresa</label>
-              <input type="text" class="form-control" id="editEmpresa" required>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="editEmpresa" class="form-label">Empresa</label>
+                <input type="text" class="form-control" id="editEmpresa" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="editNombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="editNombre" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="editTelefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="editTelefono" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="editCedula" class="form-label">Cédula</label>
+                <input type="text" class="form-control" id="editCedula" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="editRut" class="form-label">RUT</label>
+                <input type="text" class="form-control" id="editRut" required>
+              </div>
+              <div class="col-12 mb-3">
+                <label for="editDireccion" class="form-label">Dirección</label>
+                <input type="text" class="form-control" id="editDireccion" required>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="editNombre" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="editNombre" required>
+            <hr>
+            <h5>Vehículos</h5>
+            <div id="editVehiculosContainer">
+              <!-- Aquí se cargarán dinámicamente los formularios de vehículos -->
             </div>
-            <div class="mb-3">
-              <label for="editTelefono" class="form-label">Teléfono</label>
-              <input type="text" class="form-control" id="editTelefono" required>
-            </div>
-            <div class="mb-3">
-              <label for="editCedula" class="form-label">Cédula</label>
-              <input type="text" class="form-control" id="editCedula" required>
-            </div>
-            <div class="mb-3">
-              <label for="editRut" class="form-label">RUT</label>
-              <input type="text" class="form-control" id="editRut" required>
-            </div>
-            <div class="mb-3">
-              <label for="editDireccion" class="form-label">Dirección</label>
-              <input type="text" class="form-control" id="editDireccion" required>
-            </div>
+            <button type="button" class="btn btn-primary btn-sm" id="agregarVehiculoEditBtn">
+              <i class="bi bi-plus-circle"></i> Agregar Vehículo
+            </button>
           </form>
         </div>
         <div class="modal-footer">
