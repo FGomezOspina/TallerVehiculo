@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
       vehicleData.placa = modalVehPlaca.value;
       vehicleData.kilometraje = parseInt(modalVehKilometraje.value) || 0;
       vehicleData.combustible = parseInt(modalVehCombustible.value) || 0;
-  
       updateVehicleTab();
       editVehicleModal.hide();
     });
@@ -281,6 +280,76 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   
+    // -------------------------------------------------------
+    // INICIALIZACIÓN
+    // -------------------------------------------------------
+    updateVehicleTab();
+    recalcularTotal();
+  
+    // -------------------------------------------------------
+    // IMPLEMENTACIÓN DE SIGNATURE PAD PARA FIRMAS INDEPENDIENTES
+    // -------------------------------------------------------
+    // Firma del Cliente
+    const signatureCanvasCliente = document.getElementById('signatureCanvasCliente');
+    signatureCanvasCliente.width = signatureCanvasCliente.offsetWidth;
+    signatureCanvasCliente.height = signatureCanvasCliente.offsetHeight;
+    const signaturePadCliente = new SignaturePad(signatureCanvasCliente);
+    const signatureModalClienteEl = document.getElementById('signatureModalCliente');
+    const signatureModalCliente = new bootstrap.Modal(signatureModalClienteEl);
+    
+    document.getElementById('btnClearSignatureCliente').addEventListener('click', () => {
+      signaturePadCliente.clear();
+    });
+    
+    document.getElementById('btnSaveSignatureCliente').addEventListener('click', () => {
+      if(signaturePadCliente.isEmpty()) {
+        alert("Por favor, firma antes de guardar.");
+      } else {
+        const dataURL = signaturePadCliente.toDataURL();
+        document.getElementById('signatureBoxCliente').innerHTML = `<img src="${dataURL}" alt="Firma digital del Cliente" style="max-width: 100%;">`;
+        signatureModalCliente.hide();
+      }
+    });
+    
+    const signatureBoxCliente = document.getElementById('signatureBoxCliente');
+    if(signatureBoxCliente) {
+      signatureBoxCliente.addEventListener('click', () => {
+        signaturePadCliente.clear();
+        signatureModalCliente.show();
+      });
+    }
+    
+    // Firma del Taller
+    const signatureCanvasTaller = document.getElementById('signatureCanvasTaller');
+    signatureCanvasTaller.width = signatureCanvasTaller.offsetWidth;
+    signatureCanvasTaller.height = signatureCanvasTaller.offsetHeight;
+    const signaturePadTaller = new SignaturePad(signatureCanvasTaller);
+    const signatureModalTallerEl = document.getElementById('signatureModalTaller');
+    const signatureModalTaller = new bootstrap.Modal(signatureModalTallerEl);
+    
+    document.getElementById('btnClearSignatureTaller').addEventListener('click', () => {
+      signaturePadTaller.clear();
+    });
+    
+    document.getElementById('btnSaveSignatureTaller').addEventListener('click', () => {
+      if(signaturePadTaller.isEmpty()) {
+        alert("Por favor, firma antes de guardar.");
+      } else {
+        const dataURL = signaturePadTaller.toDataURL();
+        document.getElementById('signatureBoxTaller').innerHTML = `<img src="${dataURL}" alt="Firma digital del Taller" style="max-width: 100%;">`;
+        signatureModalTaller.hide();
+      }
+    });
+    
+    const signatureBoxTaller = document.getElementById('signatureBoxTaller');
+    if(signatureBoxTaller) {
+      signatureBoxTaller.addEventListener('click', () => {
+        signaturePadTaller.clear();
+        signatureModalTaller.show();
+      });
+    }
+  
+    
     // -------------------------------------------------------
     // INICIALIZACIÓN
     // -------------------------------------------------------

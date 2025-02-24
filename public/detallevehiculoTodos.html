@@ -11,19 +11,12 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!--NAVBAR-->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/dashboard">Taller Admin</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
   
@@ -31,72 +24,34 @@
         <ul class="navbar-nav me-auto">
           <!-- Vehículo: Dropdown -->
           <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle active"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-car-front-fill"></i>
             </a>
             <ul class="dropdown-menu">
-              <!-- Ajusta las rutas según tu proyecto -->
-              <li>
-                <a class="dropdown-item" href="/detallevehiculoTodos.html">Todos</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/detalleVehiculoArgos.html">ARGOS</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/fichaVehiculosClientes.html">
-                  Ficha de Vehículos x Clientes
-                </a>
-              </li>
+              <li><a class="dropdown-item" href="/detallevehiculoTodos.html">Todos</a></li>
+              <li><a class="dropdown-item" href="/detalleVehiculoArgos.html">ARGOS</a></li>
+              <li><a class="dropdown-item" href="/fichaVehiculosClientes.html">Ficha de Vehículos x Clientes</a></li>
             </ul>
           </li>
   
-          <!-- Proveedores: enlace simple -->
+          <!-- Proveedores -->
           <li class="nav-item">
-            <a
-              class="nav-link active"
-              aria-current="page"
-              href="/proveedores.html"
-            >
-              <i class="bi bi-truck"></i>
-            </a>
+            <a class="nav-link active" href="/proveedores.html"><i class="bi bi-truck"></i></a>
           </li>
   
-          <!-- Inventario: enlace simple -->
+          <!-- Inventario -->
           <li class="nav-item">
-            <a
-              class="nav-link active"
-              aria-current="page"
-              href="/inventario.html"
-            >
-              <i class="bi bi-box-seam"></i>
-            </a>
+            <a class="nav-link active" href="/inventario.html"><i class="bi bi-box-seam"></i></a>
           </li>
   
-          <!-- Clientes: Dropdown -->
+          <!-- Clientes -->
           <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle active"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-people"></i>
             </a>
             <ul class="dropdown-menu">
-              <!-- Ajusta las rutas según tu proyecto -->
-              <li>
-                <a class="dropdown-item" href="/crearClientes.html">Crear Clientes</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/fichaClientes.html">Ficha de Clientes</a>
-              </li>
+              <li><a class="dropdown-item" href="/crearClientes.html">Crear Clientes</a></li>
+              <li><a class="dropdown-item" href="/fichaClientes.html">Ficha de Clientes</a></li>
             </ul>
           </li>
         </ul>
@@ -122,27 +77,25 @@
         <select id="clientVehicleSelect" class="form-select"></select>
       </div>
       <div id="noClientMessage" class="mt-2" style="display:none;">
-        <p class="text-warning">No se encontró el cliente. ¿Desea agregarlo?</p>
+        <p class="text-warning" id="noClient">No se encontró el cliente. ¿Desea agregarlo?</p>
         <a href="/crearClientes.html" class="btn btn-outline-primary">Crear Cliente</a>
+      </div>
+    </div>
+
+    <!-- Información del Cliente -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6>Información del Cliente:</h6>
+        <p class="mb-0"><strong>Nombre:</strong> <span id="clienteNombreDisplay"></span></p>
+        <p class="mb-0"><strong>Cédula:</strong> <span id="clienteCedulaDisplay"></span></p>
+        <p class="mb-0"><strong>Teléfono:</strong> <span id="clienteTelefonoDisplay"></span></p>
       </div>
     </div>
 
     <!-- Sección de Detalle del Vehículo -->
     <div class="row">
-      <!-- Columna Izquierda: Información adicional y tabla de servicios -->
+      <!-- Columna Izquierda: Tabla de Servicios / Productos -->
       <div class="col-lg-8 mb-4">
-        <!-- Información del Cliente -->
-        <div class="card mb-3">
-          <div class="card-body">
-            <h6>Información del Cliente:</h6>
-            <p class="mb-0"><strong>Nombre:</strong> <span id="clienteNombreDisplay"></span></p>
-            <p class="mb-0"><strong>Cédula:</strong> <span id="clienteCedulaDisplay"></span></p>
-            <p class="mb-0"><strong>Teléfono:</strong> <span id="clienteTelefonoDisplay"></span></p>
-          </div>
-        </div>
-
-
-        <!-- Tabla de Servicios / Productos -->
         <div class="card">
           <div class="card-header">
             <h5 class="mb-0">Servicios o Productos</h5>
@@ -185,9 +138,8 @@
         </div>
       </div>
 
-      <!-- Columna Derecha: Información del Vehículo y Fotos -->
+      <!-- Columna Derecha: Tabs: Vehículo / Fotos -->
       <div class="col-lg-4">
-        <!-- Tabs para Vehículo / Fotos -->
         <ul class="nav nav-tabs" id="vehTabs" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="vehiculo-tab" data-bs-toggle="tab" data-bs-target="#vehiculoTabContent" type="button" role="tab" aria-controls="vehiculoTabContent" aria-selected="true">Vehículo</button>
@@ -203,11 +155,9 @@
               <div class="card-body">
                 <div class="d-flex align-items-center">
                   <div>
-                    <!-- Título y subtítulo del vehículo -->
                     <h6 id="vehTitle" class="mb-0"></h6>
                     <p class="mb-0 text-muted" id="vehSubtitle"></p>
                   </div>
-                  <!-- Botón Editar (abre el modal) -->
                   <button class="btn btn-sm btn-outline-primary ms-auto" id="btnEditarVehiculo">
                     <i class="bi bi-pencil"></i> Editar
                   </button>
@@ -253,17 +203,19 @@
       </div>
     </div>
 
-    <!-- Firmas -->
-    <div class="row mt-4">
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Firma del Cliente</label>
-        <div class="signature-box"></div>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Firma del Taller</label>
-        <div class="signature-box"></div>
-      </div>
+    <!-- Sección de Firmas -->
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <label class="form-label fw-bold">Firma del Cliente</label>
+      <!-- Caja de firma para el cliente -->
+      <div class="signature-box" id="signatureBoxCliente" style="cursor:pointer;"></div>
     </div>
+    <div class="col-md-6">
+      <label class="form-label fw-bold">Firma del Taller</label>
+      <!-- Caja de firma para el taller -->
+      <div class="signature-box" id="signatureBoxTaller" style="cursor:pointer;"></div>
+    </div>
+  </div>
     <!-- Botón de Guardar / Imprimir -->
     <div class="text-end mt-4">
       <button id="btnGuardar" class="btn btn-success">
@@ -319,6 +271,47 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal para Firma Digital del Cliente -->
+  <div class="modal fade" id="signatureModalCliente" tabindex="-1" aria-labelledby="signatureModalClienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signatureModalClienteLabel">Firma Digital - Cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <canvas id="signatureCanvasCliente" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+        </div>
+        <div class="modal-footer">
+          <button id="btnClearSignatureCliente" type="button" class="btn btn-warning">Limpiar</button>
+          <button id="btnSaveSignatureCliente" type="button" class="btn btn-primary">Guardar Firma</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Firma Digital del Taller -->
+  <div class="modal fade" id="signatureModalTaller" tabindex="-1" aria-labelledby="signatureModalTallerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signatureModalTallerLabel">Firma Digital - Taller</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <canvas id="signatureCanvasTaller" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+        </div>
+        <div class="modal-footer">
+          <button id="btnClearSignatureTaller" type="button" class="btn btn-warning">Limpiar</button>
+          <button id="btnSaveSignatureTaller" type="button" class="btn btn-primary">Guardar Firma</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signature Pad (para la firma digital) -->
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/detallevehiculoTodos.js"></script>
 </body>
