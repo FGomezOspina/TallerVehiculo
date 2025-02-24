@@ -127,13 +127,29 @@
       </div>
     </div>
 
-    <!-- Información del Cliente -->
-    <div class="card mb-3">
-      <div class="card-body">
-        <h6>Información del Cliente:</h6>
-        <p class="mb-0"><strong>Nombre:</strong> <span id="clienteNombreDisplay"></span></p>
-        <p class="mb-0"><strong>Cédula:</strong> <span id="clienteCedulaDisplay"></span></p>
-        <p class="mb-0"><strong>Teléfono:</strong> <span id="clienteTelefonoDisplay"></span></p>
+    <!-- Fila con Descripción del Vehículo e Información del Cliente -->
+    <div class="row mb-4">
+      <!-- Descripción del Vehículo -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5>Descripción del Vehículo</h5>
+          </div>
+          <div class="card-body">
+            <textarea class="form-control" rows="5" placeholder="Ingrese la descripción del vehículo"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- Información del Cliente -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h6>Información del Cliente:</h6>
+            <p class="mb-0"><strong>Nombre:</strong> <span id="clienteNombreDisplay"></span></p>
+            <p class="mb-0"><strong>Cédula:</strong> <span id="clienteCedulaDisplay"></span></p>
+            <p class="mb-0"><strong>Teléfono:</strong> <span id="clienteTelefonoDisplay"></span></p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -249,18 +265,18 @@
     </div>
 
     <!-- Sección de Firmas -->
-  <div class="row mt-4">
-    <div class="col-md-6">
-      <label class="form-label fw-bold">Firma del Cliente</label>
-      <!-- Caja de firma para el cliente -->
-      <div class="signature-box" id="signatureBoxCliente" style="cursor:pointer;"></div>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Firma del Cliente</label>
+        <!-- Caja de firma para el cliente -->
+        <div class="signature-box" id="signatureBoxCliente" style="cursor:pointer;"></div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Firma del Taller</label>
+        <!-- Caja de firma para el taller -->
+        <div class="signature-box" id="signatureBoxTaller" style="cursor:pointer;"></div>
+      </div>
     </div>
-    <div class="col-md-6">
-      <label class="form-label fw-bold">Firma del Taller</label>
-      <!-- Caja de firma para el taller -->
-      <div class="signature-box" id="signatureBoxTaller" style="cursor:pointer;"></div>
-    </div>
-  </div>
     <!-- Botón de Guardar / Imprimir -->
     <div class="text-end mt-4">
       <button id="btnGuardar" class="btn btn-success">
@@ -275,7 +291,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="editVehicleModalLabel">Editar Vehículo</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <form id="editVehicleForm">
@@ -323,7 +339,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="signatureModalClienteLabel">Firma Digital - Cliente</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <canvas id="signatureCanvasCliente" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
@@ -342,7 +358,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="signatureModalTallerLabel">Firma Digital - Taller</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <canvas id="signatureCanvasTaller" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>

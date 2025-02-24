@@ -96,16 +96,73 @@ app.put('/clientes/:id', (req, res) => {
 
 // Endpoint para eliminar un cliente
 app.delete('/clientes/:id', (req, res) => {
-    const clienteId = req.params.id;
-    db.collection("clientes").doc(clienteId).delete()
-      .then(() => {
-        res.json({ success: true });
-      })
-      .catch(err => {
-        console.error("Error eliminando cliente:", err);
-        res.status(500).json({ success: false, error: err.message });
+  const clienteId = req.params.id;
+  db.collection("clientes").doc(clienteId).delete()
+    .then(() => {
+      res.json({ success: true });
+    })
+    .catch(err => {
+      console.error("Error eliminando cliente:", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Endpoint para guardar un producto en Firestore
+app.post('/saveProducto', (req, res) => {
+  const productoData = req.body;
+  db.collection("productos").add(productoData)
+    .then(docRef => {
+      console.log("Producto guardado con ID: ", docRef.id);
+      res.json({ success: true, id: docRef.id });
+    })
+    .catch(err => {
+      console.error("Error agregando producto: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Endpoint para obtener la lista de productos
+app.get('/productos', (req, res) => {
+  db.collection("productos").get()
+    .then(snapshot => {
+      let productos = [];
+      snapshot.forEach(doc => {
+        productos.push({ id: doc.id, ...doc.data() });
       });
-});  
+      res.json({ success: true, productos });
+    })
+    .catch(err => {
+      console.error("Error obteniendo productos: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Endpoint para actualizar un producto
+app.put('/productos/:id', (req, res) => {
+  const productId = req.params.id;
+  const updatedData = req.body;
+  db.collection("productos").doc(productId).update(updatedData)
+    .then(() => {
+      res.json({ success: true });
+    })
+    .catch(err => {
+      console.error("Error actualizando producto:", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Endpoint para eliminar un producto
+app.delete('/productos/:id', (req, res) => {
+  const productId = req.params.id;
+  db.collection("productos").doc(productId).delete()
+    .then(() => {
+      res.json({ success: true });
+    })
+    .catch(err => {
+      console.error("Error eliminando producto: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
 
 // Iniciar el servidor
 app.listen(PORT, () => {
