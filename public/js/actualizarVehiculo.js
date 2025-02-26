@@ -240,104 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
         signatureModalTaller.show();
       });
     }
-  
-    // Buscar cliente (igual que en detallevehiculoTodos)
-    function searchClientes(query) {
-      fetch('/clientes')
-        .then(response => response.json())
-        .then(data => {
-          const searchResults = document.getElementById('searchResults');
-          searchResults.innerHTML = "";
-          if(data.success) {
-            let resultados = data.clientes.filter(cliente => {
-              const q = query.toLowerCase();
-              const matchNombre = cliente.nombre.toLowerCase().includes(q);
-              const matchCedula = cliente.cedula.toLowerCase().includes(q);
-              let matchPlaca = false;
-              if(cliente.vehiculos && Array.isArray(cliente.vehiculos)){
-                cliente.vehiculos.forEach(v => {
-                  if(v.placa && v.placa.toLowerCase().includes(q)) matchPlaca = true;
-                });
-              }
-              return matchNombre || matchCedula || matchPlaca;
-            });
-            if(resultados.length === 0) {
-              document.getElementById('noClientMessage').style.display = "block";
-            } else {
-              document.getElementById('noClientMessage').style.display = "none";
-            }
-            resultados.forEach(cliente => {
-              const item = document.createElement("a");
-              item.href = "#";
-              item.className = "list-group-item list-group-item-action";
-              item.dataset.id = cliente.id;
-              item.innerHTML = `
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">${cliente.nombre} (${cliente.empresa})</h5>
-                  <small>${cliente.telefono}</small>
-                </div>
-                <p class="mb-1">Cédula: ${cliente.cedula} | RUT: ${cliente.rut}</p>
-                <small>Dirección: ${cliente.direccion}</small>
-              `;
-              item.addEventListener("click", () => {
-                clientData = cliente;
-                document.getElementById('searchResults').innerHTML = "";
-                document.getElementById('clientSearch').value = cliente.nombre;
-                document.getElementById("clienteNombreDisplay").textContent = cliente.nombre;
-                document.getElementById("clienteCedulaDisplay").textContent = cliente.cedula;
-                document.getElementById("clienteTelefonoDisplay").textContent = cliente.telefono;
-                if(cliente.vehiculos && cliente.vehiculos.length > 0) {
-                  if(cliente.vehiculos.length === 1) {
-                    vehicleData = cliente.vehiculos[0];
-                    updateVehicleTab();
-                    document.getElementById('clientVehicleSelectContainer').style.display = "none";
-                  } else {
-                    const select = document.getElementById('clientVehicleSelect');
-                    select.innerHTML = "";
-                    cliente.vehiculos.forEach((veh, idx) => {
-                      const option = document.createElement("option");
-                      option.value = idx;
-                      option.textContent = `${veh.marca} ${veh.modelo} - ${veh.placa}`;
-                      select.appendChild(option);
-                    });
-                    document.getElementById('clientVehicleSelectContainer').style.display = "block";
-                    vehicleData = cliente.vehiculos[0];
-                    updateVehicleTab();
-                  }
-                } else {
-                  alert("Este cliente no tiene vehículos registrados.");
-                }
-              });
-              document.getElementById('searchResults').appendChild(item);
-            });
-          }
-        })
-        .catch(err => console.error("Error:", err));
-    }
-  
-    document.getElementById('btnClientSearch').addEventListener('click', () => {
-      const query = document.getElementById('clientSearch').value.trim();
-      if(query !== "") {
-        searchClientes(query);
-      }
-    });
-  
-    document.getElementById('clientSearch').addEventListener('keypress', (e) => {
-      if(e.key === "Enter") {
-        const query = document.getElementById('clientSearch').value.trim();
-        if(query !== "") {
-          searchClientes(query);
-        }
-      }
-    });
-  
-    document.getElementById('clientVehicleSelect').addEventListener('change', () => {
-      if(clientData && clientData.vehiculos && clientData.vehiculos.length > 1) {
-        const idx = parseInt(document.getElementById('clientVehicleSelect').value);
-        vehicleData = clientData.vehiculos[idx];
-        updateVehicleTab();
-      }
-    });
+
   
     // Función para extraer los servicios desde la tabla
     function obtenerServiciosDesdeTabla() {
@@ -516,25 +419,6 @@ document.addEventListener('DOMContentLoaded', function() {
         alert("Error al conectar con el servidor.");
       });
     });
-  
-    // Función para extraer los servicios de la tabla
-    function obtenerServiciosDesdeTabla() {
-      const servicios = [];
-      document.querySelectorAll('#tablaServicios tbody tr').forEach(row => {
-        const select = row.querySelector('.product-select');
-        const qty = parseFloat(row.querySelector('.quantity-input').value) || 0;
-        const price = parseFloat(row.querySelector('.price-input').value) || 0;
-        const subtotal = row.querySelector('.subtotal-cell').textContent;
-        servicios.push({
-          productoId: select.value,
-          productoNombre: select.options[select.selectedIndex]?.text || '',
-          cantidad: qty,
-          precioUnitario: price,
-          subtotal: subtotal
-        });
-      });
-      return servicios;
-    }
   
     // Inicializar
     loadInventory();
