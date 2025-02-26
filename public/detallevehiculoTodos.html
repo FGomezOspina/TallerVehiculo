@@ -174,10 +174,14 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="text" class="form-control" placeholder="Nuevo servicio" /></td>
-                  <td><input type="number" class="form-control" value="1" min="1" /></td>
-                  <td><input type="number" class="form-control" value="100" min="0" /></td>
-                  <td class="align-middle text-end">$100.00</td>
+                  <td>
+                    <select class="form-select product-select">
+                      <option value="">Seleccione un producto</option>
+                    </select>
+                  </td>
+                  <td><input type="number" class="form-control quantity-input" value="1" min="1" /></td>
+                  <td><input type="number" class="form-control price-input" value="0" min="0" readonly /></td>
+                  <td class="align-middle text-end subtotal-cell">$0.00</td>
                   <td class="text-center align-middle">
                     <button class="btn btn-sm btn-danger eliminarFila">
                       <i class="bi bi-trash"></i>
@@ -193,7 +197,7 @@
             </button>
             <div>
               <span class="fw-bold">Total: </span>
-              <span id="totalServicios">$500.00</span>
+              <span id="totalServicios">$0.00</span>
             </div>
           </div>
         </div>
