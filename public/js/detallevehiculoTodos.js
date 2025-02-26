@@ -380,26 +380,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // -------------------------------------------------------
-  // INICIALIZACIÓN
-  // -------------------------------------------------------
-  updateVehicleTab();
-  recalcularTotal();
-  loadInventory();
-
-  // Agregar eventos al select del registro inicial en la tabla
-  document.querySelectorAll('.product-select').forEach(select => {
-    populateProductSelect(select);
-    select.addEventListener('change', function(e) {
-      const row = e.target.closest('tr');
-      const selectedOption = e.target.options[e.target.selectedIndex];
-      const precioBase = parseFloat(selectedOption.getAttribute('data-precio-base')) || 0;
-      const priceInput = row.querySelector('.price-input');
-      priceInput.value = precioBase;
-      recalcularTotal();
-    });
-  });
-
-  // -------------------------------------------------------
   // IMPLEMENTACIÓN DE SIGNATURE PAD PARA FIRMAS INDEPENDIENTES
   // -------------------------------------------------------
   // Firma del Cliente
@@ -475,8 +455,94 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // -------------------------------------------------------
+  // FUNCIONALIDAD: GUARDAR TODOS LOS DATOS
+  // -------------------------------------------------------
+  
+  // Función para obtener los servicios/productos desde la tabla
+  function obtenerServiciosDesdeTabla() {
+    const servicios = [];
+    const filas = tablaServicios.querySelectorAll('tbody tr');
+    filas.forEach((fila) => {
+      const selectProducto = fila.querySelector('.product-select');
+      const quantityInput = fila.querySelector('.quantity-input');
+      const priceInput = fila.querySelector('.price-input');
+      const subtotalCell = fila.querySelector('.subtotal-cell');
+      
+      const servicio = {
+        productoId: selectProducto.value,
+        productoNombre: selectProducto.options[selectProducto.selectedIndex]?.text || '',
+        cantidad: parseFloat(quantityInput.value) || 0,
+        precioUnitario: parseFloat(priceInput.value) || 0,
+        subtotal: subtotalCell.textContent
+      };
+      servicios.push(servicio);
+    });
+    return servicios;
+  }
+
+  // Evento para el botón Guardar / Imprimir
+  document.getElementById('btnGuardar').addEventListener('click', () => {
+    // Recolectar los datos del detalle del vehículo
+    const detalleData = {
+      cliente: {
+        nombre: document.getElementById("clienteNombreDisplay").textContent,
+        cedula: document.getElementById("clienteCedulaDisplay").textContent,
+        telefono: document.getElementById("clienteTelefonoDisplay").textContent,
+        // Se pueden agregar otros campos si es necesario
+      },
+      vehiculo: vehicleData,
+      servicios: obtenerServiciosDesdeTabla(),
+      descripcion: document.querySelector("textarea").value,
+      // Fotos: se asume que se guardan como dataURL en un arreglo. Ajustar según implementación.
+      fotos: {
+        antes: Array.from(previewFotosAntes.querySelectorAll('img')).map(img => img.src),
+        despues: Array.from(previewFotosDespues.querySelectorAll('img')).map(img => img.src)
+      },
+      // Firmas: se obtienen las firmas guardadas en las cajas de firma.
+      firmas: {
+        cliente: document.getElementById('signatureBoxCliente').querySelector('img') ? document.getElementById('signatureBoxCliente').querySelector('img').src : '',
+        taller: document.getElementById('signatureBoxTaller').querySelector('img') ? document.getElementById('signatureBoxTaller').querySelector('img').src : ''
+      },
+      fecha: new Date().toISOString()
+    };
+
+    fetch('/guardarDetalle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(detalleData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.success){
+        alert("Detalle guardado correctamente con ID: " + data.id);
+        // Aquí se puede realizar alguna acción adicional, como limpiar el formulario o redirigir.
+      } else {
+        alert("Error guardando el detalle: " + data.error);
+      }
+    })
+    .catch(err => {
+      console.error("Error en la petición:", err);
+      alert("Error al conectar con el servidor.");
+    });
+  });
+
+  // -------------------------------------------------------
   // INICIALIZACIÓN FINAL
   // -------------------------------------------------------
   updateVehicleTab();
   recalcularTotal();
+  loadInventory();
+
+  // Agregar eventos al select del registro inicial en la tabla
+  document.querySelectorAll('.product-select').forEach(select => {
+    populateProductSelect(select);
+    select.addEventListener('change', function(e) {
+      const row = e.target.closest('tr');
+      const selectedOption = e.target.options[e.target.selectedIndex];
+      const precioBase = parseFloat(selectedOption.getAttribute('data-precio-base')) || 0;
+      const priceInput = row.querySelector('.price-input');
+      priceInput.value = precioBase;
+      recalcularTotal();
+    });
+  });
 });

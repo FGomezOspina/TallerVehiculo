@@ -17,9 +17,9 @@ const db = admin.firestore();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración del body parser para procesar formularios
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// Configuración del body parser para procesar formularios y aumentar el límite (50MB)
+app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
+app.use(bodyParser.json({ limit: '50mb' }));
 
 // Servir archivos estáticos desde la carpeta public
 app.use(express.static(path.join(__dirname, 'public')));
@@ -163,6 +163,76 @@ app.delete('/productos/:id', (req, res) => {
       res.status(500).json({ success: false, error: err.message });
     });
 });
+
+// Endpoint para guardar el detalle completo del vehículo (crear uno nuevo)
+app.post('/guardarDetalle', (req, res) => {
+  // Medir el tamaño del payload
+  const payloadStr = JSON.stringify(req.body);
+  const payloadSizeBytes = Buffer.byteLength(payloadStr, 'utf8');
+  const payloadSizeMB = payloadSizeBytes / (1024 * 1024);
+  console.log(`Payload size: ${payloadSizeMB.toFixed(2)} MB`);
+
+  const detalleData = req.body;
+  db.collection("detallesVehiculo").add(detalleData)
+    .then(docRef => {
+      console.log("Detalle del vehículo guardado con ID: ", docRef.id);
+      res.json({ success: true, id: docRef.id });
+    })
+    .catch(err => {
+      console.error("Error guardando detalle del vehículo:", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// NUEVOS ENDPOINTS para historial y edición
+
+// GET: Obtener todos los detalles vehiculares (para historial)
+app.get('/detallesVehiculo', (req, res) => {
+  db.collection("detallesVehiculo").get()
+    .then(snapshot => {
+      let detalles = [];
+      snapshot.forEach(doc => {
+        detalles.push({ id: doc.id, ...doc.data() });
+      });
+      res.json({ success: true, detalles });
+    })
+    .catch(err => {
+      console.error("Error obteniendo detalles vehiculares:", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// PUT: Actualizar un detalle vehicular existente
+app.put('/detallesVehiculo/:id', (req, res) => {
+  const detalleId = req.params.id;
+  const updatedData = req.body;
+  db.collection("detallesVehiculo").doc(detalleId).update(updatedData)
+    .then(() => {
+      res.json({ success: true });
+    })
+    .catch(err => {
+      console.error("Error actualizando detalle vehicular:", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// GET: Obtener un detalle vehicular específico por su ID
+app.get('/detallesVehiculo/:id', (req, res) => {
+  const detalleId = req.params.id;
+  db.collection("detallesVehiculo").doc(detalleId).get()
+    .then(doc => {
+      if (!doc.exists) {
+        res.status(404).json({ success: false, error: "Detalle no encontrado" });
+      } else {
+        res.json({ success: true, detalle: { id: doc.id, ...doc.data() } });
+      }
+    })
+    .catch(err => {
+      console.error("Error obteniendo detalle vehicular:", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
 
 // Iniciar el servidor
 app.listen(PORT, () => {
