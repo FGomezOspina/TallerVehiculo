@@ -91,7 +91,6 @@ input:focus, textarea:focus, select:focus {
   font-weight: 600;
 }
 
-
 /* ----------------------------------------------------
    PROGRESO (COMBUSTIBLE)
 ---------------------------------------------------- */
@@ -185,3 +184,37 @@ input:focus, textarea:focus, select:focus {
   margin-top: 0.5rem;
 }
 
+/* ----------------------------------------------------
+   NUEVOS ESTILOS: PREVISUALIZACIÓN DE FOTOS CON OPCIÓN DE ELIMINAR
+---------------------------------------------------- */
+.image-preview {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+}
+.image-preview img {
+  display: block;
+  max-width: 120px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.image-preview .remove-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(255, 0, 0, 0.7);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+  padding: 0;
+}
+.image-preview:hover .remove-btn {
+  display: block;
+}

@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(err => console.error("Error fetching products:", err));
   }
   
-
   // Función para poblar un select con los productos del inventario
   function populateProductSelect(selectElement) {
     selectElement.innerHTML = '<option value="">Seleccione un producto</option>';
@@ -188,21 +187,73 @@ document.addEventListener('DOMContentLoaded', function() {
   const previewFotosAntes = document.getElementById('previewFotosAntes');
   const previewFotosDespues = document.getElementById('previewFotosDespues');
 
+  // Función para mostrar la imagen ampliada en un modal overlay
+  function showImageModal(imageSrc) {
+    const modalOverlay = document.createElement('div');
+    modalOverlay.style.position = 'fixed';
+    modalOverlay.style.top = '0';
+    modalOverlay.style.left = '0';
+    modalOverlay.style.width = '100%';
+    modalOverlay.style.height = '100%';
+    modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    modalOverlay.style.display = 'flex';
+    modalOverlay.style.justifyContent = 'center';
+    modalOverlay.style.alignItems = 'center';
+    modalOverlay.style.zIndex = '1050';
+
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.alt = "Imagen ampliada";
+    img.style.maxWidth = '90%';
+    img.style.maxHeight = '90%';
+    img.style.border = '5px solid #fff';
+    img.style.borderRadius = '8px';
+
+    modalOverlay.appendChild(img);
+
+    modalOverlay.addEventListener('click', function(e) {
+      if(e.target === modalOverlay) {
+        modalOverlay.remove();
+      }
+    });
+
+    document.body.appendChild(modalOverlay);
+  }
+
+  // Función actualizada: agrega nuevas fotos sin borrar las existentes,
+  // incluye botón para eliminar y permite ver la imagen ampliada al hacer clic
   function previewMultiple(input, container) {
-    container.innerHTML = ''; // Limpia el contenedor
     const files = input.files;
     if (files.length === 0) return;
     Array.from(files).forEach(file => {
       const reader = new FileReader();
       reader.onload = function(e) {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('image-preview');
+        
         const img = document.createElement('img');
         img.src = e.target.result;
-        img.classList.add('img-thumbnail', 'm-1');
-        img.style.maxWidth = '120px';
-        container.appendChild(img);
+        img.alt = "Foto";
+        img.addEventListener('click', () => {
+          showImageModal(e.target.result);
+        });
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = '×';
+        removeBtn.classList.add('remove-btn');
+        removeBtn.addEventListener('click', (event) => {
+          event.stopPropagation();
+          wrapper.remove();
+        });
+        
+        wrapper.appendChild(img);
+        wrapper.appendChild(removeBtn);
+        container.appendChild(wrapper);
       };
       reader.readAsDataURL(file);
     });
+    // Limpiar el input para permitir subir la misma imagen nuevamente si se desea
+    input.value = '';
   }
 
   fotoAntesInput.addEventListener('change', () => {
