@@ -163,6 +163,14 @@ input:focus, textarea:focus, select:focus {
   position: relative;
 }
 
+#signatureBoxCliente {
+  width: 50%;
+}
+
+#signatureBoxTaller {
+  width: 50%;
+}
+
 /* ----------------------------------------------------
    FOTOS / PREVISUALIZACIÓN
 ---------------------------------------------------- */

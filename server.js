@@ -202,11 +202,22 @@ app.get('/detallesVehiculo', (req, res) => {
     });
 });
 
-// PUT: Actualizar un detalle vehicular existente
+// PUT: Actualizar un detalle vehicular existente (solo si no está cerrado)
 app.put('/detallesVehiculo/:id', (req, res) => {
   const detalleId = req.params.id;
   const updatedData = req.body;
-  db.collection("detallesVehiculo").doc(detalleId).update(updatedData)
+  const docRef = db.collection("detallesVehiculo").doc(detalleId);
+  docRef.get()
+    .then(doc => {
+      if (!doc.exists) {
+        return res.status(404).json({ success: false, error: "Detalle no encontrado" });
+      }
+      const detalleData = doc.data();
+      if (detalleData.estado && detalleData.estado === 'Cerrado') {
+        return res.status(400).json({ success: false, error: "El informe está cerrado y no puede ser editado" });
+      }
+      return docRef.update(updatedData);
+    })
     .then(() => {
       res.json({ success: true });
     })
@@ -233,6 +244,56 @@ app.get('/detallesVehiculo/:id', (req, res) => {
     });
 });
 
+// PUT: Actualizar el estado a "Cerrado" (cerrar informe) y descontar el stock
+app.put('/detallesVehiculo/:id/cerrar', (req, res) => {
+  const detalleId = req.params.id;
+  const docRef = db.collection("detallesVehiculo").doc(detalleId);
+  docRef.get()
+    .then(doc => {
+      if (!doc.exists) {
+        return res.status(404).json({ success: false, error: "Detalle no encontrado" });
+      }
+      const detalleData = doc.data();
+      if (detalleData.estado && detalleData.estado === 'Cerrado') {
+        return res.status(400).json({ success: false, error: "El informe ya está cerrado" });
+      }
+      // Actualizamos el estado a "Cerrado"
+      return docRef.update({ estado: 'Cerrado' }).then(() => detalleData);
+    })
+    .then((detalleData) => {
+      // Si el detalle no tiene servicios o es nulo, saltamos la actualización de stock
+      if (!detalleData || !Array.isArray(detalleData.servicios)) {
+        return;
+      }
+      // Iterar sobre cada servicio y descontar stock del producto correspondiente
+      let promises = detalleData.servicios.map(serv => {
+        if (serv.productoId && serv.cantidad) {
+          const productRef = db.collection("productos").doc(serv.productoId);
+          return productRef.get().then(productDoc => {
+            if (productDoc.exists) {
+              const productData = productDoc.data();
+              const currentStock = (productData.stock && productData.stock.cantidadDisponible) ? productData.stock.cantidadDisponible : 0;
+              const newStock = currentStock - parseInt(serv.cantidad);
+              // Actualizar el stock del producto
+              return productRef.update({
+                'stock.cantidadDisponible': newStock
+              });
+            }
+            return Promise.resolve();
+          });
+        }
+        return Promise.resolve();
+      });
+      return Promise.all(promises);
+    })
+    .then(() => {
+      res.json({ success: true, mensaje: "Informe cerrado correctamente y stock actualizado." });
+    })
+    .catch(err => {
+      console.error("Error al cerrar el informe:", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
 
 // Iniciar el servidor
 app.listen(PORT, () => {

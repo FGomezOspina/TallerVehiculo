@@ -56,6 +56,10 @@
 
   <div class="container my-4">
     <h2 class="mb-4">Actualizar Detalle Vehicular</h2>
+    <!-- Sección para mostrar el estado del informe -->
+    <div id="estadoInforme" class="mb-3">
+      <strong>Estado:</strong> <span id="estadoDisplay">Cargando...</span>
+    </div>
 
     <!-- Fila con Descripción del Vehículo e Información del Cliente -->
     <div class="row mb-4">
@@ -211,10 +215,22 @@
         <div class="signature-box" id="signatureBoxTaller" style="cursor:pointer;"></div>
       </div>
     </div>
-    <!-- Botón de Actualizar -->
-    <div class="text-end mt-4">
+    <!-- Zona de Acciones -->
+    <div class="text-end mt-4" id="accionesEdicion">
+      <button id="btnCerrar" class="btn btn-danger me-2">
+        <i class="bi bi-x-circle"></i> Cerrar
+      </button>
       <button id="btnActualizar" class="btn btn-success">
         <i class="bi bi-check-circle"></i> Actualizar
+      </button>
+    </div>
+    <!-- Zona para documentos cerrados: se mostrarán "Imprimir" y "Ver" -->
+    <div class="text-end mt-4 d-none" id="accionesCerrado">
+      <button id="btnImprimir" class="btn btn-info me-2">
+        <i class="bi bi-printer"></i> Imprimir
+      </button>
+      <button id="btnVer" class="btn btn-secondary">
+        <i class="bi bi-eye"></i> Ver
       </button>
     </div>
   </div>
@@ -311,3 +327,4 @@
   <script src="js/actualizarVehiculo.js"></script>
 </body>
 </html>
+

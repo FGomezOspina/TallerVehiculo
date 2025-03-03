@@ -22,6 +22,24 @@ document.addEventListener('DOMContentLoaded', function() {
     let inventoryProducts = [];
     let loadedDetail = null; // Guardará el documento cargado
   
+    // Función para actualizar únicamente el estado en la base de datos
+    function updateEstado(nuevoEstado) {
+      fetch(`/detallesVehiculo/${detalleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: nuevoEstado })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.success) {
+          document.getElementById('estadoDisplay').textContent = nuevoEstado;
+        } else {
+          console.error("Error actualizando estado:", data.error);
+        }
+      })
+      .catch(err => console.error("Error conectando para actualizar estado:", err));
+    }
+  
     // Cargar productos del inventario
     function loadInventory() {
       fetch('/productos')
@@ -240,7 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
         signatureModalTaller.show();
       });
     }
-
   
     // Función para extraer los servicios desde la tabla
     function obtenerServiciosDesdeTabla() {
@@ -368,6 +385,22 @@ document.addEventListener('DOMContentLoaded', function() {
             if(detalle.firmas && detalle.firmas.taller) {
               signatureTallerBox.innerHTML = `<img src="${detalle.firmas.taller}" alt="Firma Taller" style="max-width: 100%;">`;
             }
+            // Mostrar estado del informe y restringir edición si está cerrado
+            if(detalle.estado && detalle.estado === 'Cerrado'){
+              document.getElementById('estadoDisplay').textContent = 'Cerrado';
+              document.querySelectorAll('input, select, textarea, button').forEach(el => {
+                if(el.id !== 'btnImprimir' && el.id !== 'btnVer'){
+                  el.setAttribute('disabled', 'disabled');
+                }
+              });
+              const mensaje = document.createElement('div');
+              mensaje.className = 'alert alert-info mt-3';
+              mensaje.textContent = 'Este informe está cerrado y no puede ser editado.';
+              document.querySelector('.container').prepend(mensaje);
+            } else {
+              // Si no es Cerrado, lo mostramos como Abierto
+              document.getElementById('estadoDisplay').textContent = 'Abierto';
+            }
           } else {
             alert("Error al cargar el detalle.");
           }
@@ -420,8 +453,38 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   
+    // Evento para cerrar el informe (cambiar estado a "Cerrado")
+    // Este botón debe existir en el HTML con id "btnCerrar"
+    document.getElementById('btnCerrar').addEventListener('click', () => {
+      if(confirm("¿Estás seguro de que deseas cerrar este informe?")) {
+        fetch(`/detallesVehiculo/${detalleId}/cerrar`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ estado: 'Cerrado' })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.success) {
+            alert("El informe se ha cerrado correctamente.");
+            // Deshabilitar controles para evitar futuras ediciones
+            document.querySelectorAll('input, select, textarea, button').forEach(el => {
+              if(el.id !== 'btnImprimir' && el.id !== 'btnVer'){
+                el.setAttribute('disabled', 'disabled');
+              }
+            });
+            document.getElementById('estadoDisplay').textContent = 'Cerrado';
+          } else {
+            alert("Error al cerrar el informe: " + data.error);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error al conectar con el servidor.");
+        });
+      }
+    });
+  
     // Inicializar
     loadInventory();
     loadDetalle();
 });
-  
