@@ -346,6 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if(data.success) {
           let resultados = data.clientes.filter(cliente => {
             const q = query.toLowerCase();
+            const matchEmpresa = cliente.empresa.toLowerCase().includes(q);
             const matchNombre = cliente.nombre.toLowerCase().includes(q);
             const matchCedula = cliente.cedula.toLowerCase().includes(q);
             let matchPlaca = false;
@@ -356,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
               });
             }
-            return matchNombre || matchCedula || matchPlaca;
+            return matchNombre || matchCedula || matchEmpresa || matchPlaca;
           });
           if(resultados.length === 0) {
             noClientMessage.style.display = "block";
@@ -381,6 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
               document.getElementById("clienteNombreDisplay").textContent = cliente.nombre;
               document.getElementById("clienteCedulaDisplay").textContent = cliente.cedula;
               document.getElementById("clienteTelefonoDisplay").textContent = cliente.telefono;
+              document.getElementById("clienteEmpresaDisplay").textContent = cliente.empresa;
               if(cliente.vehiculos && cliente.vehiculos.length > 0) {
                 if(cliente.vehiculos.length === 1) {
                   vehicleData = cliente.vehiculos[0];

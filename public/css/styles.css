@@ -237,6 +237,10 @@ input:focus, textarea:focus, select:focus {
   max-width: 15%;
 }
 
+#logo {
+  width: 30%;
+}
+
 /* ----------------------------------------------------
    LISTA DE CLIENTES (Ficha de Clientes)
 ---------------------------------------------------- */

@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
           data.clientes.forEach(cliente => {
             // Filtro: si se ingresa consulta, buscar en nombre, cédula o en alguna placa de los vehículos.
             const q = query.toLowerCase();
+            const coincideEmpresa = cliente.empresa.toLowerCase().includes(q);
             const coincideNombre = cliente.nombre.toLowerCase().includes(q);
             const coincideCedula = cliente.cedula.toLowerCase().includes(q);
             let coincidePlaca = false;
@@ -35,9 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
               });
             }
-            if (query && !coincideNombre && !coincideCedula && !coincidePlaca) {
+  
+            // Modificación aquí: si coincide con cualquiera de los filtros, mostrar el cliente.
+            if (query && !(
+              coincideNombre || 
+              coincideCedula || 
+              coincidePlaca || 
+              coincideEmpresa
+            )) {
               return;
             }
+  
             // Crear item de lista para cliente
             const item = document.createElement("div");
             item.className = "list-group-item";
@@ -63,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <div class="vehiculos-list mt-2" style="display:none;"></div>
             `;
+            
             // Botón para ver vehículos
             const verVehiculosBtn = item.querySelector(".verVehiculosBtn");
             verVehiculosBtn.addEventListener("click", () => {
@@ -80,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 vehiculosList.style.display = "none";
               }
             });
+  
             // Botón para editar cliente
             const editarClienteBtn = item.querySelector(".editarClienteBtn");
             editarClienteBtn.addEventListener("click", () => {
@@ -88,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
               fillEditForm(cliente);
               editClienteModal.show();
             });
+  
             // Botón para eliminar cliente
             const eliminarClienteBtn = item.querySelector(".eliminarClienteBtn");
             eliminarClienteBtn.addEventListener("click", () => {
@@ -108,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   });
               }
             });
+  
             clientesContainer.appendChild(item);
           });
         } else {
