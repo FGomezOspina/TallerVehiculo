@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
   // -------------------------------------------------------
+  // OBTENCIÓN DE LA SEDE
+  // -------------------------------------------------------
+  // Se obtiene la sede desde la URL o desde localStorage (valor por defecto "pereira")
+  const urlParams = new URLSearchParams(window.location.search);
+  const sede = urlParams.get('sede') || localStorage.getItem('sede') || 'pereira';
+  // Si la sede viene en la URL, se puede guardar en localStorage para usarla en otras páginas
+  if(urlParams.get('sede')) {
+    localStorage.setItem('sede', urlParams.get('sede'));
+  }
+
+  // -------------------------------------------------------
   // DATOS INICIALES DEL VEHÍCULO
   // -------------------------------------------------------
   let vehicleData = {
@@ -109,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const agregarFilaBtn = document.getElementById('agregarFila');
   const totalServiciosEl = document.getElementById('totalServicios');
 
-  // Actualizamos la función recalcularTotal para usar selectores por clase
   function recalcularTotal() {
     let total = 0;
     const filas = tablaServicios.querySelectorAll('tbody tr');
@@ -146,11 +156,9 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     tbody.appendChild(nuevaFila);
 
-    // Poblar el select con los productos del inventario
     const selectElement = nuevaFila.querySelector('.product-select');
     populateProductSelect(selectElement);
 
-    // Agregar evento para actualizar el precio unitario al seleccionar un producto
     selectElement.addEventListener('change', function(e) {
       const selectedOption = e.target.options[e.target.selectedIndex];
       const precioBase = parseFloat(selectedOption.getAttribute('data-precio-base')) || 0;
@@ -162,21 +170,18 @@ document.addEventListener('DOMContentLoaded', function() {
     recalcularTotal();
   }
 
-  // Evento para eliminar una fila al hacer clic en el botón de borrar
-  function eliminarFila(e) {
-    if (e.target.closest('.eliminarFila')) {
-      const fila = e.target.closest('tr');
-      fila.remove();
-      recalcularTotal();
-    }
-  }
-
   tablaServicios.addEventListener('input', (e) => {
     if (e.target.tagName === 'INPUT') {
       recalcularTotal();
     }
   });
-  tablaServicios.addEventListener('click', eliminarFila);
+  tablaServicios.addEventListener('click', (e) => {
+    if (e.target.closest('.eliminarFila')) {
+      const fila = e.target.closest('tr');
+      fila.remove();
+      recalcularTotal();
+    }
+  });
   agregarFilaBtn.addEventListener('click', agregarFila);
 
   // -------------------------------------------------------
@@ -187,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const previewFotosAntes = document.getElementById('previewFotosAntes');
   const previewFotosDespues = document.getElementById('previewFotosDespues');
 
-  // Función para mostrar la imagen ampliada en un modal overlay
   function showImageModal(imageSrc) {
     const modalOverlay = document.createElement('div');
     modalOverlay.style.position = 'fixed';
@@ -220,8 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(modalOverlay);
   }
 
-  // Función actualizada: agrega nuevas fotos sin borrar las existentes,
-  // incluye botón para eliminar y permite ver la imagen ampliada al hacer clic
   function previewMultiple(input, container) {
     const files = input.files;
     if (files.length === 0) return;
@@ -252,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       reader.readAsDataURL(file);
     });
-    // Limpiar el input para permitir subir la misma imagen nuevamente si se desea
     input.value = '';
   }
 
@@ -266,6 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // -------------------------------------------------------
   // BUSCADOR DE CLIENTES Y SELECCIÓN DE VEHÍCULO
   // -------------------------------------------------------
+  // Ahora se filtran los clientes de acuerdo a la sede actual
   const clientSearchInput = document.getElementById('clientSearch');
   const btnClientSearch = document.getElementById('btnClientSearch');
   const searchResults = document.getElementById('searchResults');
@@ -273,10 +275,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const clientVehicleSelect = document.getElementById('clientVehicleSelect');
   const noClientMessage = document.getElementById('noClientMessage');
 
-  let currentClient = null; // Almacena el cliente seleccionado
+  let currentClient = null;
 
   function searchClientes(query) {
-    fetch('/clientes')
+    // Se añade el parámetro de sede a la petición
+    fetch(`/clientes?sede=${sede}`)
       .then(response => response.json())
       .then(data => {
         searchResults.innerHTML = "";
@@ -318,7 +321,6 @@ document.addEventListener('DOMContentLoaded', function() {
               currentClient = cliente;
               searchResults.innerHTML = "";
               clientSearchInput.value = cliente.nombre;
-              // Actualiza la información del cliente en la parte superior
               document.getElementById("clienteNombreDisplay").textContent = cliente.nombre;
               document.getElementById("clienteCedulaDisplay").textContent = cliente.cedula;
               document.getElementById("clienteTelefonoDisplay").textContent = cliente.telefono;
@@ -380,9 +382,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // -------------------------------------------------------
-  // IMPLEMENTACIÓN DE SIGNATURE PAD PARA FIRMAS INDEPENDIENTES
+  // IMPLEMENTACIÓN DE SIGNATURE PAD PARA FIRMAS
   // -------------------------------------------------------
-  // Firma del Cliente
   const signatureCanvasCliente = document.getElementById('signatureCanvasCliente');
   signatureCanvasCliente.width = signatureCanvasCliente.offsetWidth;
   signatureCanvasCliente.height = signatureCanvasCliente.offsetHeight;
@@ -418,7 +419,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Firma del Taller
   const signatureCanvasTaller = document.getElementById('signatureCanvasTaller');
   signatureCanvasTaller.width = signatureCanvasTaller.offsetWidth;
   signatureCanvasTaller.height = signatureCanvasTaller.offsetHeight;
@@ -457,8 +457,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // -------------------------------------------------------
   // FUNCIONALIDAD: GUARDAR TODOS LOS DATOS
   // -------------------------------------------------------
-  
-  // Función para obtener los servicios/productos desde la tabla
   function obtenerServiciosDesdeTabla() {
     const servicios = [];
     const filas = tablaServicios.querySelectorAll('tbody tr');
@@ -480,25 +478,20 @@ document.addEventListener('DOMContentLoaded', function() {
     return servicios;
   }
 
-  // Evento para el botón Guardar / Imprimir
   document.getElementById('btnGuardar').addEventListener('click', () => {
-    // Recolectar los datos del detalle del vehículo
     const detalleData = {
       cliente: {
         nombre: document.getElementById("clienteNombreDisplay").textContent,
         cedula: document.getElementById("clienteCedulaDisplay").textContent,
         telefono: document.getElementById("clienteTelefonoDisplay").textContent,
-        // Se pueden agregar otros campos si es necesario
       },
       vehiculo: vehicleData,
       servicios: obtenerServiciosDesdeTabla(),
       descripcion: document.querySelector("textarea").value,
-      // Fotos: se asume que se guardan como dataURL en un arreglo. Ajustar según implementación.
       fotos: {
         antes: Array.from(previewFotosAntes.querySelectorAll('img')).map(img => img.src),
         despues: Array.from(previewFotosDespues.querySelectorAll('img')).map(img => img.src)
       },
-      // Firmas: se obtienen las firmas guardadas en las cajas de firma.
       firmas: {
         cliente: document.getElementById('signatureBoxCliente').querySelector('img') ? document.getElementById('signatureBoxCliente').querySelector('img').src : '',
         taller: document.getElementById('signatureBoxTaller').querySelector('img') ? document.getElementById('signatureBoxTaller').querySelector('img').src : ''
@@ -515,7 +508,6 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
       if(data.success){
         alert("Detalle guardado correctamente con ID: " + data.id);
-        // Aquí se puede realizar alguna acción adicional, como limpiar el formulario o redirigir.
       } else {
         alert("Error guardando el detalle: " + data.error);
       }
@@ -533,7 +525,6 @@ document.addEventListener('DOMContentLoaded', function() {
   recalcularTotal();
   loadInventory();
 
-  // Agregar eventos al select del registro inicial en la tabla
   document.querySelectorAll('.product-select').forEach(select => {
     populateProductSelect(select);
     select.addEventListener('change', function(e) {

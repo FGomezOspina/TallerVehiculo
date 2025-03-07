@@ -33,26 +33,49 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (username === 'admin' && password === 'admin123') {
+    // Redirige al dashboard sin sede para que se le solicite la selección
     res.redirect('/dashboard');
   } else {
     res.redirect('/?error=invalid');
   }
 });
 
-// Ruta para el dashboard
+// Ruta para el dashboard con selección de sede
 app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  if (!req.query.sede) {
+    // Si no se ha seleccionado una sede, mostrar página de selección
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <title>Seleccionar Sede</title>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+      </head>
+      <body>
+          <div class="container mt-5">
+              <h1>Selecciona una Sede</h1>
+              <div class="d-flex justify-content-around mt-4">
+                  <a href="/dashboard?sede=pereira" class="btn btn-primary">Pereira</a>
+                  <a href="/dashboard?sede=medellin" class="btn btn-secondary">Medellín</a>
+              </div>
+          </div>
+      </body>
+      </html>
+    `);
+  } else {
+    // Una vez seleccionada la sede, se carga el dashboard principal.
+    // El front-end (dashboard.html y su JS) deberá capturar el parámetro "sede"
+    // para enviar las solicitudes filtradas a la API.
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  }
 });
 
-// Endpoint para guardar datos del vehículo (ejemplo)
-app.post('/saveCar', (req, res) => {
-  console.log('Datos del vehículo recibidos:', req.body);
-  res.json({ success: true, message: 'Datos guardados correctamente' });
-});
+// -------------------- CLIENTES --------------------
 
-// Endpoint para crear un cliente
+// Crear un cliente (el objeto debe incluir el campo "sede")
 app.post('/crearCliente', (req, res) => {
-  const clienteData = req.body; // Debe incluir: empresa, nombre, teléfono, cédula, rut, dirección, vehiculos, etc.
+  const clienteData = req.body; // Debe incluir: empresa, nombre, teléfono, cédula, rut, dirección, vehículos, sede, etc.
   db.collection("clientes").add(clienteData)
     .then(docRef => {
       console.log("Cliente guardado con ID: ", docRef.id);
@@ -64,9 +87,13 @@ app.post('/crearCliente', (req, res) => {
     });
 });
 
-// Endpoint para obtener la lista de clientes
+// Obtener la lista de clientes filtrando por sede (se envía ?sede=pereira o ?sede=medellin)
 app.get('/clientes', (req, res) => {
-  db.collection("clientes").get()
+  const sede = req.query.sede;
+  if (!sede) {
+    return res.status(400).json({ success: false, error: "Falta el parámetro sede" });
+  }
+  db.collection("clientes").where("sede", "==", sede).get()
     .then(snapshot => {
       let clientes = [];
       snapshot.forEach(doc => {
@@ -80,7 +107,7 @@ app.get('/clientes', (req, res) => {
     });
 });
 
-// Endpoint para actualizar un cliente
+// Actualizar un cliente
 app.put('/clientes/:id', (req, res) => {
   const clienteId = req.params.id;
   const updatedData = req.body;
@@ -94,7 +121,7 @@ app.put('/clientes/:id', (req, res) => {
     });
 });
 
-// Endpoint para eliminar un cliente
+// Eliminar un cliente
 app.delete('/clientes/:id', (req, res) => {
   const clienteId = req.params.id;
   db.collection("clientes").doc(clienteId).delete()
@@ -107,7 +134,9 @@ app.delete('/clientes/:id', (req, res) => {
     });
 });
 
-// Endpoint para guardar un producto en Firestore
+// -------------------- PRODUCTOS (comunes a ambas sedes) --------------------
+
+// Guardar un producto
 app.post('/saveProducto', (req, res) => {
   const productoData = req.body;
   db.collection("productos").add(productoData)
@@ -121,7 +150,7 @@ app.post('/saveProducto', (req, res) => {
     });
 });
 
-// Endpoint para obtener la lista de productos
+// Obtener la lista de productos (sin filtro de sede)
 app.get('/productos', (req, res) => {
   db.collection("productos").get()
     .then(snapshot => {
@@ -137,7 +166,7 @@ app.get('/productos', (req, res) => {
     });
 });
 
-// Endpoint para actualizar un producto
+// Actualizar un producto
 app.put('/productos/:id', (req, res) => {
   const productId = req.params.id;
   const updatedData = req.body;
@@ -151,7 +180,7 @@ app.put('/productos/:id', (req, res) => {
     });
 });
 
-// Endpoint para eliminar un producto
+// Eliminar un producto
 app.delete('/productos/:id', (req, res) => {
   const productId = req.params.id;
   db.collection("productos").doc(productId).delete()
@@ -164,7 +193,10 @@ app.delete('/productos/:id', (req, res) => {
     });
 });
 
-// Endpoint para guardar el detalle completo del vehículo (crear uno nuevo)
+// -------------------- DETALLES VEHICULO --------------------
+
+// Guardar el detalle completo del vehículo (crear uno nuevo)
+// El objeto debe incluir el campo "sede" para identificar a qué sede pertenece.
 app.post('/guardarDetalle', (req, res) => {
   // Medir el tamaño del payload
   const payloadStr = JSON.stringify(req.body);
@@ -184,11 +216,13 @@ app.post('/guardarDetalle', (req, res) => {
     });
 });
 
-// NUEVOS ENDPOINTS para historial y edición
-
-// GET: Obtener todos los detalles vehiculares (para historial)
+// Obtener todos los detalles vehiculares filtrando por sede
 app.get('/detallesVehiculo', (req, res) => {
-  db.collection("detallesVehiculo").get()
+  const sede = req.query.sede;
+  if (!sede) {
+    return res.status(400).json({ success: false, error: "Falta el parámetro sede" });
+  }
+  db.collection("detallesVehiculo").where("sede", "==", sede).get()
     .then(snapshot => {
       let detalles = [];
       snapshot.forEach(doc => {
@@ -202,7 +236,7 @@ app.get('/detallesVehiculo', (req, res) => {
     });
 });
 
-// PUT: Actualizar un detalle vehicular existente (solo si no está cerrado)
+// Actualizar un detalle vehicular existente (solo si no está cerrado)
 app.put('/detallesVehiculo/:id', (req, res) => {
   const detalleId = req.params.id;
   const updatedData = req.body;
@@ -227,7 +261,7 @@ app.put('/detallesVehiculo/:id', (req, res) => {
     });
 });
 
-// GET: Obtener un detalle vehicular específico por su ID
+// Obtener un detalle vehicular específico por su ID
 app.get('/detallesVehiculo/:id', (req, res) => {
   const detalleId = req.params.id;
   db.collection("detallesVehiculo").doc(detalleId).get()
@@ -244,7 +278,7 @@ app.get('/detallesVehiculo/:id', (req, res) => {
     });
 });
 
-// PUT: Actualizar el estado a "Cerrado" (cerrar informe) y descontar el stock
+// Actualizar el estado a "Cerrado" (cerrar informe) y descontar el stock
 app.put('/detallesVehiculo/:id/cerrar', (req, res) => {
   const detalleId = req.params.id;
   const docRef = db.collection("detallesVehiculo").doc(detalleId);

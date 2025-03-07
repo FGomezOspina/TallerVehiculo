@@ -1,3 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Aquí se pueden agregar funcionalidades propias del dashboard si se requieren.
-});
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sede = urlParams.get('sede');
+    if (sede) {
+      localStorage.setItem('sede', sede);
+    }
+  });
