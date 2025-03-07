@@ -33,17 +33,26 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (username === 'admin' && password === 'admin123') {
-    // Redirige al dashboard sin sede para que se le solicite la selección
-    res.redirect('/dashboard');
+    // Para admin: redirige a la página de selección de sede con role=admin
+    res.redirect('/dashboard?role=admin');
+  } else if (username === 'patioPereira' && password === 'patio123') {
+    // Para usuario de patioPereira: redirige directamente al dashboard con sede y role=patio
+    res.redirect('/dashboard?sede=pereira&role=patio');
+  } else if (username === 'patioMedellin' && password === 'patio123') {
+    // Para usuario de patioMedellin: redirige directamente al dashboard con sede y role=patio
+    res.redirect('/dashboard?sede=medellin&role=patio');
   } else {
     res.redirect('/?error=invalid');
   }
 });
 
+
 // Ruta para el dashboard con selección de sede
 app.get('/dashboard', (req, res) => {
   if (!req.query.sede) {
-    // Si no se ha seleccionado una sede, mostrar página de selección
+    // No se ha seleccionado la sede: mostramos la pantalla de selección
+    // Conservamos el parámetro role (o lo asumimos como admin si no se indica)
+    const role = req.query.role || 'admin';
     res.send(`
       <!DOCTYPE html>
       <html lang="es">
@@ -56,20 +65,19 @@ app.get('/dashboard', (req, res) => {
           <div class="container mt-5">
               <h1>Selecciona una Sede</h1>
               <div class="d-flex justify-content-around mt-4">
-                  <a href="/dashboard?sede=pereira" class="btn btn-primary">Pereira</a>
-                  <a href="/dashboard?sede=medellin" class="btn btn-secondary">Medellín</a>
+                  <a href="/dashboard?sede=pereira&role=${role}" class="btn btn-primary">Pereira</a>
+                  <a href="/dashboard?sede=medellin&role=${role}" class="btn btn-secondary">Medellín</a>
               </div>
           </div>
       </body>
       </html>
     `);
   } else {
-    // Una vez seleccionada la sede, se carga el dashboard principal.
-    // El front-end (dashboard.html y su JS) deberá capturar el parámetro "sede"
-    // para enviar las solicitudes filtradas a la API.
+    // Se ha seleccionado la sede; se carga el dashboard principal.
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
   }
 });
+
 
 // -------------------- CLIENTES --------------------
 

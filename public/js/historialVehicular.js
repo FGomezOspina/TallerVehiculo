@@ -3,13 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Obtener el parámetro "sede" de la URL
   const sede = localStorage.getItem('sede') || 'pereira';
+  const role = localStorage.getItem('role') || 'admin'; // Obtener el rol
 
   // Cargar historial desde el endpoint /detallesVehiculo, incluyendo el parámetro sede
   function loadHistorial() {
     fetch(`/detallesVehiculo?sede=${sede}`)
       .then(response => response.json())
       .then(data => {
-        if(data.success) {
+        if (data.success) {
           detalles = data.detalles; // Se asume que data.detalles es un arreglo de documentos
           populateHistorialTable();
         } else {
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         imprimirBtn.className = 'btn btn-sm btn-info me-2';
         imprimirBtn.textContent = 'Imprimir';
         imprimirBtn.addEventListener('click', () => {
-          window.location.href = `/imprimirInforme.html?detalleId=${detalle.id}&sede=${sede}`;
+          window.location.href = `/imprimirInformeTodos.html?detalleId=${detalle.id}&sede=${sede}`;
         });
         actionsCell.appendChild(imprimirBtn);
 
@@ -73,6 +74,57 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Inicializar la carga del historial
+  // -------------------------------------------------------
+  // AJUSTAR VISIBILIDAD DEL NAV Y LOGO SEGÚN EL ROL
+  // -------------------------------------------------------
+  // Los elementos que solo deben verse para admin
+  const elementosARestrigir = [
+    'navProveedores',
+    'navInventario',
+    'navClientes',
+    'cardProveedores',
+    'cardInventario',
+    'cardClientes'
+  ];
+
+  if (role === 'patio') {
+    // Para usuarios tipo patio: ocultar elementos
+    elementosARestrigir.forEach(id => {
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.style.display = 'none';
+      }
+    });
+  } else {
+    // Para admin: asegurar que se muestren todos los elementos
+    elementosARestrigir.forEach(id => {
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.style.display = '';
+      }
+    });
+  }
+
+  // -------------------------------------------------------
+  // CONFIGURACIÓN DEL LOGO
+  // -------------------------------------------------------
+  // Al hacer clic en el logo, se redirige:
+  // - Si es usuario patio: a /dashboard?sede=<sede>&role=patio
+  // - Si es admin: a /dashboard?role=admin
+  const logo = document.getElementById('logo');
+  if (logo) {
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (role === 'patio') {
+        window.location.href = `/dashboard?sede=${sede}&role=patio`;
+      } else {
+        window.location.href = '/dashboard?role=admin';
+      }
+    });
+  }
+
+  // -------------------------------------------------------
+  // INICIALIZACIÓN DEL HISTORIAL
+  // -------------------------------------------------------
   loadHistorial();
 });

@@ -5,9 +5,64 @@ document.addEventListener('DOMContentLoaded', function() {
   // Se obtiene la sede desde la URL o desde localStorage (valor por defecto "pereira")
   const urlParams = new URLSearchParams(window.location.search);
   const sede = urlParams.get('sede') || localStorage.getItem('sede') || 'pereira';
-  // Si la sede viene en la URL, se puede guardar en localStorage para usarla en otras páginas
+  // Si la sede viene en la URL, se guarda en localStorage para usarla en otras páginas
   if(urlParams.get('sede')) {
     localStorage.setItem('sede', urlParams.get('sede'));
+  }
+
+  // -------------------------------------------------------
+  // OBTENCIÓN DEL ROL
+  // -------------------------------------------------------
+  // Se recupera el rol del localStorage; si no existe, se asume 'admin'
+  const role = localStorage.getItem('role') || 'admin';
+
+  // -------------------------------------------------------
+  // AJUSTE DE LA VISTA (NAV Y TARJETAS) SEGÚN ROL
+  // -------------------------------------------------------
+  // Los elementos que solo deben verse para admin
+  const elementosARestrigir = [
+    'navProveedores',
+    'navInventario',
+    'navClientes',
+    'cardProveedores',
+    'cardInventario',
+    'cardClientes'
+  ];
+
+  if (role === 'patio') {
+    // Para usuarios tipo patio: ocultar elementos
+    elementosARestrigir.forEach(id => {
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.style.display = 'none';
+      }
+    });
+  } else {
+    // Para admin: asegurar que se muestren todos los elementos
+    elementosARestrigir.forEach(id => {
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.style.display = '';
+      }
+    });
+  }
+
+  // -------------------------------------------------------
+  // CONFIGURACIÓN DEL LOGO
+  // -------------------------------------------------------
+  // Al hacer clic en el logo, se redirige:
+  // - Si es usuario patio: a /dashboard?sede=<sede>&role=patio
+  // - Si es admin: a /dashboard?role=admin
+  const logo = document.getElementById('logo');
+  if (logo) {
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (role === 'patio') {
+        window.location.href = `/dashboard?sede=${sede}&role=patio`;
+      } else {
+        window.location.href = '/dashboard?role=admin';
+      }
+    });
   }
 
   // -------------------------------------------------------
@@ -56,7 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Referencias para la pestaña Vehículo
+  // -------------------------------------------------------
+  // REFERENCIAS Y LÓGICA DE LA PESTAÑA VEHÍCULO
+  // -------------------------------------------------------
   const vehTitle = document.getElementById('vehTitle');
   const vehSubtitle = document.getElementById('vehSubtitle');
   const vehKilometrajeDisplay = document.getElementById('vehKilometrajeDisplay');
@@ -267,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // -------------------------------------------------------
   // BUSCADOR DE CLIENTES Y SELECCIÓN DE VEHÍCULO
   // -------------------------------------------------------
-  // Ahora se filtran los clientes de acuerdo a la sede actual
+  // Se filtran los clientes de acuerdo a la sede actual
   const clientSearchInput = document.getElementById('clientSearch');
   const btnClientSearch = document.getElementById('btnClientSearch');
   const searchResults = document.getElementById('searchResults');

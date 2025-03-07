@@ -13,7 +13,7 @@
   <!-- Navbar-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/dashboard">Taller Admin</a>
+      <a class="navbar-brand" href="/dashboard"> <img src="img/logo.png" alt="logo" id="logo"></a>
       <button
         class="navbar-toggler"
         type="button"
@@ -29,7 +29,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <!-- Vehículo: Dropdown -->
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" id="navVehiculo">
             <a
               class="nav-link dropdown-toggle active"
               href="#"
@@ -40,7 +40,6 @@
               <i class="bi bi-car-front-fill"></i>
             </a>
             <ul class="dropdown-menu">
-              <!-- Ajusta las rutas según tu proyecto -->
               <li>
                 <a class="dropdown-item" href="/detallevehiculoTodos.html">Todos</a>
               </li>
@@ -48,37 +47,27 @@
                 <a class="dropdown-item" href="/detalleVehiculoArgos.html">ARGOS</a>
               </li>
               <li>
-                <a class="dropdown-item" href="/historialVehicular.html">
-                  Historial Vehicular
-                </a>
+                <a class="dropdown-item" href="/historialVehicular.html">Historial Vehicular</a>
               </li>
             </ul>
           </li>
   
           <!-- Proveedores: enlace simple -->
-          <li class="nav-item">
-            <a
-              class="nav-link active"
-              aria-current="page"
-              href="/proveedores.html"
-            >
+          <li class="nav-item" id="navProveedores">
+            <a class="nav-link active" aria-current="page" href="/proveedores.html">
               <i class="bi bi-truck"></i>
             </a>
           </li>
   
           <!-- Inventario: enlace simple -->
-          <li class="nav-item">
-            <a
-              class="nav-link active"
-              aria-current="page"
-              href="/inventario.html"
-            >
+          <li class="nav-item" id="navInventario">
+            <a class="nav-link active" aria-current="page" href="/inventario.html">
               <i class="bi bi-box-seam"></i>
             </a>
           </li>
   
           <!-- Clientes: Dropdown -->
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" id="navClientes">
             <a
               class="nav-link dropdown-toggle active"
               href="#"
@@ -89,7 +78,6 @@
               <i class="bi bi-people"></i>
             </a>
             <ul class="dropdown-menu">
-              <!-- Ajusta las rutas según tu proyecto -->
               <li>
                 <a class="dropdown-item" href="/crearClientes.html">Crear Clientes</a>
               </li>

@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
   // ---------------------------------------------------------
+  // OBTENCIÓN DE LA SEDE Y ROL
+  // ---------------------------------------------------------
+  const sede = localStorage.getItem('sede') || 'pereira';
+  const role = localStorage.getItem('role') || 'admin'; // Obtener el rol
+
+  // ---------------------------------------------------------
   // LÓGICA DE LA TABLA DE REPORTES (OT / MITTO)
   // ---------------------------------------------------------
   const tablaReportes = document.getElementById('tablaReportes');
@@ -184,6 +190,55 @@ document.addEventListener('DOMContentLoaded', function() {
     signatureBoxRecibe.addEventListener('click', () => {
       signaturePadRecibe.clear();
       signatureModalRecibe.show();
+    });
+  }
+
+  // ---------------------------------------------------------
+  // AJUSTE DE VISIBILIDAD DEL NAV Y LOGO SEGÚN EL ROL
+  // ---------------------------------------------------------
+  // Los elementos que solo deben verse para admin
+  const elementosARestrigir = [
+    'navProveedores',
+    'navInventario',
+    'navClientes',
+    'cardProveedores',
+    'cardInventario',
+    'cardClientes'
+  ];
+
+  if (role === 'patio') {
+    // Para usuarios tipo patio: ocultar elementos
+    elementosARestrigir.forEach(id => {
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.style.display = 'none';
+      }
+    });
+  } else {
+    // Para admin: asegurar que se muestren todos los elementos
+    elementosARestrigir.forEach(id => {
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.style.display = '';
+      }
+    });
+  }
+
+  // ---------------------------------------------------------
+  // CONFIGURACIÓN DEL LOGO
+  // ---------------------------------------------------------
+  // Al hacer clic en el logo, se redirige:
+  // - Si es usuario patio: a /dashboard?sede=<sede>&role=patio
+  // - Si es admin: a /dashboard?role=admin
+  const logo = document.getElementById('logo');
+  if (logo) {
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (role === 'patio') {
+        window.location.href = `/dashboard?sede=${sede}&role=patio`;
+      } else {
+        window.location.href = '/dashboard?role=admin';
+      }
     });
   }
 });
