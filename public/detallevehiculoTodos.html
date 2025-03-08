@@ -11,353 +11,334 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!-- Navbar-->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/dashboard"> <img src="img/logo.png" alt="logo" id="logo"></a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <!-- Vehículo: Dropdown -->
-          <li class="nav-item dropdown" id="navVehiculo">
-            <a
-              class="nav-link dropdown-toggle active"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="bi bi-car-front-fill"></i>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="/dashboard" class="brand">
+        <img src="img/logo.png" alt="logo" id="logo">
+    </a>
+    
+    <!-- User Info Section -->
+    <!--div class="user-info">
+      <a href="/dashboard" class="brand">
+        <img src="img/logo.png" alt="Avatar" id="user-avatar">
+        <span id="user-name">Admin</span>
+      </a>
+    </div-->
+
+    <ul class="nav">
+        <li class="nav-item" id="navVehiculo">
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVehiculo" aria-expanded="false">
+                <i class="bi bi-car-front-fill"></i>
+                Vehículo
             </a>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="/detallevehiculoTodos.html">Todos</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/detalleVehiculoArgos.html">ARGOS</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/historialVehicular.html">Historial Vehicular</a>
-              </li>
-            </ul>
-          </li>
-  
-          <!-- Proveedores: enlace simple -->
-          <li class="nav-item" id="navProveedores">
-            <a class="nav-link active" aria-current="page" href="/proveedores.html">
-              <i class="bi bi-truck"></i>
+            <div class="collapse" id="collapseVehiculo">
+                <ul class="sub-menu">
+                    <li><a href="detallevehiculoTodos.html">Todos</a></li>
+                    <li><a href="detalleVehiculoArgos.html">ARGOS</a></li>
+                    <li><a href="historialVehicular.html">Historial Vehicular</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item" id="navProveedores">
+            <a class="nav-link" href="/proveedores.html">
+                <i class="bi bi-truck"></i>
+                Proveedores
             </a>
-          </li>
-  
-          <!-- Inventario: enlace simple -->
-          <li class="nav-item" id="navInventario">
-            <a class="nav-link active" aria-current="page" href="/inventario.html">
-              <i class="bi bi-box-seam"></i>
+        </li>
+        <li class="nav-item" id="navInventario">
+            <a class="nav-link" href="/inventario.html">
+                <i class="bi bi-box-seam"></i>
+                Inventario
             </a>
-          </li>
-  
-          <!-- Clientes: Dropdown -->
-          <li class="nav-item dropdown" id="navClientes">
-            <a
-              class="nav-link dropdown-toggle active"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="bi bi-people"></i>
+        </li>
+        <li class="nav-item" id="navClientes">
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseClientes" aria-expanded="false">
+                <i class="bi bi-people"></i>
+                Clientes
             </a>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="/crearClientes.html">Crear Clientes</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/fichaClientes.html">Ficha de Clientes</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+            <div class="collapse" id="collapseClientes">
+                <ul class="sub-menu">
+                    <li><a href="/crearClientes.html">Crear Clientes</a></li>
+                    <li><a href="/fichaClientes.html">Ficha de Clientes</a></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+    
+    <!-- Logout Button -->
+    <div class="logout-btn" id="logout-btn">
+        <i class="bi bi-box-arrow-left"></i> Log out
     </div>
-  </nav>
+  </div>
 
-  <div class="container my-4">
-    <h2 class="mb-4">Detalle del Vehículo</h2>
+  <div class="main-content">
+    <div class="container my-4">
+      <h2 class="mb-4">Detalle del Vehículo</h2>
 
-    <!-- Buscador de Clientes -->
-    <div class="mb-4">
-      <label for="clientSearch" class="form-label">Buscar Cliente</label>
-      <div class="input-group">
-        <input type="text" class="form-control" id="clientSearch" placeholder="Ingrese nombre, cédula o placa">
-        <button class="btn btn-primary" id="btnClientSearch">
-          <i class="bi bi-search"></i> Buscar
+      <!-- Buscador de Clientes -->
+      <div class="mb-4">
+        <label for="clientSearch" class="form-label">Buscar Cliente</label>
+        <div class="input-group">
+          <input type="text" class="form-control" id="clientSearch" placeholder="Ingrese nombre, cédula o placa">
+          <button class="btn btn-primary" id="btnClientSearch">
+            <i class="bi bi-search"></i> Buscar
+          </button>
+        </div>
+        <div id="searchResults" class="list-group mt-2"></div>
+        <div id="clientVehicleSelectContainer" class="mt-2" style="display:none;">
+          <label for="clientVehicleSelect" class="form-label">Seleccione el Vehículo</label>
+          <select id="clientVehicleSelect" class="form-select"></select>
+        </div>
+        <div id="noClientMessage" class="mt-2" style="display:none;">
+          <p class="text-warning" id="noClient">No se encontró el cliente. ¿Desea agregarlo?</p>
+          <a href="/crearClientes.html" class="btn btn-outline-primary">Crear Cliente</a>
+        </div>
+      </div>
+
+      <!-- Fila con Descripción del Vehículo e Información del Cliente -->
+      <div class="row mb-4">
+        <!-- Descripción del Vehículo -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h5>Descripción del Vehículo</h5>
+            </div>
+            <div class="card-body">
+              <textarea class="form-control" rows="5" placeholder="Ingrese la descripción del vehículo"></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- Información del Cliente -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h6>Información del Cliente:</h6>
+              <p class="mb-0"><strong>Nombre:</strong> <span id="clienteNombreDisplay"></span></p>
+              <p class="mb-0"><strong>Cédula:</strong> <span id="clienteCedulaDisplay"></span></p>
+              <p class="mb-0"><strong>Teléfono:</strong> <span id="clienteTelefonoDisplay"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Detalle del Vehículo -->
+      <div class="row">
+        <!-- Columna Izquierda: Tabla de Servicios / Productos -->
+        <div class="col-lg-8 mb-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Servicios o Productos</h5>
+            </div>
+            <div class="card-body p-0">
+              <table class="table mb-0" id="tablaServicios">
+                <thead class="table-light">
+                  <tr>
+                    <th>Servicio / Producto</th>
+                    <th>Cant.</th>
+                    <th>Precio U.</th>
+                    <th>Subtotal</th>
+                    <th style="width: 50px;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <select class="form-select product-select">
+                        <option value="">Seleccione un producto</option>
+                      </select>
+                    </td>
+                    <td><input type="number" class="form-control quantity-input" value="1" min="1" /></td>
+                    <td><input type="number" class="form-control price-input" value="0" min="0" readonly /></td>
+                    <td class="align-middle text-end subtotal-cell">$0.00</td>
+                    <td class="text-center align-middle">
+                      <button class="btn btn-sm btn-danger eliminarFila">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+              <button id="agregarFila" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle"></i> Agregar producto
+              </button>
+              <div>
+                <span class="fw-bold">Total: </span>
+                <span id="totalServicios">$0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Tabs: Vehículo / Fotos -->
+        <div class="col-lg-4">
+          <ul class="nav nav-tabs" id="vehTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="vehiculo-tab" data-bs-toggle="tab" data-bs-target="#vehiculoTabContent" type="button" role="tab" aria-controls="vehiculoTabContent" aria-selected="true">Vehículo</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="fotos-tab" data-bs-toggle="tab" data-bs-target="#fotosTabContent" type="button" role="tab" aria-controls="fotosTabContent" aria-selected="false">Fotos</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="vehTabsContent">
+            <!-- TAB Vehículo -->
+            <div class="tab-pane fade show active p-3" id="vehiculoTabContent" role="tabpanel" aria-labelledby="vehiculo-tab">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <div>
+                      <h6 id="vehTitle" class="mb-0"></h6>
+                      <p class="mb-0 text-muted" id="vehSubtitle"></p>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary ms-auto" id="btnEditarVehiculo">
+                      <i class="bi bi-pencil"></i> Editar
+                    </button>
+                  </div>
+                  <hr />
+                  <div class="mb-3">
+                    <label class="form-label">Kilometraje actual</label>
+                    <p id="vehKilometrajeDisplay" class="mb-1">0 Kms</p>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Nivel de combustible</label>
+                    <div class="progress progress-fuel">
+                      <div class="progress-bar fuel-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="fuelProgress">0%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- TAB Fotos -->
+            <div class="tab-pane fade p-3" id="fotosTabContent" role="tabpanel" aria-labelledby="fotos-tab">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Fotos del Vehículo</h5>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label for="fotoAntes" class="form-label">Foto Antes</label>
+                    <input class="form-control" type="file" id="fotoAntes" multiple>
+                    <small class="text-muted">Puedes seleccionar varias imágenes</small>
+                  </div>
+                  <div class="row preview-container" id="previewFotosAntes"></div>
+                  <hr>
+                  <div class="mb-3">
+                    <label for="fotoDespues" class="form-label">Foto Después</label>
+                    <input class="form-control" type="file" id="fotoDespues" multiple>
+                    <small class="text-muted">Puedes seleccionar varias imágenes</small>
+                  </div>
+                  <div class="row preview-container" id="previewFotosDespues"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Firmas -->
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Firma del Cliente</label>
+          <!-- Caja de firma para el cliente -->
+          <div class="signature-box" id="signatureBoxCliente" style="cursor:pointer;"></div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Firma del Taller</label>
+          <!-- Caja de firma para el taller -->
+          <div class="signature-box" id="signatureBoxTaller" style="cursor:pointer;"></div>
+        </div>
+      </div>
+      <!-- Botón de Guardar / Imprimir -->
+      <div class="text-end mt-4">
+        <button id="btnGuardar" class="btn btn-success">
+          <i class="bi bi-check-circle"></i> Guardar 
         </button>
       </div>
-      <div id="searchResults" class="list-group mt-2"></div>
-      <div id="clientVehicleSelectContainer" class="mt-2" style="display:none;">
-        <label for="clientVehicleSelect" class="form-label">Seleccione el Vehículo</label>
-        <select id="clientVehicleSelect" class="form-select"></select>
-      </div>
-      <div id="noClientMessage" class="mt-2" style="display:none;">
-        <p class="text-warning" id="noClient">No se encontró el cliente. ¿Desea agregarlo?</p>
-        <a href="/crearClientes.html" class="btn btn-outline-primary">Crear Cliente</a>
-      </div>
     </div>
 
-    <!-- Fila con Descripción del Vehículo e Información del Cliente -->
-    <div class="row mb-4">
-      <!-- Descripción del Vehículo -->
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">
-            <h5>Descripción del Vehículo</h5>
+    <!-- Modal para editar datos del vehículo -->
+    <div class="modal fade" id="editVehicleModal" tabindex="-1" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editVehicleModalLabel">Editar Vehículo</h5>
+            <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>
-          <div class="card-body">
-            <textarea class="form-control" rows="5" placeholder="Ingrese la descripción del vehículo"></textarea>
-          </div>
-        </div>
-      </div>
-      <!-- Información del Cliente -->
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <h6>Información del Cliente:</h6>
-            <p class="mb-0"><strong>Nombre:</strong> <span id="clienteNombreDisplay"></span></p>
-            <p class="mb-0"><strong>Cédula:</strong> <span id="clienteCedulaDisplay"></span></p>
-            <p class="mb-0"><strong>Teléfono:</strong> <span id="clienteTelefonoDisplay"></span></p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección de Detalle del Vehículo -->
-    <div class="row">
-      <!-- Columna Izquierda: Tabla de Servicios / Productos -->
-      <div class="col-lg-8 mb-4">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="mb-0">Servicios o Productos</h5>
-          </div>
-          <div class="card-body p-0">
-            <table class="table mb-0" id="tablaServicios">
-              <thead class="table-light">
-                <tr>
-                  <th>Servicio / Producto</th>
-                  <th>Cant.</th>
-                  <th>Precio U.</th>
-                  <th>Subtotal</th>
-                  <th style="width: 50px;"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <select class="form-select product-select">
-                      <option value="">Seleccione un producto</option>
-                    </select>
-                  </td>
-                  <td><input type="number" class="form-control quantity-input" value="1" min="1" /></td>
-                  <td><input type="number" class="form-control price-input" value="0" min="0" readonly /></td>
-                  <td class="align-middle text-end subtotal-cell">$0.00</td>
-                  <td class="text-center align-middle">
-                    <button class="btn btn-sm btn-danger eliminarFila">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="card-footer d-flex justify-content-between">
-            <button id="agregarFila" class="btn btn-primary btn-sm">
-              <i class="bi bi-plus-circle"></i> Agregar producto
-            </button>
-            <div>
-              <span class="fw-bold">Total: </span>
-              <span id="totalServicios">$0.00</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Columna Derecha: Tabs: Vehículo / Fotos -->
-      <div class="col-lg-4">
-        <ul class="nav nav-tabs" id="vehTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="vehiculo-tab" data-bs-toggle="tab" data-bs-target="#vehiculoTabContent" type="button" role="tab" aria-controls="vehiculoTabContent" aria-selected="true">Vehículo</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="fotos-tab" data-bs-toggle="tab" data-bs-target="#fotosTabContent" type="button" role="tab" aria-controls="fotosTabContent" aria-selected="false">Fotos</button>
-          </li>
-        </ul>
-        <div class="tab-content" id="vehTabsContent">
-          <!-- TAB Vehículo -->
-          <div class="tab-pane fade show active p-3" id="vehiculoTabContent" role="tabpanel" aria-labelledby="vehiculo-tab">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex align-items-center">
-                  <div>
-                    <h6 id="vehTitle" class="mb-0"></h6>
-                    <p class="mb-0 text-muted" id="vehSubtitle"></p>
-                  </div>
-                  <button class="btn btn-sm btn-outline-primary ms-auto" id="btnEditarVehiculo">
-                    <i class="bi bi-pencil"></i> Editar
-                  </button>
-                </div>
-                <hr />
-                <div class="mb-3">
-                  <label class="form-label">Kilometraje actual</label>
-                  <p id="vehKilometrajeDisplay" class="mb-1">0 Kms</p>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Nivel de combustible</label>
-                  <div class="progress progress-fuel">
-                    <div class="progress-bar fuel-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="fuelProgress">0%</div>
-                  </div>
-                </div>
+          <div class="modal-body">
+            <form id="editVehicleForm">
+              <div class="mb-3">
+                <label for="modalVehMarca" class="form-label">Marca</label>
+                <input type="text" class="form-control" id="modalVehMarca">
               </div>
-            </div>
-          </div>
-          <!-- TAB Fotos -->
-          <div class="tab-pane fade p-3" id="fotosTabContent" role="tabpanel" aria-labelledby="fotos-tab">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Fotos del Vehículo</h5>
+              <div class="mb-3">
+                <label for="modalVehModelo" class="form-label">Modelo</label>
+                <input type="text" class="form-control" id="modalVehModelo">
               </div>
-              <div class="card-body">
-                <div class="mb-3">
-                  <label for="fotoAntes" class="form-label">Foto Antes</label>
-                  <input class="form-control" type="file" id="fotoAntes" multiple>
-                  <small class="text-muted">Puedes seleccionar varias imágenes</small>
-                </div>
-                <div class="row preview-container" id="previewFotosAntes"></div>
-                <hr>
-                <div class="mb-3">
-                  <label for="fotoDespues" class="form-label">Foto Después</label>
-                  <input class="form-control" type="file" id="fotoDespues" multiple>
-                  <small class="text-muted">Puedes seleccionar varias imágenes</small>
-                </div>
-                <div class="row preview-container" id="previewFotosDespues"></div>
+              <div class="mb-3">
+                <label for="modalVehAnio" class="form-label">Año</label>
+                <input type="number" class="form-control" id="modalVehAnio">
               </div>
-            </div>
+              <div class="mb-3">
+                <label for="modalVehColor" class="form-label">Color</label>
+                <input type="text" class="form-control" id="modalVehColor">
+              </div>
+              <div class="mb-3">
+                <label for="modalVehPlaca" class="form-label">Placa</label>
+                <input type="text" class="form-control" id="modalVehPlaca">
+              </div>
+              <div class="mb-3">
+                <label for="modalVehKilometraje" class="form-label">Kilometraje</label>
+                <input type="number" class="form-control" id="modalVehKilometraje">
+              </div>
+              <div class="mb-3">
+                <label for="modalVehCombustible" class="form-label">Nivel de Combustible (%)</label>
+                <input type="number" class="form-control" id="modalVehCombustible">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button class="btn btn-primary" id="btnGuardarVehiculo">Guardar</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Sección de Firmas -->
-    <div class="row mt-4">
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Firma del Cliente</label>
-        <!-- Caja de firma para el cliente -->
-        <div class="signature-box" id="signatureBoxCliente" style="cursor:pointer;"></div>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Firma del Taller</label>
-        <!-- Caja de firma para el taller -->
-        <div class="signature-box" id="signatureBoxTaller" style="cursor:pointer;"></div>
+    <!-- Modal para Firma Digital del Cliente -->
+    <div class="modal fade" id="signatureModalCliente" tabindex="-1" aria-labelledby="signatureModalClienteLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signatureModalClienteLabel">Firma Digital - Cliente</h5>
+            <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <canvas id="signatureCanvasCliente" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button id="btnClearSignatureCliente" type="button" class="btn btn-warning">Limpiar</button>
+            <button id="btnSaveSignatureCliente" type="button" class="btn btn-primary">Guardar Firma</button>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- Botón de Guardar / Imprimir -->
-    <div class="text-end mt-4">
-      <button id="btnGuardar" class="btn btn-success">
-        <i class="bi bi-check-circle"></i> Guardar 
-      </button>
-    </div>
-  </div>
 
-  <!-- Modal para editar datos del vehículo -->
-  <div class="modal fade" id="editVehicleModal" tabindex="-1" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editVehicleModalLabel">Editar Vehículo</h5>
-          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <form id="editVehicleForm">
-            <div class="mb-3">
-              <label for="modalVehMarca" class="form-label">Marca</label>
-              <input type="text" class="form-control" id="modalVehMarca">
-            </div>
-            <div class="mb-3">
-              <label for="modalVehModelo" class="form-label">Modelo</label>
-              <input type="text" class="form-control" id="modalVehModelo">
-            </div>
-            <div class="mb-3">
-              <label for="modalVehAnio" class="form-label">Año</label>
-              <input type="number" class="form-control" id="modalVehAnio">
-            </div>
-            <div class="mb-3">
-              <label for="modalVehColor" class="form-label">Color</label>
-              <input type="text" class="form-control" id="modalVehColor">
-            </div>
-            <div class="mb-3">
-              <label for="modalVehPlaca" class="form-label">Placa</label>
-              <input type="text" class="form-control" id="modalVehPlaca">
-            </div>
-            <div class="mb-3">
-              <label for="modalVehKilometraje" class="form-label">Kilometraje</label>
-              <input type="number" class="form-control" id="modalVehKilometraje">
-            </div>
-            <div class="mb-3">
-              <label for="modalVehCombustible" class="form-label">Nivel de Combustible (%)</label>
-              <input type="number" class="form-control" id="modalVehCombustible">
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button class="btn btn-primary" id="btnGuardarVehiculo">Guardar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal para Firma Digital del Cliente -->
-  <div class="modal fade" id="signatureModalCliente" tabindex="-1" aria-labelledby="signatureModalClienteLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="signatureModalClienteLabel">Firma Digital - Cliente</h5>
-          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <canvas id="signatureCanvasCliente" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
-        </div>
-        <div class="modal-footer">
-          <button id="btnClearSignatureCliente" type="button" class="btn btn-warning">Limpiar</button>
-          <button id="btnSaveSignatureCliente" type="button" class="btn btn-primary">Guardar Firma</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal para Firma Digital del Taller -->
-  <div class="modal fade" id="signatureModalTaller" tabindex="-1" aria-labelledby="signatureModalTallerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="signatureModalTallerLabel">Firma Digital - Taller</h5>
-          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <canvas id="signatureCanvasTaller" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
-        </div>
-        <div class="modal-footer">
-          <button id="btnClearSignatureTaller" type="button" class="btn btn-warning">Limpiar</button>
-          <button id="btnSaveSignatureTaller" type="button" class="btn btn-primary">Guardar Firma</button>
+    <!-- Modal para Firma Digital del Taller -->
+    <div class="modal fade" id="signatureModalTaller" tabindex="-1" aria-labelledby="signatureModalTallerLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signatureModalTallerLabel">Firma Digital - Taller</h5>
+            <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <canvas id="signatureCanvasTaller" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button id="btnClearSignatureTaller" type="button" class="btn btn-warning">Limpiar</button>
+            <button id="btnSaveSignatureTaller" type="button" class="btn btn-primary">Guardar Firma</button>
+          </div>
         </div>
       </div>
     </div>

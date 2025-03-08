@@ -2,14 +2,16 @@
    VARIABLES GLOBALES
 ---------------------------------------------------- */
 :root {
-  --primary-color: #198754;
+  --primary-color: #504f4f;
   --secondary-color: #6c757d;
   --light-color: #f8f9fa;
   --dark-color: #343a40;
   --muted-color: #6c757d;
   --bg-card: #ffffff;
-  --border-radius: 8px;
-  --box-shadow-card: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --bg-sidebar: #212529; /* Fondo oscuro para el sidebar */
+  --bg-hover: #343a40; /* Fondo oscuro para hover */
+  --border-radius: 15px; /* Más redondeado */
+  --box-shadow-card: 0 6px 15px rgba(0, 0, 0, 0.1);
   --input-border: #ced4da;
   --input-focus: #80bdff;
   --transition-speed: 0.3s;
@@ -22,8 +24,9 @@ html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: var(--light-color);
+  color: var(--dark-color);
 }
 
 *, *::before, *::after {
@@ -43,19 +46,122 @@ p, label, span, a, li, input, textarea {
 }
 
 /* ----------------------------------------------------
-   NAVBAR
+   SIDEBAR
 ---------------------------------------------------- */
-.navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.sidebar {
+  position: fixed;
+  top: 15px;
+  left: 0;
+  width: 235px;
+  height: 95%;
+  margin-left: 20px; /* Margen izquierdo aumentado */
+  margin-right: 10px; /* Margen derecho para separarlo de los bordes */
+  background-color: var(--bg-sidebar);
+  padding-top: 40px;
+  border-radius: 25px 25px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: all var(--transition-speed);
 }
 
-.navbar-brand {
-  font-weight: 600;
-  font-size: 1.25rem;
+.sidebar .user-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px; /* Aumentar margen inferior */
+}
+
+.sidebar .user-info img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.sidebar .user-info span {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.sidebar .nav {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 20px; /* Añadir espacio superior */
+}
+
+.sidebar .nav-item {
+  margin: 20px 0; /* Espaciado entre items */
+}
+
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  padding: 12px 25px; /* Ajustar padding para más espacio */
+  text-decoration: none;
+  border-radius: 30px;
+  transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.sidebar .nav-link i {
+  margin-right: 15px;
+  font-size: 1.2rem;
+}
+
+.sidebar .nav-link:hover {
+  background-color: var(--primary-color);
+}
+
+.sidebar .sub-menu {
+  margin-left: 40px; /* Más espacio para sub-menú */
+}
+
+.sidebar .sub-menu a {
+  color: #d1d1d1;
+  padding: 8px 15px;
+  text-decoration: none;
+  border-radius: 20px;
+  transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.sidebar .sub-menu a:hover {
+  background-color: var(--bg-hover);
+}
+
+.sidebar .logout-btn {
+  position: absolute;
+  bottom: 40px; /* Aumentar el margen inferior */
+  left: 20px;
+  width: 90%;
+  background-color: var(--bg-sidebar);
+  color: #fff;
+  padding: 12px 20px;
+  text-align: center;
+  border-radius: 30px;
+  transition: background-color var(--transition-speed);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 30px; /* Agregar margen superior en el botón */
+}
+
+.sidebar .logout-btn:hover {
+  background-color: var(--primary-color);
 }
 
 /* ----------------------------------------------------
-   CARDS Y CONTENEDORES
+   MAIN CONTENT
+---------------------------------------------------- */
+.main-content {
+  margin-left: 250px; /* Reduce el margen izquierdo para dar más espacio entre el sidebar y el contenido */
+  padding: 20px;
+  max-width: calc(100% - 270px); /* Ajusta el ancho para que el contenido se adapte correctamente */
+}
+
+
+/* ----------------------------------------------------
+   CARDS
 ---------------------------------------------------- */
 .card {
   border-radius: var(--border-radius);
@@ -74,6 +180,15 @@ p, label, span, a, li, input, textarea {
 
 .card-body {
   padding: 1.5rem;
+}
+
+.card-body i {
+  font-size: 2rem;
+}
+
+.card-body h5 {
+  font-weight: 500;
+  margin-top: 10px;
 }
 
 /* ----------------------------------------------------
@@ -143,6 +258,7 @@ input:focus, textarea:focus, select:focus {
   border: 1px solid transparent;
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   color: var(--dark-color);
+  padding: 10px 20px; /* Ajustar padding para más espacio */
   transition: background-color var(--transition-speed);
 }
 
@@ -159,7 +275,7 @@ input:focus, textarea:focus, select:focus {
   height: 80px;
   border: 2px dashed var(--input-border);
   border-radius: var(--border-radius);
-  margin-top: 0.5rem;
+  margin-top: 1rem; /* Aumento de margen superior */
   position: relative;
 }
 
@@ -175,7 +291,7 @@ input:focus, textarea:focus, select:focus {
    FOTOS / PREVISUALIZACIÓN
 ---------------------------------------------------- */
 .preview-container {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem; /* Aumento en el margen inferior */
   display: flex;
   flex-wrap: wrap;
 }
@@ -238,7 +354,9 @@ input:focus, textarea:focus, select:focus {
 }
 
 #logo {
+  margin-left: 35%;
   width: 30%;
+  border-radius: 100%;
 }
 
 /* ----------------------------------------------------
@@ -246,7 +364,7 @@ input:focus, textarea:focus, select:focus {
 ---------------------------------------------------- */
 .list-group-item {
   border: 1px solid #ddd;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem; /* Aumento del margen entre elementos */
   border-radius: var(--border-radius);
   background-color: var(--bg-card);
   transition: background-color 0.2s ease, transform 0.2s ease;
@@ -279,8 +397,8 @@ input:focus, textarea:focus, select:focus {
 /* Vehículos dentro de cada cliente */
 .vehiculos-list {
   background-color: var(--light-color);
-  padding: 0.5rem;
+  padding: 0.75rem; /* Mayor padding para contenido dentro */
   border: 1px solid #ddd;
   border-radius: var(--border-radius);
-  margin-top: 0.5rem;
+  margin-top: 1rem; /* Aumento de margen superior */
 }

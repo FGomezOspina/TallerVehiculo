@@ -175,5 +175,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     });
+
 });
   
