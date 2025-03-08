@@ -134,14 +134,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Funciones para actualizar la pestaña Vehículo
   function updateVehicleTab() {
-    vehTitle.textContent = `${vehicleData.marca} ${vehicleData.modelo}`;
-    vehSubtitle.textContent = `${vehicleData.placa} - ${vehicleData.anio} - ${vehicleData.color}`;
-    let kms = parseFloat(vehicleData.kilometraje) || 0;
-    vehKilometrajeDisplay.textContent = kms.toLocaleString() + ' Kms';
-    fuelProgress.style.width = vehicleData.combustible + '%';
-    fuelProgress.setAttribute('aria-valuenow', vehicleData.combustible);
-    fuelProgress.textContent = vehicleData.combustible + '%';
+    if (vehicleData) {
+      vehTitle.textContent = `${vehicleData.marca} ${vehicleData.modelo}`;
+      vehSubtitle.textContent = `${vehicleData.placa} - ${vehicleData.anio} - ${vehicleData.color}`;
+      let kms = parseFloat(vehicleData.kilometraje) || 0;
+      vehKilometrajeDisplay.textContent = kms.toLocaleString() + ' Kms';
+      fuelProgress.style.width = vehicleData.combustible + '%';
+      fuelProgress.setAttribute('aria-valuenow', vehicleData.combustible);
+      fuelProgress.textContent = vehicleData.combustible + '%';
+    }
   }
+  
 
   function fillModalFields() {
     modalVehMarca.value = vehicleData.marca;
@@ -343,23 +346,23 @@ document.addEventListener('DOMContentLoaded', function() {
         currentClient = null;
         clientVehicleSelectContainer.style.display = "none";
         noClientMessage.style.display = "none";
-        if(data.success) {
+        if (data.success) {
           let resultados = data.clientes.filter(cliente => {
             const q = query.toLowerCase();
             const matchEmpresa = cliente.empresa.toLowerCase().includes(q);
             const matchNombre = cliente.nombre.toLowerCase().includes(q);
             const matchCedula = cliente.cedula.toLowerCase().includes(q);
             let matchPlaca = false;
-            if(cliente.vehiculos && Array.isArray(cliente.vehiculos)) {
+            if (cliente.vehiculos && Array.isArray(cliente.vehiculos)) {
               cliente.vehiculos.forEach(v => {
-                if(v.placa && v.placa.toLowerCase().includes(q)) {
+                if (v.placa && v.placa.toLowerCase().includes(q)) {
                   matchPlaca = true;
                 }
               });
             }
             return matchNombre || matchCedula || matchEmpresa || matchPlaca;
           });
-          if(resultados.length === 0) {
+          if (resultados.length === 0) {
             noClientMessage.style.display = "block";
           }
           resultados.forEach(cliente => {
@@ -382,13 +385,16 @@ document.addEventListener('DOMContentLoaded', function() {
               document.getElementById("clienteNombreDisplay").textContent = cliente.nombre;
               document.getElementById("clienteCedulaDisplay").textContent = cliente.cedula;
               document.getElementById("clienteTelefonoDisplay").textContent = cliente.telefono;
-              document.getElementById("clienteEmpresaDisplay").textContent = cliente.empresa;
-              if(cliente.vehiculos && cliente.vehiculos.length > 0) {
-                if(cliente.vehiculos.length === 1) {
+              
+              // Si el cliente tiene vehículos
+              if (cliente.vehiculos && cliente.vehiculos.length > 0) {
+                if (cliente.vehiculos.length === 1) {
+                  // Solo tiene un vehículo, se muestra la información directamente
                   vehicleData = cliente.vehiculos[0];
                   updateVehicleTab();
-                  clientVehicleSelectContainer.style.display = "none";
+                  clientVehicleSelectContainer.style.display = "none"; // Ocultar la selección de vehículos
                 } else {
+                  // Tiene más de un vehículo, mostrar los vehículos en el select
                   clientVehicleSelect.innerHTML = "";
                   cliente.vehiculos.forEach((veh, idx) => {
                     const option = document.createElement("option");
@@ -396,8 +402,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     option.textContent = `${veh.marca} ${veh.modelo} - ${veh.placa}`;
                     clientVehicleSelect.appendChild(option);
                   });
-                  clientVehicleSelectContainer.style.display = "block";
-                  vehicleData = cliente.vehiculos[0];
+                  clientVehicleSelectContainer.style.display = "block"; // Mostrar la selección de vehículos
+                  vehicleData = cliente.vehiculos[0]; // Seleccionamos el primer vehículo por defecto
                   updateVehicleTab();
                 }
               } else {
@@ -415,6 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
         searchResults.innerHTML = "Error al buscar clientes.";
       });
   }
+  
 
   btnClientSearch.addEventListener("click", () => {
     const query = clientSearchInput.value.trim();
