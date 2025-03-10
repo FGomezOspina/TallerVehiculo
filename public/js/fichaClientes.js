@@ -55,8 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="d-flex w-100 justify-content-between">
                 <div>
                   <h5 class="mb-1">${cliente.nombre} (${cliente.empresa})</h5>
-                  <p class="mb-1">Cédula: ${cliente.cedula} | RUT: ${cliente.rut}</p>
-                  <small>Dirección: ${cliente.direccion}</small>
+                  <p class="mb-1">Cédula: ${cliente.cedula} | Email: ${cliente.email}</p>
                 </div>
                 <div>
                   <button class="btn btn-sm btn-info verVehiculosBtn me-1">
@@ -139,8 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("editNombre").value = cliente.nombre || "";
     document.getElementById("editTelefono").value = cliente.telefono || "";
     document.getElementById("editCedula").value = cliente.cedula || "";
-    document.getElementById("editRut").value = cliente.rut || "";
-    document.getElementById("editDireccion").value = cliente.direccion || "";
+    document.getElementById("editEmail").value = cliente.direccion || "";
     
     // Limpiar contenedor de vehículos
     editVehiculosContainer.innerHTML = "";
@@ -205,8 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nombre: document.getElementById("editNombre").value,
       telefono: document.getElementById("editTelefono").value,
       cedula: document.getElementById("editCedula").value,
-      rut: document.getElementById("editRut").value,
-      direccion: document.getElementById("editDireccion").value,
+      email: document.getElementById("editEmail").value,
       sede, // se utiliza la sede extraída de la URL
       vehiculos: []
     };

@@ -374,8 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h5 class="mb-1">${cliente.nombre} (${cliente.empresa})</h5>
                 <small>${cliente.telefono}</small>
               </div>
-              <p class="mb-1">Cédula: ${cliente.cedula} | RUT: ${cliente.rut}</p>
-              <small>Dirección: ${cliente.direccion}</small>
+              <p class="mb-1">Cédula: ${cliente.cedula} | Email: ${cliente.email}</p>
             `;
             item.addEventListener("click", () => {
               currentClient = cliente;

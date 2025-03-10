@@ -69,8 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nombre: document.getElementById('nombre').value,
       telefono: document.getElementById('telefono').value,
       cedula: document.getElementById('cedula').value,
-      rut: document.getElementById('rut').value,
-      direccion: document.getElementById('direccion').value,
+      email: document.getElementById('email').value,
       vehiculos: [],
       sede: sede  // se agrega la sede extraída de la URL
     };

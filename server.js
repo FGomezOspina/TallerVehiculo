@@ -108,7 +108,7 @@ app.get('/dashboard', (req, res) => {
 
 // Crear un cliente (el objeto debe incluir el campo "sede")
 app.post('/crearCliente', (req, res) => {
-  const clienteData = req.body; // Debe incluir: empresa, nombre, teléfono, cédula, rut, dirección, vehículos, sede, etc.
+  const clienteData = req.body; // Debe incluir: empresa, nombre, teléfono, cédula, dirección, vehículos, sede, etc.
   db.collection("clientes").add(clienteData)
     .then(docRef => {
       console.log("Cliente guardado con ID: ", docRef.id);
