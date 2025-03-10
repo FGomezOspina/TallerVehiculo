@@ -128,35 +128,95 @@ p, label, span, a, li, input, textarea {
   background-color: var(--bg-hover);
 }
 
+/* Estilo actualizado para el botón de log out */
 .sidebar .logout-btn {
   position: absolute;
-  bottom: 40px; /* Aumentar el margen inferior */
-  left: 20px;
-  width: 90%;
+  top: 20px;           /* Ubicado en la parte superior */
+  right: 20px;         /* Alineado a la derecha */
+  width: auto;         /* Se ajusta al contenido */
   background-color: var(--bg-sidebar);
   color: #fff;
-  padding: 12px 20px;
+  padding: 8px 12px;   /* Padding reducido para un tamaño más pequeño */
   text-align: center;
-  border-radius: 30px;
+  border-radius: 20px; /* Bordes redondeados más pequeños */
   transition: background-color var(--transition-speed);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  margin-top: 30px; /* Agregar margen superior en el botón */
+  z-index: 1000;       /* Asegura que quede encima de otros elementos */
+  font-size: 0.9rem;   /* Fuente ligeramente reducida */
 }
 
 .sidebar .logout-btn:hover {
   background-color: var(--primary-color);
 }
 
+/* Para pantallas tipo tablet (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 200px;             /* Reduce el ancho del sidebar */
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 20px;         /* Ajusta el padding superior */
+  }
+  .sidebar .nav-link {
+    padding: 10px 20px;        /* Disminuye el padding en los enlaces */
+  }
+  .sidebar .logout-btn {
+    padding: 10px 15px;        /* Ajusta el padding del botón de logout */
+  }
+
+}
+
+/* Para pantallas móviles (max-width: 576px) */
+@media screen and (max-width: 576px) {
+  .sidebar {
+    width: 100%;              /* Ocupa el ancho total */
+    height: auto;             /* Permite que la altura se ajuste al contenido */
+    position: relative;       /* Quita la posición fija para integrarlo en el flujo de la página */
+    margin: 0;                /* Elimina márgenes externos */
+    border-radius: 0;         /* Quita bordes redondeados */
+    box-shadow: none;         /* Elimina la sombra */
+    padding: 10px;            /* Reduce el padding general */
+  }
+  .sidebar .nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;  /* Centra los elementos del menú */
+  }
+  .sidebar .nav-item {
+    margin: 5px;              /* Espaciado más reducido entre items */
+  }
+  .sidebar .nav-link {
+    padding: 8px 10px;        /* Ajusta el padding en enlaces para pantallas pequeñas */
+  }
+  .sidebar .sub-menu {
+    margin-left: 20px;        /* Reduce el margen del submenú */
+  }
+  .sidebar .logout-btn {
+    position: relative;  /* Se integra en el flujo normal para móviles */
+    top: 0;
+    right: 0;
+    margin: 10px auto;   /* Centramos el botón y ajustamos márgenes */
+  }
+}
+
+
 /* ----------------------------------------------------
    MAIN CONTENT
 ---------------------------------------------------- */
 .main-content {
-  margin-left: 250px; /* Reduce el margen izquierdo para dar más espacio entre el sidebar y el contenido */
-  padding: 20px;
-  max-width: calc(100% - 270px); /* Ajusta el ancho para que el contenido se adapte correctamente */
+  margin-left: 0px; /* Reduce el margen izquierdo para dar más espacio entre el sidebar y el contenido */
+  max-width: 100; /* Ajusta el ancho para que el contenido se adapte correctamente */
+}
+
+@media screen and (min-width: 576px) {
+  .main-content{
+    margin-left: 250px; /* Reduce el margen izquierdo para dar más espacio entre el sidebar y el contenido */
+    padding: 20px;
+    max-width: calc(100% - 270px); /* Ajusta el ancho para que el contenido se adapte correctamente */
+  }
 }
 
 
@@ -180,10 +240,6 @@ p, label, span, a, li, input, textarea {
 
 .card-body {
   padding: 1.5rem;
-}
-
-.card-body i {
-  font-size: 2rem;
 }
 
 .card-body h5 {
@@ -401,4 +457,49 @@ input:focus, textarea:focus, select:focus {
   border: 1px solid #ddd;
   border-radius: var(--border-radius);
   margin-top: 1rem; /* Aumento de margen superior */
+}
+
+/* Estilos generales para el contenedor y las tarjetas */
+.container.my-4 {
+  padding: 0 15px;
+}
+
+.row.mt-4 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Espacio entre tarjetas */
+}
+
+.card-col {
+  margin-bottom: 20px;
+}
+
+/* Distribución en pantallas grandes: 4 tarjetas por fila */
+/* Se respeta la clase col-md-3, pero se fuerza el layout en flex */
+@media screen and (min-width: 992px) {
+  .card-col {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+}
+
+/* Para tabletas y laptops pequeños (máx. 992px): 2 tarjetas por fila */
+@media screen and (max-width: 992px) {
+  .card-col {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/* Para móviles (máx. 576px): 1 tarjeta por fila */
+@media screen and (max-width: 576px) {
+  .card-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  
+  /* Ajuste de la tarjeta para que se vea bien en pantallas pequeñas */
+  .card {
+    margin: 0 auto; /* Centra la tarjeta */
+  }
 }

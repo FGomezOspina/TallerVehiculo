@@ -5,4 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (error === 'invalid') {
         document.getElementById('errorMsg').textContent = 'Credenciales inválidas. Intenta de nuevo.';
     }
+
+    // Agrega la funcionalidad de logout
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            // Redirige al endpoint de logout para cerrar la sesión
+            window.location.href = '/logout';
+        });
+    }
 });

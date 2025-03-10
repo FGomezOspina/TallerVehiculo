@@ -337,6 +337,7 @@ app.put('/detallesVehiculo/:id/cerrar', (req, res) => {
     });
 });
 
+
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
