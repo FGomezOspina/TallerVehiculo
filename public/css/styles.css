@@ -9,7 +9,7 @@
   --muted-color: #6c757d;
   --bg-card: #ffffff;
   --bg-sidebar: #212529; /* Fondo oscuro para el sidebar */
-  --bg-hover: #343a40; /* Fondo oscuro para hover */
+  --bg-hover: #343a40;   /* Fondo oscuro para hover */
   --border-radius: 15px; /* Más redondeado */
   --box-shadow-card: 0 6px 15px rgba(0, 0, 0, 0.1);
   --input-border: #ced4da;
@@ -166,7 +166,6 @@ p, label, span, a, li, input, textarea {
   .sidebar .logout-btn {
     padding: 10px 15px;        /* Ajusta el padding del botón de logout */
   }
-
 }
 
 /* Para pantallas móviles (max-width: 576px) */
@@ -174,11 +173,16 @@ p, label, span, a, li, input, textarea {
   .sidebar {
     width: 100%;              /* Ocupa el ancho total */
     height: auto;             /* Permite que la altura se ajuste al contenido */
-    position: relative;       /* Quita la posición fija para integrarlo en el flujo de la página */
+    position: relative;       /* Deja de estar fija para integrarse en el flujo */
     margin: 0;                /* Elimina márgenes externos */
     border-radius: 0;         /* Quita bordes redondeados */
     box-shadow: none;         /* Elimina la sombra */
     padding: 10px;            /* Reduce el padding general */
+
+    /* Asegura que el contenido interno pueda hacer scroll vertical */
+    max-height: 100vh;        /* Limita la altura al alto de la ventana */
+    overflow-y: auto;
+    overflow-x: hidden;       /* Evita scroll horizontal */
   }
   .sidebar .nav {
     display: flex;
@@ -198,27 +202,25 @@ p, label, span, a, li, input, textarea {
     position: relative;  /* Se integra en el flujo normal para móviles */
     top: 0;
     right: 0;
-    margin: 10px auto;   /* Centramos el botón y ajustamos márgenes */
+    margin: 10px auto;   /* Centra el botón y ajusta márgenes */
   }
 }
-
 
 /* ----------------------------------------------------
    MAIN CONTENT
 ---------------------------------------------------- */
 .main-content {
   margin-left: 0px; /* Reduce el margen izquierdo para dar más espacio entre el sidebar y el contenido */
-  max-width: 100; /* Ajusta el ancho para que el contenido se adapte correctamente */
+  max-width: 100;   /* Ajusta el ancho para que el contenido se adapte correctamente */
 }
 
 @media screen and (min-width: 576px) {
-  .main-content{
-    margin-left: 250px; /* Reduce el margen izquierdo para dar más espacio entre el sidebar y el contenido */
+  .main-content {
+    margin-left: 250px;                  /* Espacio para el sidebar */
     padding: 20px;
-    max-width: calc(100% - 270px); /* Ajusta el ancho para que el contenido se adapte correctamente */
+    max-width: calc(100% - 270px);       /* Ajusta el ancho restante del contenido */
   }
 }
-
 
 /* ----------------------------------------------------
    CARDS
@@ -475,7 +477,6 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* Distribución en pantallas grandes: 4 tarjetas por fila */
-/* Se respeta la clase col-md-3, pero se fuerza el layout en flex */
 @media screen and (min-width: 992px) {
   .card-col {
     flex: 0 0 25%;
