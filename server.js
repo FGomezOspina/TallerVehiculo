@@ -74,11 +74,12 @@ app.get('/logout', (req, res) => {
 });
 
 // Ruta para el dashboard con selección de sede
-app.get('/dashboard', (req, res) => {
+
+app.get("/dashboard", (req, res) => {
   if (!req.query.sede) {
     // No se ha seleccionado la sede: mostramos la pantalla de selección
     // Conservamos el parámetro role (o lo asumimos como admin si no se indica)
-    const role = req.query.role || 'admin';
+    const role = req.query.role || "admin";
     res.send(`
       <!DOCTYPE html>
       <html lang="es">
@@ -86,13 +87,48 @@ app.get('/dashboard', (req, res) => {
           <meta charset="UTF-8">
           <title>Seleccionar Sede</title>
           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+          <script>
+            function selectBranch(sede) {
+              window.location.href = "/dashboard?sede=" + sede + "&role=${role}";
+            }
+          </script>
+          <style>
+            .branch-card {
+              border: 2px solid #ccc;
+              border-radius: 10px;
+              padding: 20px;
+              text-align: center;
+              cursor: pointer;
+              transition: 0.3s;
+            }
+            .branch-card:hover {
+              border-color: #007bff;
+              box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.3);
+            }
+            .selected {
+              border-color: #007bff !important;
+              box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.5);
+            }
+          </style>
       </head>
       <body>
           <div class="container mt-5">
-              <h1>Selecciona una Sede</h1>
-              <div class="d-flex justify-content-around mt-4">
-                  <a href="/dashboard?sede=pereira&role=${role}" class="btn btn-primary">Pereira</a>
-                  <a href="/dashboard?sede=medellin&role=${role}" class="btn btn-secondary">Medellín</a>
+              <h1 class="text-center">Selecciona una Sede</h1>
+              <div class="row justify-content-center mt-4">
+                  <div class="col-md-4">
+                      <div class="branch-card" onclick="selectBranch('pereira')">
+                          <h2>Sede Pereira</h2>
+                          <p><strong>Ubicación:</strong> Centro, Pereira</p>
+                          
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="branch-card" onclick="selectBranch('medellin')">
+                          <h2>Sede Medellín</h2>
+                          <p><strong>Ubicación:</strong> Zona Norte, Medellín</p>
+                          
+                      </div>
+                  </div>
               </div>
           </div>
       </body>
@@ -100,7 +136,7 @@ app.get('/dashboard', (req, res) => {
     `);
   } else {
     // Se ha seleccionado la sede; se carga el dashboard principal.
-    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+    res.sendFile(path.join(__dirname, "public", "dashboard.html"));
   }
 });
 
