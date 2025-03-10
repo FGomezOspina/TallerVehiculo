@@ -28,12 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const tr = document.createElement('tr');
       // Formatear la fecha
       const fecha = new Date(detalle.fecha).toLocaleString();
-      const clienteNombre = detalle.cliente?.nombre || '';
+      const clienteEmpresa = detalle.cliente?.empresa || '';
       const vehiculo = detalle.vehiculo ? `${detalle.vehiculo.marca} ${detalle.vehiculo.modelo} (${detalle.vehiculo.placa})` : '';
       const estado = detalle.estado || 'Abierto';
       tr.innerHTML = `
         <td>${fecha}</td>
-        <td>${clienteNombre}</td>
+        <td>${clienteEmpresa}</td>
         <td>${vehiculo}</td>
         <td>${estado}</td>
         <td></td>
@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         verBtn.className = 'btn btn-sm btn-secondary';
         verBtn.textContent = 'Ver';
         verBtn.addEventListener('click', () => {
-          // Redirige a la misma página de actualizarVehiculo, que al cargar verificará que el estado es Cerrado y deshabilitará la edición.
           window.location.href = `/actualizarVehiculo.html?detalleId=${detalle.id}&sede=${sede}`;
         });
         actionsCell.appendChild(verBtn);
@@ -77,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------
   // AJUSTAR VISIBILIDAD DEL NAV Y LOGO SEGÚN EL ROL
   // -------------------------------------------------------
-  // Los elementos que solo deben verse para admin
   const elementosARestrigir = [
     'navProveedores',
     'navInventario',
@@ -88,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   if (role === 'patio') {
-    // Para usuarios tipo patio: ocultar elementos
     elementosARestrigir.forEach(id => {
       const elem = document.getElementById(id);
       if (elem) {
@@ -96,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   } else {
-    // Para admin: asegurar que se muestren todos los elementos
     elementosARestrigir.forEach(id => {
       const elem = document.getElementById(id);
       if (elem) {
@@ -108,9 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------
   // CONFIGURACIÓN DEL LOGO
   // -------------------------------------------------------
-  // Al hacer clic en el logo, se redirige:
-  // - Si es usuario patio: a /dashboard?sede=<sede>&role=patio
-  // - Si es admin: a /dashboard?role=admin
   const logo = document.getElementById('logo');
   if (logo) {
     logo.addEventListener('click', (e) => {

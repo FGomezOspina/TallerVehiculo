@@ -145,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-
   function fillModalFields() {
     modalVehMarca.value = vehicleData.marca;
     modalVehModelo.value = vehicleData.modelo;
@@ -385,6 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
               document.getElementById("clienteNombreDisplay").textContent = cliente.nombre;
               document.getElementById("clienteCedulaDisplay").textContent = cliente.cedula;
               document.getElementById("clienteTelefonoDisplay").textContent = cliente.telefono;
+              document.getElementById("clienteEmpresaDisplay").textContent = cliente.empresa;
               
               // Si el cliente tiene vehículos
               if (cliente.vehiculos && cliente.vehiculos.length > 0) {
@@ -550,6 +550,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nombre: document.getElementById("clienteNombreDisplay").textContent,
         cedula: document.getElementById("clienteCedulaDisplay").textContent,
         telefono: document.getElementById("clienteTelefonoDisplay").textContent,
+        empresa: document.getElementById("clienteEmpresaDisplay").textContent
       },
       vehiculo: vehicleData,
       servicios: obtenerServiciosDesdeTabla(),
@@ -562,7 +563,8 @@ document.addEventListener('DOMContentLoaded', function() {
         cliente: document.getElementById('signatureBoxCliente').querySelector('img') ? document.getElementById('signatureBoxCliente').querySelector('img').src : '',
         taller: document.getElementById('signatureBoxTaller').querySelector('img') ? document.getElementById('signatureBoxTaller').querySelector('img').src : ''
       },
-      fecha: new Date().toISOString()
+      fecha: new Date().toISOString(),
+      sede: sede  // <-- Agregada esta línea para incluir la sede
     };
 
     fetch('/guardarDetalle', {
