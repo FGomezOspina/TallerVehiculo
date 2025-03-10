@@ -513,36 +513,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Evento para cerrar el informe (cambiar estado a "Cerrado")
-  // Este botón debe existir en el HTML con id "btnCerrar"
-  document.getElementById('btnCerrar').addEventListener('click', () => {
-    if(confirm("¿Estás seguro de que deseas cerrar este informe?")) {
-      fetch(`/detallesVehiculo/${detalleId}/cerrar`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado: 'Cerrado' })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if(data.success) {
-          alert("El informe se ha cerrado correctamente.");
-          // Deshabilitar controles para evitar futuras ediciones
-          document.querySelectorAll('input, select, textarea, button').forEach(el => {
-            if(el.id !== 'btnImprimir' && el.id !== 'btnVer'){
-              el.setAttribute('disabled', 'disabled');
-            }
-          });
-          document.getElementById('estadoDisplay').textContent = 'Cerrado';
-        } else {
-          alert("Error al cerrar el informe: " + data.error);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Error al conectar con el servidor.");
-      });
-    }
-  });
 
   // Inicializar
   loadInventory();

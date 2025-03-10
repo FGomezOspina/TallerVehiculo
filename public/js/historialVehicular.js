@@ -41,6 +41,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const actionsCell = tr.querySelector('td:last-child');
 
+      if (estado === 'Abierto') {
+        // Botón de Cerrar cuando el estado es 'Abierto'
+        const cerrarBtn = document.createElement('button');
+        cerrarBtn.className = 'btn btn-sm btn-danger me-2';
+        cerrarBtn.textContent = 'Cerrar';
+        cerrarBtn.addEventListener('click', () => {
+          if (confirm("¿Estás seguro de que deseas cerrar este informe?")) {
+            fetch(`/detallesVehiculo/${detalle.id}/cerrar`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ estado: 'Cerrado' })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert("El informe se ha cerrado correctamente.");
+                loadHistorial(); // Recargar la tabla con los datos actualizados
+              } else {
+                alert("Error al cerrar el informe: " + data.error);
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              alert("Error al conectar con el servidor.");
+            });
+          }
+        });
+        actionsCell.appendChild(cerrarBtn);
+      }
+
+      // Otros botones como Imprimir o Ver (según el estado)
       if (estado === 'Cerrado') {
         const imprimirBtn = document.createElement('button');
         imprimirBtn.className = 'btn btn-sm btn-info me-2';
@@ -94,8 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     populateHistorialTable(filteredDetails);
   }
-
-
 
   // Botón de búsqueda
   document.getElementById('searchBtn').addEventListener('click', filterHistorial);
