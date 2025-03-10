@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(data => {
         if (data.success) {
           detalles = data.detalles; // Se asume que data.detalles es un arreglo de documentos
-          populateHistorialTable();
+          populateHistorialTable(detalles); // Pasamos el historial cargado a la función
         } else {
           console.error("Error al cargar historial:", data.error);
         }
@@ -20,11 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => console.error("Error:", err));
   }
 
-  // Rellenar la tabla del historial
-  function populateHistorialTable() {
+  // Rellenar la tabla del historial con los datos filtrados
+  function populateHistorialTable(filteredDetails) {
     const tbody = document.querySelector('#historialTable tbody');
     tbody.innerHTML = '';
-    detalles.forEach(detalle => {
+    filteredDetails.forEach(detalle => {
       const tr = document.createElement('tr');
       // Formatear la fecha
       const fecha = new Date(detalle.fecha).toLocaleString();
@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const actionsCell = tr.querySelector('td:last-child');
 
       if (estado === 'Cerrado') {
-        // Si el informe está cerrado, mostrar botones de Imprimir y Ver
         const imprimirBtn = document.createElement('button');
         imprimirBtn.className = 'btn btn-sm btn-info me-2';
         imprimirBtn.textContent = 'Imprimir';
@@ -59,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         actionsCell.appendChild(verBtn);
       } else {
-        // Permitir edición mientras el informe no esté cerrado
         const editBtn = document.createElement('button');
         editBtn.className = 'btn btn-sm btn-primary';
         editBtn.textContent = 'Editar';
@@ -72,6 +70,35 @@ document.addEventListener('DOMContentLoaded', () => {
       tbody.appendChild(tr);
     });
   }
+
+  // Filtrar los registros según los campos de búsqueda
+  function filterHistorial() {
+    const fecha = document.getElementById('searchFecha').value;
+    const empresa = document.getElementById('searchEmpresa').value.toLowerCase();
+    const placa = document.getElementById('searchPlaca').value.toLowerCase();
+
+    // Obtener solo la fecha (sin la hora) para comparar, en formato YYYY-MM-DD
+    const formatDate = (date) => {
+      const d = new Date(date);
+      return d.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    };
+
+    const filteredDetails = detalles.filter(detalle => {
+      const detalleFecha = formatDate(detalle.fecha); // Convertir la fecha del detalle al formato YYYY-MM-DD
+      const fechaMatch = fecha ? detalleFecha === formatDate(fecha) : true; // Comparar solo fechas (sin horas)
+      const empresaMatch = detalle.cliente?.empresa.toLowerCase().includes(empresa) || false;
+      const placaMatch = detalle.vehiculo?.placa.toLowerCase().includes(placa) || false;
+      
+      return fechaMatch && empresaMatch && placaMatch;
+    });
+
+    populateHistorialTable(filteredDetails);
+  }
+
+
+
+  // Botón de búsqueda
+  document.getElementById('searchBtn').addEventListener('click', filterHistorial);
 
   // -------------------------------------------------------
   // AJUSTAR VISIBILIDAD DEL NAV Y LOGO SEGÚN EL ROL

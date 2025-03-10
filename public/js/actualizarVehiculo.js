@@ -349,6 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
           document.getElementById('clienteNombreDisplay').textContent = clientData.nombre || '';
           document.getElementById('clienteCedulaDisplay').textContent = clientData.cedula || '';
           document.getElementById('clienteTelefonoDisplay').textContent = clientData.telefono || '';
+          document.getElementById('clienteEmpresaDisplay').textContent = clientData.empresa || '';
           // Cargar datos del vehículo
           vehicleData = detalle.vehiculo || {};
           updateVehicleTab();
@@ -475,7 +476,8 @@ document.addEventListener('DOMContentLoaded', function() {
       cliente: {
         nombre: document.getElementById('clienteNombreDisplay').textContent,
         cedula: document.getElementById('clienteCedulaDisplay').textContent,
-        telefono: document.getElementById('clienteTelefonoDisplay').textContent
+        telefono: document.getElementById('clienteTelefonoDisplay').textContent,
+        empresa: document.getElementById('clienteEmpresaDisplay').textContent
       },
       vehiculo: vehicleData, // Se asume que vehicleData se actualiza mediante la edición de la pestaña Vehículo
       descripcion: document.getElementById('descripcionVehiculo').value,
