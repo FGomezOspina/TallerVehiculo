@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
+const session = require('express-session');
 
 // Carga las credenciales desde las variables de entorno
 const serviceAccount = JSON.parse(process.env.GOOGLE_CREDENTIALS);
@@ -16,6 +17,13 @@ const db = admin.firestore();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Configuración de express-session
+app.use(session({
+  secret: 'tu_clave_secreta', // Reemplaza por una clave segura
+  resave: false,
+  saveUninitialized: false
+}));
 
 // Configuración del body parser para procesar formularios y aumentar el límite (50MB)
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
@@ -33,12 +41,16 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (username === 'admin' && password === 'admin123') {
+    // Guarda información del usuario en la sesión
+    req.session.user = { username, role: 'admin' };
     // Para admin: redirige a la página de selección de sede con role=admin
     res.redirect('/dashboard?role=admin');
   } else if (username === 'patioPereira' && password === 'patio123') {
+    req.session.user = { username, role: 'patio' };
     // Para usuario de patioPereira: redirige directamente al dashboard con sede y role=patio
     res.redirect('/dashboard?sede=pereira&role=patio');
   } else if (username === 'patioMedellin' && password === 'patio123') {
+    req.session.user = { username, role: 'patio' };
     // Para usuario de patioMedellin: redirige directamente al dashboard con sede y role=patio
     res.redirect('/dashboard?sede=medellin&role=patio');
   } else {
@@ -46,6 +58,20 @@ app.post('/login', (req, res) => {
   }
 });
 
+// Endpoint para cerrar sesión
+app.get('/logout', (req, res) => {
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        console.error("Error al cerrar la sesión:", err);
+        return res.status(500).send("Error al cerrar la sesión");
+      }
+      res.redirect('/');
+    });
+  } else {
+    res.redirect('/');
+  }
+});
 
 // Ruta para el dashboard con selección de sede
 app.get('/dashboard', (req, res) => {
@@ -77,7 +103,6 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
   }
 });
-
 
 // -------------------- CLIENTES --------------------
 
@@ -137,7 +162,7 @@ app.delete('/clientes/:id', (req, res) => {
       res.json({ success: true });
     })
     .catch(err => {
-      console.error("Error eliminando cliente:", err);
+      console.error("Error eliminando cliente: ", err);
       res.status(500).json({ success: false, error: err.message });
     });
 });
@@ -336,7 +361,6 @@ app.put('/detallesVehiculo/:id/cerrar', (req, res) => {
       res.status(500).json({ success: false, error: err.message });
     });
 });
-
 
 // Iniciar el servidor
 app.listen(PORT, () => {
