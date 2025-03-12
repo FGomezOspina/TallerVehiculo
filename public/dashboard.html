@@ -39,17 +39,25 @@
                     </ul>
                 </div>
             </li>
-            <!--li class="nav-item" id="navProveedores">
+            <!--
+            <li class="nav-item" id="navProveedores">
                 <a class="nav-link" href="/proveedores.html">
                     <i class="bi bi-truck"></i>
                     Proveedores
                 </a>
-            </li-->
+            </li>
+            -->
             <li class="nav-item" id="navInventario">
-                <a class="nav-link" href="/inventario.html">
+                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false">
                     <i class="bi bi-box-seam"></i>
                     Inventario
                 </a>
+                <div class="collapse" id="collapseInventario">
+                    <ul class="sub-menu">
+                        <li><a href="/inventario.html">Productos</a></li>
+                        <li><a href="/tempario.html">Tempario</a></li>
+                    </ul>
+                </div>
             </li>
             <li class="nav-item" id="navClientes">
                 <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseClientes" aria-expanded="false">
@@ -64,6 +72,7 @@
                 </div>
             </li>
         </ul>
+        
         
         <!-- Logout Button -->
         <div class="logout-btn" id="logout-btn">
@@ -119,17 +128,36 @@
                         </div>
                     </a>
                 </div-->
-                <!-- Tarjeta: Inventario (enlace simple) -->
+                <!-- Tarjeta: Inventario -->
                 <div class="col-md-3 card-col" id="cardInventario">
-                    <a href="/inventario.html" class="text-decoration-none">
-                        <div class="card">
+                    <div class="card">
+                        <a data-bs-toggle="collapse" href="#collapseInventario" role="button" aria-expanded="false" aria-controls="collapseInventario" class="text-decoration-none text-dark">
                             <div class="card-body text-center">
-                                <i class="bi bi-box-seam" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                                <h5 class="card-title">Inventario</h5>
+                                <i class="bi bi-box-seam" style="font-size: 2rem;"></i>
+                                <h5 class="card-title mt-2">Inventario</h5>
+                            </div>
+                        </a>
+                        <div class="collapse" id="collapseInventario">
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        Inventario
+                                        <ul class="list-group mt-1">
+                                            <li class="list-group-item">
+                                                <a href="/inventario.html" class="text-decoration-none">Productos</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <a href="/tempario.html" class="text-decoration-none">Tempario</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
+                
+                  
                 <!-- Tarjeta: Clientes con menú desplegable -->
                 <div class="col-md-3 card-col" id="cardClientes">
                     <div class="card">

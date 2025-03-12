@@ -262,6 +262,72 @@ app.delete('/productos/:id', (req, res) => {
     });
 });
 
+app.post('/saveTempario', (req, res) => {
+  const { tempario } = req.body;
+  if (!tempario || !Array.isArray(tempario)) {
+    return res.status(400).json({ success: false, error: "Datos inválidos" });
+  }
+
+  // Se crea un documento por cada item en la colección "saveTempario"
+  const promises = tempario.map(item => {
+    return db.collection("saveTempario").add(item);
+  });
+
+  Promise.all(promises)
+    .then(results => {
+      res.json({ success: true, ids: results.map(doc => doc.id) });
+    })
+    .catch(err => {
+      console.error("Error guardando tempario: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Obtener todos los temparios guardados
+app.get('/getTempario', (req, res) => {
+  db.collection("saveTempario").get()
+    .then(snapshot => {
+      let temparioItems = [];
+      snapshot.forEach(doc => {
+        temparioItems.push({ id: doc.id, ...doc.data() });
+      });
+      res.json({ success: true, tempario: temparioItems });
+    })
+    .catch(err => {
+      console.error("Error obteniendo tempario: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Actualizar un producto del tempario
+app.put('/tempario/:id', (req, res) => {
+  const id = req.params.id;
+  const updatedData = req.body;
+  db.collection("saveTempario").doc(id).update(updatedData)
+    .then(() => {
+      res.json({ success: true });
+    })
+    .catch(err => {
+      console.error("Error actualizando tempario: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+// Eliminar un producto del tempario
+app.delete('/tempario/:id', (req, res) => {
+  const id = req.params.id;
+  db.collection("saveTempario").doc(id).delete()
+    .then(() => {
+      res.json({ success: true });
+    })
+    .catch(err => {
+      console.error("Error eliminando tempario: ", err);
+      res.status(500).json({ success: false, error: err.message });
+    });
+});
+
+
+
 // -------------------- DETALLES VEHICULO --------------------
 
 // Guardar el detalle completo del vehículo (crear uno nuevo)
