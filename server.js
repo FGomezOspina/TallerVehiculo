@@ -331,25 +331,41 @@ app.delete('/tempario/:id', (req, res) => {
 // -------------------- DETALLES VEHICULO --------------------
 
 // Guardar el detalle completo del vehículo (crear uno nuevo)
-// El objeto debe incluir el campo "sede" para identificar a qué sede pertenece.
+// Ruta para guardar el detalle del vehículo
 app.post('/guardarDetalle', (req, res) => {
-  // Medir el tamaño del payload
-  const payloadStr = JSON.stringify(req.body);
-  const payloadSizeBytes = Buffer.byteLength(payloadStr, 'utf8');
-  const payloadSizeMB = payloadSizeBytes / (1024 * 1024);
-  console.log(`Payload size: ${payloadSizeMB.toFixed(2)} MB`);
-
   const detalleData = req.body;
+
+  // Guardar en la colección "detallesVehiculo"
   db.collection("detallesVehiculo").add(detalleData)
     .then(docRef => {
       console.log("Detalle del vehículo guardado con ID: ", docRef.id);
-      res.json({ success: true, id: docRef.id });
+
+      // Después de guardar el detalle del vehículo, también guardar los productos de la tabla
+      const productosData = detalleData.servicios.map(servicio => ({
+        productoId: servicio.productoId,
+        productoNombre: servicio.productoNombre,
+        cantidad: servicio.cantidad,
+        precioUnitario: servicio.precioUnitario,
+        subtotal: servicio.subtotal,
+        detalleId: docRef.id // Relacionamos el producto con el ID del detalle del vehículo
+      }));
+
+      // Guardar los productos en la colección "productosDetalles"
+      const productoPromises = productosData.map(item => {
+        return db.collection("productosDetalles").add(item);
+      });
+
+      return Promise.all(productoPromises).then(() => {
+        res.json({ success: true, id: docRef.id });
+      });
     })
     .catch(err => {
       console.error("Error guardando detalle del vehículo:", err);
       res.status(500).json({ success: false, error: err.message });
     });
 });
+
+
 
 // Obtener todos los detalles vehiculares filtrando por sede
 app.get('/detallesVehiculo', (req, res) => {

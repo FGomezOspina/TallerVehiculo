@@ -324,6 +324,127 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // -------------------------------------------------------
+  // TEMPARIO
+  // -------------------------------------------------------
+
+   // Cargar los servicios de tempario
+   function loadTemparioServicios() {
+    fetch('/getTempario')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.tempario)) {
+          temparioServicios = data.tempario;
+          populateTemparioSelect();
+        }
+      })
+      .catch(err => console.error('Error al obtener tempario:', err));
+  }
+
+   // Poblar el select de servicios de tempario
+   function populateTemparioSelect() {
+    const selects = document.querySelectorAll('.tempario-select');
+    selects.forEach(select => {
+      select.innerHTML = '<option value="">Seleccione un servicio</option>';
+      temparioServicios.forEach(servicio => {
+        const option = document.createElement('option');
+        option.value = servicio.id;
+        option.textContent = servicio.descripcion;
+        option.setAttribute('data-precio', servicio.precio);
+        select.appendChild(option);
+      });
+    });
+  }
+
+  loadTemparioServicios(); // Llamada para cargar los servicios de tempario
+
+  // Función para recalcular el total de la tabla de tempario
+  function recalcularTotalTempario() {
+    let total = 0;
+    const filas = document.querySelectorAll('#temparioTableBody tr');
+    filas.forEach((fila) => {
+      const priceInput = fila.querySelector('.tempario-price');
+      const precio = parseFloat(priceInput.value) || 0; // Usamos el precio editable
+      total += precio; // Acumulamos el total
+    });
+    document.getElementById('totalTempario').textContent = `$${total.toFixed(2)}`; // Mostrar el total
+  }
+
+
+
+  // Función para agregar una nueva fila de tempario
+  function agregarTemparioFila() {
+    const tbody = document.getElementById('temparioTableBody');
+    const nuevaFila = document.createElement('tr');
+    nuevaFila.innerHTML = `
+      <td>
+        <select class="form-select tempario-select">
+          <option value="">Seleccione un servicio</option>
+        </select>
+      </td>
+      <td><input type="number" class="form-control tempario-price" value="0" min="0" /></td>
+      <td class="text-center align-middle">
+        <button class="btn btn-sm btn-danger tempario-eliminarFila">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(nuevaFila);
+
+    // Poblar el select con los servicios de tempario
+    populateTemparioSelect();
+
+    // Manejar el cambio en el select de servicio
+    nuevaFila.querySelector('.tempario-select').addEventListener('change', (e) => {
+      const selectedOption = e.target.options[e.target.selectedIndex];
+      const precio = parseFloat(selectedOption.getAttribute('data-precio')) || 0;
+      nuevaFila.querySelector('.tempario-price').value = precio;
+      recalcularTotalTempario(); // Recalcular el total cuando se seleccione un servicio
+    });
+
+    // Manejar el cambio en el precio editable
+    nuevaFila.querySelector('.tempario-price').addEventListener('input', () => {
+      recalcularTotalTempario(); // Recalcular el total cuando se modifique el precio
+    });
+
+    recalcularTotalTempario();
+  }
+
+
+
+
+  // Delegación para el botón "Eliminar" en cada fila de tempario
+  document.getElementById('temparioTableBody').addEventListener('click', function(e) {
+    if (e.target.classList.contains('tempario-eliminarFila')) {
+      const fila = e.target.closest('tr');
+      fila.remove();
+      recalcularTotalTempario(); // Recalcular total después de eliminar una fila
+    }
+  });
+
+
+  // Agregar una fila al hacer clic en el botón "Agregar Servicio"
+  document.getElementById('agregarTemparioFila').addEventListener('click', agregarTemparioFila);
+
+  // Función para obtener los temparios desde la tabla
+  function obtenerTemparioDesdeTabla() {
+    const temparioServicios = [];
+    const filas = document.querySelectorAll('#temparioTableBody tr');
+    filas.forEach((fila) => {
+      const selectServicio = fila.querySelector('.tempario-select');
+      const priceInput = fila.querySelector('.tempario-price');
+      
+      const tempario = {
+        servicioId: selectServicio.value,
+        servicioDescripcion: selectServicio.options[selectServicio.selectedIndex]?.text || '',
+        precio: parseFloat(priceInput.value) || 0
+      };
+      temparioServicios.push(tempario);
+    });
+    return temparioServicios;
+  }
+
+
+  // -------------------------------------------------------
   // BUSCADOR DE CLIENTES Y SELECCIÓN DE VEHÍCULO
   // -------------------------------------------------------
   // Se filtran los clientes de acuerdo a la sede actual
@@ -542,7 +663,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     return servicios;
   }
-
+  
   document.getElementById('btnGuardar').addEventListener('click', () => {
     const detalleData = {
       cliente: {
@@ -552,7 +673,8 @@ document.addEventListener('DOMContentLoaded', function() {
         empresa: document.getElementById("clienteEmpresaDisplay").textContent
       },
       vehiculo: vehicleData,
-      servicios: obtenerServiciosDesdeTabla(),
+      tempario: obtenerTemparioDesdeTabla(), // Aquí estamos obteniendo los temparios
+      servicios: obtenerServiciosDesdeTabla(), // Aquí estamos obteniendo los productos/servicios
       descripcion: document.querySelector("textarea").value,
       fotos: {
         antes: Array.from(previewFotosAntes.querySelectorAll('img')).map(img => img.src),
@@ -563,9 +685,9 @@ document.addEventListener('DOMContentLoaded', function() {
         taller: document.getElementById('signatureBoxTaller').querySelector('img') ? document.getElementById('signatureBoxTaller').querySelector('img').src : ''
       },
       fecha: new Date().toISOString(),
-      sede: sede  // <-- Agregada esta línea para incluir la sede
+      sede: sede
     };
-
+  
     fetch('/guardarDetalle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -584,6 +706,7 @@ document.addEventListener('DOMContentLoaded', function() {
       alert("Error al conectar con el servidor.");
     });
   });
+
 
   // -------------------------------------------------------
   // INICIALIZACIÓN FINAL
