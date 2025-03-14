@@ -381,7 +381,9 @@ document.addEventListener('DOMContentLoaded', function() {
           <option value="">Seleccione un servicio</option>
         </select>
       </td>
-      <td><input type="number" class="form-control tempario-price" value="0" min="0" /></td>
+      <td>
+        <input type="number" class="form-control tempario-price" value="0" min="0" />
+      </td>
       <td class="text-center align-middle">
         <button class="btn btn-sm btn-danger tempario-eliminarFila">
           <i class="bi bi-trash"></i>
@@ -389,37 +391,48 @@ document.addEventListener('DOMContentLoaded', function() {
       </td>
     `;
     tbody.appendChild(nuevaFila);
-
-    // Poblar el select con los servicios de tempario
-    populateTemparioSelect();
-
+  
+    // Solo poblar el select de la nueva fila
+    const newSelect = nuevaFila.querySelector('.tempario-select');
+    newSelect.innerHTML = '<option value="">Seleccione un servicio</option>';
+    temparioServicios.forEach(servicio => {
+      const option = document.createElement('option');
+      option.value = servicio.id;
+      option.textContent = servicio.descripcion;
+      option.setAttribute('data-precio', servicio.precio);
+      newSelect.appendChild(option);
+    });
+  
     // Manejar el cambio en el select de servicio
-    nuevaFila.querySelector('.tempario-select').addEventListener('change', (e) => {
+    newSelect.addEventListener('change', (e) => {
       const selectedOption = e.target.options[e.target.selectedIndex];
       const precio = parseFloat(selectedOption.getAttribute('data-precio')) || 0;
       nuevaFila.querySelector('.tempario-price').value = precio;
       recalcularTotalTempario(); // Recalcular el total cuando se seleccione un servicio
     });
-
+  
     // Manejar el cambio en el precio editable
     nuevaFila.querySelector('.tempario-price').addEventListener('input', () => {
       recalcularTotalTempario(); // Recalcular el total cuando se modifique el precio
     });
-
+  
     recalcularTotalTempario();
   }
+  
 
 
 
 
   // Delegación para el botón "Eliminar" en cada fila de tempario
   document.getElementById('temparioTableBody').addEventListener('click', function(e) {
-    if (e.target.classList.contains('tempario-eliminarFila')) {
-      const fila = e.target.closest('tr');
+    const deleteBtn = e.target.closest('.tempario-eliminarFila');
+    if (deleteBtn) {
+      const fila = deleteBtn.closest('tr');
       fila.remove();
-      recalcularTotalTempario(); // Recalcular total después de eliminar una fila
+      recalcularTotalTempario();
     }
   });
+  
 
 
   // Agregar una fila al hacer clic en el botón "Agregar Servicio"
