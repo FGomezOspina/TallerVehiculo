@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("editNombre").value = cliente.nombre || "";
     document.getElementById("editTelefono").value = cliente.telefono || "";
     document.getElementById("editCedula").value = cliente.cedula || "";
-    document.getElementById("editEmail").value = cliente.direccion || "";
+    document.getElementById("editEmail").value = cliente.email || "";
     
     // Limpiar contenedor de vehículos
     editVehiculosContainer.innerHTML = "";
