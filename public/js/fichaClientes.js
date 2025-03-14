@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
   
   let currentClienteId = null;
   let currentClienteData = null;
+  let vehiculoSeleccionadoGlobal = null;
+
+  function mostrarOpcionesVehiculo(vehiculo) {
+    vehiculoSeleccionadoGlobal = vehiculo;
+    // Mostrar el modal de opciones del vehículo usando Bootstrap
+    const modalEl = document.getElementById('vehiculoOptionsModal');
+    const vehiculoModal = new bootstrap.Modal(modalEl);
+    vehiculoModal.show();
+  }
   
   // Función para obtener y renderizar clientes desde el servidor, filtrando por sede
   function renderClientes(query = "") {
@@ -23,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.success) {
           clientesContainer.innerHTML = "";
           data.clientes.forEach(cliente => {
-            // Filtro: si se ingresa consulta, buscar en nombre, cédula o en alguna placa de los vehículos.
+            // Filtro: si se ingresa consulta, buscar en nombre, cédula, empresa o en alguna placa de los vehículos.
             const q = query.toLowerCase();
             const coincideEmpresa = cliente.empresa.toLowerCase().includes(q);
             const coincideNombre = cliente.nombre.toLowerCase().includes(q);
@@ -37,13 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
               });
             }
   
-            // Modificación aquí: si coincide con cualquiera de los filtros, mostrar el cliente.
-            if (query && !(
-              coincideNombre || 
-              coincideCedula || 
-              coincidePlaca || 
-              coincideEmpresa
-            )) {
+            // Si se ingresa consulta y no coincide con ninguno de los filtros, no se muestra el cliente.
+            if (query && !(coincideNombre || coincideCedula || coincidePlaca || coincideEmpresa)) {
               return;
             }
   
@@ -71,7 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <div class="vehiculos-list mt-2" style="display:none;"></div>
             `;
-            
+  
+            // **Asignar el eventListener al hacer clic en el cliente**
+            item.addEventListener('click', () => {
+              currentClienteData = cliente; // Asigna el cliente seleccionado a currentClienteData
+              // Aquí puedes hacer más acciones como actualizar la UI, si lo necesitas
+              console.log(currentClienteData); // Aquí podrías ver los datos del cliente en la consola
+            });
+  
             // Botón para ver vehículos
             const verVehiculosBtn = item.querySelector(".verVehiculosBtn");
             verVehiculosBtn.addEventListener("click", () => {
@@ -79,9 +90,27 @@ document.addEventListener('DOMContentLoaded', () => {
               if (vehiculosList.style.display === "none") {
                 vehiculosList.style.display = "block";
                 if (cliente.vehiculos && cliente.vehiculos.length > 0) {
+                  // Renderizar cada vehículo como hipervínculo
                   vehiculosList.innerHTML = "<strong>Vehículos:</strong><ul>" + 
-                    cliente.vehiculos.map(v => `<li>${v.marca} ${v.modelo} - ${v.placa}</li>`).join("") + 
+                    cliente.vehiculos.map((v, index) => {
+                      return `<li>
+                        <a href="#" class="vehiculoLink" data-index="${index}">
+                          ${v.marca} ${v.modelo} - ${v.placa}
+                        </a>
+                      </li>`;
+                    }).join("") +
                     "</ul>";
+  
+                  // Asignar listener a cada enlace de vehículo
+                  const vehiculoLinks = vehiculosList.querySelectorAll('.vehiculoLink');
+                  vehiculoLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                      e.preventDefault();
+                      const idx = e.target.getAttribute('data-index');
+                      const vehiculoSeleccionado = cliente.vehiculos[idx];
+                      mostrarOpcionesVehiculo(vehiculoSeleccionado);
+                    });
+                  });
                 } else {
                   vehiculosList.innerHTML = "<em>No tiene vehículos registrados.</em>";
                 }
@@ -131,6 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
         clientesContainer.innerHTML = "Error al cargar clientes.";
       });
   }
+  
+  
   
   // Función para llenar el formulario de edición (cliente y vehículos)
   function fillEditForm(cliente) {
@@ -247,6 +278,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const vehiculoForm = crearFormularioVehiculoEdit(index);
     editVehiculosContainer.appendChild(vehiculoForm);
   });
+  
+
+  document.getElementById('btnCrearOrden').addEventListener('click', () => {
+    if (vehiculoSeleccionadoGlobal) {
+      const params = new URLSearchParams();
+      params.set('marca', vehiculoSeleccionadoGlobal.marca);
+      params.set('modelo', vehiculoSeleccionadoGlobal.modelo);
+      params.set('anio', vehiculoSeleccionadoGlobal.anio);
+      params.set('color', vehiculoSeleccionadoGlobal.color);
+      params.set('placa', vehiculoSeleccionadoGlobal.placa);
+
+      // Datos del cliente
+      params.set('clienteNombre', currentClienteData.nombre);
+      params.set('clienteCedula', currentClienteData.cedula);
+      params.set('clienteTelefono', currentClienteData.telefono);
+      params.set('clienteEmpresa', currentClienteData.empresa);
+      window.location.href = `detallevehiculoTodos.html?${params.toString()}`;
+    }
+  });
+  
+  document.getElementById('btnHistorialVehicular').addEventListener('click', () => {
+    if (vehiculoSeleccionadoGlobal) {
+      const params = new URLSearchParams();
+      params.set('placa', vehiculoSeleccionadoGlobal.placa);
+      window.location.href = `historialVehicular.html?${params.toString()}`;
+    }
+  });
+  
   
   // Delegar la eliminación de vehículo en el modal de edición
   editVehiculosContainer.addEventListener("click", (e) => {

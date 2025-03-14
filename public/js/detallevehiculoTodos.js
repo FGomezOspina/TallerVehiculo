@@ -6,6 +6,32 @@ document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
   const sede = urlParams.get('sede') || localStorage.getItem('sede') || 'pereira';
   // Si la sede viene en la URL, se guarda en localStorage para usarla en otras páginas
+
+  const marca = urlParams.get('marca');
+  const modelo = urlParams.get('modelo');
+  const anio = urlParams.get('anio');
+  const color = urlParams.get('color');
+  const placa = urlParams.get('placa');
+
+  // Obtener los valores de los parámetros del cliente
+  const clienteNombre = urlParams.get('clienteNombre');
+  const clienteCedula = urlParams.get('clienteCedula');
+  const clienteTelefono = urlParams.get('clienteTelefono');
+  const clienteEmpresa = urlParams.get('clienteEmpresa');
+
+   // Asignar los valores de los parámetros a los campos del formulario
+   if (marca) document.getElementById('modalVehMarca').value = marca;
+   if (modelo) document.getElementById('modalVehModelo').value = modelo;
+   if (anio) document.getElementById('modalVehAnio').value = anio;
+   if (color) document.getElementById('modalVehColor').value = color;
+   if (placa) document.getElementById('modalVehPlaca').value = placa;
+
+  // Asignar los valores de los parámetros del cliente a los campos del formulario
+  if (clienteNombre) document.getElementById('clienteNombreDisplay').textContent = clienteNombre;
+  if (clienteCedula) document.getElementById('clienteCedulaDisplay').textContent = clienteCedula;
+  if (clienteTelefono) document.getElementById('clienteTelefonoDisplay').textContent = clienteTelefono;
+  if (clienteEmpresa) document.getElementById('clienteEmpresaDisplay').textContent = clienteEmpresa;
+
   if(urlParams.get('sede')) {
     localStorage.setItem('sede', urlParams.get('sede'));
   }
@@ -145,26 +171,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Funciones para actualizar la pestaña Vehículo
   function updateVehicleTab() {
+    const urlParams = new URLSearchParams(window.location.search);
+  
+    // Obtener los parámetros de la URL o usar los valores de vehicleData como respaldo
+    const marca = urlParams.get('marca') || vehicleData.marca;
+    const modelo = urlParams.get('modelo') || vehicleData.modelo;
+    const anio = urlParams.get('anio') || vehicleData.anio;
+    const color = urlParams.get('color') || vehicleData.color;
+    const placa = urlParams.get('placa') || vehicleData.placa;
+    const kilometraje = urlParams.get('kilometraje') || vehicleData.kilometraje;
+    const combustible = urlParams.get('combustible') || vehicleData.combustible;
+  
     if (vehicleData) {
-      vehTitle.textContent = `${vehicleData.marca} ${vehicleData.modelo}`;
-      vehSubtitle.textContent = `${vehicleData.placa} - ${vehicleData.anio} - ${vehicleData.color}`;
-      let kms = parseFloat(vehicleData.kilometraje) || 0;
+      vehTitle.textContent = `${marca} ${modelo}`;
+      vehSubtitle.textContent = `${placa} - ${anio} - ${color}`;
+      let kms = parseFloat(kilometraje) || 0;
       vehKilometrajeDisplay.textContent = kms.toLocaleString() + ' Kms';
-      fuelProgress.style.width = vehicleData.combustible + '%';
-      fuelProgress.setAttribute('aria-valuenow', vehicleData.combustible);
-      fuelProgress.textContent = vehicleData.combustible + '%';
+      fuelProgress.style.width = combustible + '%';
+      fuelProgress.setAttribute('aria-valuenow', combustible);
+      fuelProgress.textContent = combustible + '%';
     }
   }
   
+  
   function fillModalFields() {
-    modalVehMarca.value = vehicleData.marca;
-    modalVehModelo.value = vehicleData.modelo;
-    modalVehAnio.value = vehicleData.anio;
-    modalVehColor.value = vehicleData.color;
-    modalVehPlaca.value = vehicleData.placa;
-    modalVehKilometraje.value = vehicleData.kilometraje;
-    modalVehCombustible.value = vehicleData.combustible;
+    const urlParams = new URLSearchParams(window.location.search);
+  
+    // Obtener los parámetros de la URL o usar los valores de vehicleData como respaldo
+    const marca = urlParams.get('marca') || vehicleData.marca;
+    const modelo = urlParams.get('modelo') || vehicleData.modelo;
+    const anio = urlParams.get('anio') || vehicleData.anio;
+    const color = urlParams.get('color') || vehicleData.color;
+    const placa = urlParams.get('placa') || vehicleData.placa;
+    const kilometraje = urlParams.get('kilometraje') || vehicleData.kilometraje;
+    const combustible = urlParams.get('combustible') || vehicleData.combustible;
+  
+    // Asignar los valores a los campos del formulario de edición
+    document.getElementById('modalVehMarca').value = marca;
+    document.getElementById('modalVehModelo').value = modelo;
+    document.getElementById('modalVehAnio').value = anio;
+    document.getElementById('modalVehColor').value = color;
+    document.getElementById('modalVehPlaca').value = placa;
+    document.getElementById('modalVehKilometraje').value = kilometraje;
+    document.getElementById('modalVehCombustible').value = combustible;
   }
+  
 
   btnEditarVehiculo.addEventListener('click', () => {
     fillModalFields();
