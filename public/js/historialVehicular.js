@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const sede = localStorage.getItem('sede') || 'pereira';
   const role = localStorage.getItem('role') || 'admin'; // Obtener el rol
 
+  // Obtener el parámetro "placa" de la URL
+  const urlParams = new URLSearchParams(window.location.search); 
+  const placaUrl = urlParams.get('placa'); // Placa pasada por URL
+
   // Cargar historial desde el endpoint /detallesVehiculo, incluyendo el parámetro sede
   function loadHistorial() {
     fetch(`/detallesVehiculo?sede=${sede}`)
@@ -12,7 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(data => {
         if (data.success) {
           detalles = data.detalles; // Se asume que data.detalles es un arreglo de documentos
-          populateHistorialTable(detalles); // Pasamos el historial cargado a la función
+          
+          // Si se pasa una placa por URL, filtrar los detalles por placa
+          if (placaUrl) {
+            const filteredDetails = detalles.filter(detalle => detalle.vehiculo?.placa.toLowerCase() === placaUrl.toLowerCase());
+            populateHistorialTable(filteredDetails); // Pasar los detalles filtrados a la tabla
+          } else {
+            populateHistorialTable(detalles); // Mostrar todos los detalles si no hay placa
+          }
         } else {
           console.error("Error al cargar historial:", data.error);
         }
@@ -23,14 +34,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // Rellenar la tabla del historial con los datos filtrados
   function populateHistorialTable(filteredDetails) {
     const tbody = document.querySelector('#historialTable tbody');
-    tbody.innerHTML = '';
+    tbody.innerHTML = ''; // Limpiar tabla antes de agregar datos
+
+    // Verificar si no hay vehículos
+    if (filteredDetails.length === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td colspan="5" class="text-center">No hay vehículos disponibles</td>
+      `;
+      tbody.appendChild(tr); // Agregar fila con el mensaje
+      return; // Terminar la ejecución si no hay datos
+    }
+
+    // Rellenar la tabla con los detalles
     filteredDetails.forEach(detalle => {
       const tr = document.createElement('tr');
-      // Formatear la fecha
       const fecha = new Date(detalle.fecha).toLocaleString();
       const clienteEmpresa = detalle.cliente?.empresa || '';
       const vehiculo = detalle.vehiculo ? `${detalle.vehiculo.marca} ${detalle.vehiculo.modelo} (${detalle.vehiculo.placa})` : '';
       const estado = detalle.estado || 'Abierto';
+
       tr.innerHTML = `
         <td>${fecha}</td>
         <td>${clienteEmpresa}</td>
@@ -42,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const actionsCell = tr.querySelector('td:last-child');
 
       if (estado === 'Abierto') {
-        // Botón de Cerrar cuando el estado es 'Abierto'
         const cerrarBtn = document.createElement('button');
         cerrarBtn.className = 'btn btn-sm btn-danger me-2';
         cerrarBtn.textContent = 'Cerrar';
@@ -57,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
               if (data.success) {
                 alert("El informe se ha cerrado correctamente.");
-                loadHistorial(); // Recargar la tabla con los datos actualizados
+                loadHistorial();
               } else {
                 alert("Error al cerrar el informe: " + data.error);
               }
@@ -71,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
         actionsCell.appendChild(cerrarBtn);
       }
 
-      // Otros botones como Imprimir o Ver (según el estado)
       if (estado === 'Cerrado') {
         const imprimirBtn = document.createElement('button');
         imprimirBtn.className = 'btn btn-sm btn-info me-2';
