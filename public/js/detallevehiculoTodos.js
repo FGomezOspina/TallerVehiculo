@@ -30,22 +30,33 @@ document.addEventListener('DOMContentLoaded', function() {
   ];
 
   if (role === 'patio') {
-    // Para usuarios tipo patio: ocultar elementos
+    // Para usuarios tipo patio: ocultar elementos restringidos
     elementosARestrigir.forEach(id => {
       const elem = document.getElementById(id);
       if (elem) {
         elem.style.display = 'none';
       }
     });
+    // Ocultar la tabla de tempario
+    const temparioTableContainer = document.getElementById('temparioTableContainer');
+    if (temparioTableContainer) {
+      temparioTableContainer.style.display = 'none';
+    }
   } else {
-    // Para admin: asegurar que se muestren todos los elementos
+    // Para admin: asegurar que se muestren todos los elementos restringidos
     elementosARestrigir.forEach(id => {
       const elem = document.getElementById(id);
       if (elem) {
         elem.style.display = '';
       }
     });
+    // Mostrar la tabla de tempario
+    const temparioTableContainer = document.getElementById('temparioTableContainer');
+    if (temparioTableContainer) {
+      temparioTableContainer.style.display = '';
+    }
   }
+  
 
   // -------------------------------------------------------
   // CONFIGURACIÓN DEL LOGO
