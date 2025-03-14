@@ -480,6 +480,18 @@ input:focus, textarea:focus, select:focus {
   margin-bottom: 20px;
 }
 
+/* Estilo para el campo de precio */
+.tempario-price {
+  width: 150px; /* Asegura un tamaño adecuado para el campo del precio */
+  text-align: right; /* Alinea el texto a la derecha para los valores monetarios */
+}
+
+/* Estilo para el campo de descripción (select) */
+.tempario-select {
+  width: 250px; /* Tamaño mediano para la descripción del servicio */
+}
+
+
 /* Distribución en pantallas grandes: 4 tarjetas por fila */
 @media screen and (min-width: 992px) {
   .card-col {

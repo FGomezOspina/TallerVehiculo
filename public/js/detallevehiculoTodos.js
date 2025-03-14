@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(err => console.error("Error fetching products:", err));
   }
   
-  // Función para poblar un select con los productos del inventario
+  // Función para poblar el select de productos
   function populateProductSelect(selectElement) {
     selectElement.innerHTML = '<option value="">Seleccione un producto</option>';
     inventoryProducts.forEach(product => {
@@ -241,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const agregarFilaBtn = document.getElementById('agregarFila');
   const totalServiciosEl = document.getElementById('totalServicios');
 
+  // Función para recalcular el total de la tabla de productos
   function recalcularTotal() {
     let total = 0;
     const filas = tablaServicios.querySelectorAll('tbody tr');
@@ -257,12 +258,13 @@ document.addEventListener('DOMContentLoaded', function() {
     totalServiciosEl.textContent = `$${total.toFixed(2)}`;
   }
 
+  // Función para agregar una nueva fila a la tabla de productos
   function agregarFila() {
     const tbody = tablaServicios.querySelector('tbody');
     const nuevaFila = document.createElement('tr');
     nuevaFila.innerHTML = `
       <td>
-        <select class="form-select product-select">
+        <select class="form-select product-select select2">
           <option value="">Seleccione un producto</option>
         </select>
       </td>
@@ -280,12 +282,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectElement = nuevaFila.querySelector('.product-select');
     populateProductSelect(selectElement);
 
-    selectElement.addEventListener('change', function(e) {
-      const selectedOption = e.target.options[e.target.selectedIndex];
+    // Inicializar Select2 para el nuevo select
+    $(selectElement).select2({
+      placeholder: "Seleccione un producto",
+      allowClear: true
+    });
+
+    // Manejar el cambio en el select de producto para actualizar el precio
+    $(selectElement).on('change', function(e) {
+      const selectedOption = this.options[this.selectedIndex];
       const precioBase = parseFloat(selectedOption.getAttribute('data-precio-base')) || 0;
       const priceInput = nuevaFila.querySelector('.price-input');
       priceInput.value = precioBase;
-      recalcularTotal();
+      recalcularTotal(); // Recalcular el total cuando se seleccione un producto
     });
 
     recalcularTotal();
@@ -402,8 +411,8 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(err => console.error('Error al obtener tempario:', err));
   }
 
-   // Poblar el select de servicios de tempario
-   function populateTemparioSelect() {
+  // Poblar el select de servicios de tempario
+  function populateTemparioSelect() {
     const selects = document.querySelectorAll('.tempario-select');
     selects.forEach(select => {
       select.innerHTML = '<option value="">Seleccione un servicio</option>';
@@ -414,8 +423,14 @@ document.addEventListener('DOMContentLoaded', function() {
         option.setAttribute('data-precio', servicio.precio);
         select.appendChild(option);
       });
+      // Inicializar Select2 en el select recién poblado
+      $(select).select2({
+        placeholder: "Seleccione un servicio",
+        allowClear: true
+      });
     });
   }
+
 
   loadTemparioServicios(); // Llamada para cargar los servicios de tempario
 
@@ -430,6 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.getElementById('totalTempario').textContent = `$${total.toFixed(2)}`; // Mostrar el total
   }
+
 
 
 
@@ -454,9 +470,8 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     tbody.appendChild(nuevaFila);
   
-    // Solo poblar el select de la nueva fila
+    // Poblar el select con los servicios de tempario
     const newSelect = nuevaFila.querySelector('.tempario-select');
-    newSelect.innerHTML = '<option value="">Seleccione un servicio</option>';
     temparioServicios.forEach(servicio => {
       const option = document.createElement('option');
       option.value = servicio.id;
@@ -465,9 +480,15 @@ document.addEventListener('DOMContentLoaded', function() {
       newSelect.appendChild(option);
     });
   
-    // Manejar el cambio en el select de servicio
-    newSelect.addEventListener('change', (e) => {
-      const selectedOption = e.target.options[e.target.selectedIndex];
+    // Inicializar Select2 para el nuevo select
+    $(newSelect).select2({
+      placeholder: "Seleccione un servicio",
+      allowClear: true
+    });
+  
+    // Manejar el cambio en el select de servicio para actualizar el precio
+    $(newSelect).on('change', function (e) {
+      const selectedOption = this.options[this.selectedIndex];
       const precio = parseFloat(selectedOption.getAttribute('data-precio')) || 0;
       nuevaFila.querySelector('.tempario-price').value = precio;
       recalcularTotalTempario(); // Recalcular el total cuando se seleccione un servicio
@@ -481,10 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
     recalcularTotalTempario();
   }
   
-
-
-
-
+  
   // Delegación para el botón "Eliminar" en cada fila de tempario
   document.getElementById('temparioTableBody').addEventListener('click', function(e) {
     const deleteBtn = e.target.closest('.tempario-eliminarFila');

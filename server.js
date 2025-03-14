@@ -340,30 +340,15 @@ app.post('/guardarDetalle', (req, res) => {
     .then(docRef => {
       console.log("Detalle del vehículo guardado con ID: ", docRef.id);
 
-      // Después de guardar el detalle del vehículo, también guardar los productos de la tabla
-      const productosData = detalleData.servicios.map(servicio => ({
-        productoId: servicio.productoId,
-        productoNombre: servicio.productoNombre,
-        cantidad: servicio.cantidad,
-        precioUnitario: servicio.precioUnitario,
-        subtotal: servicio.subtotal,
-        detalleId: docRef.id // Relacionamos el producto con el ID del detalle del vehículo
-      }));
-
-      // Guardar los productos en la colección "productosDetalles"
-      const productoPromises = productosData.map(item => {
-        return db.collection("productosDetalles").add(item);
-      });
-
-      return Promise.all(productoPromises).then(() => {
-        res.json({ success: true, id: docRef.id });
-      });
+      // Respondemos con éxito después de guardar el detalle del vehículo
+      res.json({ success: true, id: docRef.id });
     })
     .catch(err => {
       console.error("Error guardando detalle del vehículo:", err);
       res.status(500).json({ success: false, error: err.message });
     });
 });
+
 
 
 
