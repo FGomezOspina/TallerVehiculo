@@ -118,8 +118,7 @@
       <strong>Factura a:</strong><br>
       <span id="clienteNombre"></span><br>
       <span id="clienteCedula"></span><br>
-      <span id="clienteDireccion"></span> <!-- Si lo tuvieras en tus datos -->
-      <!-- Ajusta o elimina campos según tu estructura de datos -->
+      <span id="clienteDireccion"></span>
     </div>
     <div class="factura-info">
       <p><strong>Factura #:</strong> <span id="facturaNumero"></span></p>
@@ -142,6 +141,11 @@
       <!-- Filas generadas dinámicamente -->
     </tbody>
   </table>
+
+  <!-- Sección de Tempario -->
+  <div id="temparioSection">
+    <!-- Si existen servicios de tempario, se mostrará esta tabla -->
+  </div>
 
   <!-- Resumen de totales -->
   <div class="resumen">
@@ -166,11 +170,11 @@
   <!-- Términos y condiciones, etc. -->
   <div style="clear: both; margin-top: 2rem;">
     <h4>Términos y Condiciones</h4>
+    <!-- Aquí puedes colocar más información -->
   </div>
 
   <!-- Sellos o firmas -->
   <div class="sellos">
-    <!-- Puedes incluir algún sello o firma aquí -->
     <img src="img/sello.png" alt="Sello de Aprobación">
   </div>
 </div>
@@ -180,7 +184,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const detalleId = urlParams.get('detalleId');
-    if(!detalleId) {
+    if (!detalleId) {
       alert("No se proporcionó un ID de detalle para la factura.");
       return;
     }
@@ -189,7 +193,7 @@
     fetch('/detallesVehiculo/' + detalleId)
       .then(response => response.json())
       .then(data => {
-        if(data.success) {
+        if (data.success) {
           const detalle = data.detalle;
           cargarDatosFactura(detalle);
         } else {
@@ -206,27 +210,26 @@
     // Datos del cliente
     document.getElementById('clienteNombre').textContent = detalle.cliente?.nombre || 'Sin nombre';
     document.getElementById('clienteCedula').textContent = detalle.cliente?.cedula || '';
-    // Si tuvieras dirección en tu DB:
+    // Si tienes dirección en la base de datos, descomenta la siguiente línea:
     // document.getElementById('clienteDireccion').textContent = detalle.cliente?.direccion || '';
 
     // Datos de factura
-    document.getElementById('facturaNumero').textContent = detalle.id; // o algún otro campo que lleve la numeración
+    document.getElementById('facturaNumero').textContent = detalle.id;
     const fecha = detalle.fecha ? new Date(detalle.fecha).toLocaleDateString() : new Date().toLocaleDateString();
     document.getElementById('fechaFactura').textContent = fecha;
     document.getElementById('estadoFactura').textContent = detalle.estado || 'Abierto';
 
-    // Lista de servicios / productos
+    // Lista de productos/servicios
     const productosBody = document.getElementById('productosBody');
     productosBody.innerHTML = '';
-    let subtotal = 0;
-    if(Array.isArray(detalle.servicios)) {
+    let productosSubtotal = 0;
+    if (Array.isArray(detalle.servicios)) {
       detalle.servicios.forEach(item => {
         const tr = document.createElement('tr');
         const precioUnitario = parseFloat(item.precioUnitario) || 0;
         const cantidad = parseFloat(item.cantidad) || 0;
         const sub = precioUnitario * cantidad;
-        subtotal += sub;
-
+        productosSubtotal += sub;
         tr.innerHTML = `
           <td>${item.productoNombre || 'Producto/Servicio'}</td>
           <td>${cantidad}</td>
@@ -237,12 +240,52 @@
       });
     }
 
-    // Calcular totales
-    const iva = subtotal * 0.19; // 19% de IVA
-    const total = subtotal + iva;
+    // Sección de Tempario
+    const temparioSection = document.getElementById('temparioSection');
+    temparioSection.innerHTML = '';
+    let temparioSubtotal = 0;
+    if (Array.isArray(detalle.tempario) && detalle.tempario.length > 0) {
+      // Crear título para la sección de tempario
+      const titulo = document.createElement('h3');
+      titulo.textContent = "Servicios de Tempario";
+      temparioSection.appendChild(titulo);
+
+      // Crear tabla para los servicios de tempario
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Descripción</th>
+            <th class="text-right">Precio</th>
+          </tr>
+        </thead>
+        <tbody id="temparioBody">
+          <!-- Se generarán las filas -->
+        </tbody>
+      `;
+      temparioSection.appendChild(table);
+
+      const temparioBody = document.getElementById('temparioBody');
+      detalle.tempario.forEach(servicio => {
+        const tr = document.createElement('tr');
+        // Se asume que en cada objeto tempario existe "servicioDescripcion" y "precio"
+        const precio = parseFloat(servicio.precio) || 0;
+        temparioSubtotal += precio;
+        tr.innerHTML = `
+          <td>${servicio.servicioDescripcion || 'Servicio de Tempario'}</td>
+          <td class="text-right">$${precio.toFixed(2)}</td>
+        `;
+        temparioBody.appendChild(tr);
+      });
+    }
+
+    // Calcular totales combinando productos y tempario
+    const totalSubtotal = productosSubtotal + temparioSubtotal;
+    const iva = totalSubtotal * 0.19; // 19% de IVA
+    const total = totalSubtotal + iva;
 
     // Mostrar totales
-    document.getElementById('subtotalFactura').textContent = `$${subtotal.toFixed(2)}`;
+    document.getElementById('subtotalFactura').textContent = `$${totalSubtotal.toFixed(2)}`;
     document.getElementById('ivaFactura').textContent = `$${iva.toFixed(2)}`;
     document.getElementById('totalFactura').textContent = `$${total.toFixed(2)}`;
   }
