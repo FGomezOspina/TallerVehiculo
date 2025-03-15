@@ -758,6 +758,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   document.getElementById('btnGuardar').addEventListener('click', () => {
+    // Capturar parámetros de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const vehiculoInfo = {
+        marca: urlParams.get('marca'),
+        modelo: urlParams.get('modelo'),
+        anio: urlParams.get('anio'),
+        color: urlParams.get('color'),
+        placa: urlParams.get('placa')
+    };
+
+    // Obtener los datos del cliente
     const detalleData = {
       cliente: {
         nombre: document.getElementById("clienteNombreDisplay").textContent,
@@ -765,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function() {
         telefono: document.getElementById("clienteTelefonoDisplay").textContent,
         empresa: document.getElementById("clienteEmpresaDisplay").textContent
       },
-      vehiculo: vehicleData,
+      vehiculo: vehiculoInfo, // Agregar la información del vehículo
       tempario: obtenerTemparioDesdeTabla(), // Aquí estamos obteniendo los temparios
       servicios: obtenerServiciosDesdeTabla(), // Aquí estamos obteniendo los productos/servicios
       descripcion: document.querySelector("textarea").value,
@@ -781,6 +792,7 @@ document.addEventListener('DOMContentLoaded', function() {
       sede: sede
     };
   
+    // Enviar los datos al backend
     fetch('/guardarDetalle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -799,6 +811,7 @@ document.addEventListener('DOMContentLoaded', function() {
       alert("Error al conectar con el servidor.");
     });
   });
+
 
 
   // -------------------------------------------------------
