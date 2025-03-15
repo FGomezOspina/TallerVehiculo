@@ -51,62 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
   tablaReportes.addEventListener('click', eliminarReporte);
 
   // ---------------------------------------------------------
-  // LÓGICA DE LA TABLA DE SERVICIOS (cálculo de costos)
-  // ---------------------------------------------------------
-  const tablaServicios = document.getElementById('tablaServicios');
-  const agregarFilaBtn = document.getElementById('agregarFila');
-  const totalServiciosEl = document.getElementById('totalServicios');
-
-  function recalcularTotal() {
-    let total = 0;
-    const filas = tablaServicios.querySelectorAll('tbody tr');
-    filas.forEach((fila) => {
-      const inputs = fila.querySelectorAll('input');
-      const cantidad = parseFloat(inputs[1].value) || 0;
-      const precioU = parseFloat(inputs[2].value) || 0;
-      const subtotal = cantidad * precioU;
-      const subtotalCell = fila.querySelectorAll('td')[3];
-      subtotalCell.textContent = `$${subtotal.toFixed(2)}`;
-      total += subtotal;
-    });
-    totalServiciosEl.textContent = `$${total.toFixed(2)}`;
-  }
-
-  function agregarFila() {
-    const tbody = tablaServicios.querySelector('tbody');
-    const nuevaFila = document.createElement('tr');
-    nuevaFila.innerHTML = `
-      <td><input type="text" class="form-control" placeholder="Nuevo servicio" /></td>
-      <td><input type="number" class="form-control" value="1" min="1" /></td>
-      <td><input type="number" class="form-control" value="0" min="0" /></td>
-      <td class="align-middle text-end">$0.00</td>
-      <td class="text-center align-middle">
-        <button class="btn btn-sm btn-danger eliminarFila">
-          <i class="bi bi-trash"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(nuevaFila);
-    recalcularTotal();
-  }
-
-  function eliminarFila(e) {
-    if (e.target.closest('.eliminarFila')) {
-      const fila = e.target.closest('tr');
-      fila.remove();
-      recalcularTotal();
-    }
-  }
-
-  tablaServicios.addEventListener('input', function(e) {
-    if (e.target.tagName === 'INPUT') {
-      recalcularTotal();
-    }
-  });
-  tablaServicios.addEventListener('click', eliminarFila);
-  agregarFilaBtn.addEventListener('click', agregarFila);
-
-  // ---------------------------------------------------------
   // BOTÓN GUARDAR / IMPRIMIR
   // ---------------------------------------------------------
   const btnGuardar = document.getElementById('btnGuardar');
@@ -115,11 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.print();
   });
 
-  // Inicialización
-  recalcularTotal();
-
   // ---------------------------------------------------------
-  // SIGNATURE PAD: Implementación para firmas (Ejecutor y Recibe)
+  // SIGNATURE PAD: Implementación para firmas (Ejecutor, Recibe y Mantenimiento)
   // ---------------------------------------------------------
   // Firma del Ejecutor
   const signatureCanvasEjecutor = document.getElementById('signatureCanvasEjecutor');
@@ -190,6 +131,42 @@ document.addEventListener('DOMContentLoaded', function() {
     signatureBoxRecibe.addEventListener('click', () => {
       signaturePadRecibe.clear();
       signatureModalRecibe.show();
+    });
+  }
+
+  // Firma del Mantenimiento
+  const signatureCanvasMantenimiento = document.getElementById('signatureCanvasMantenimiento');
+  signatureCanvasMantenimiento.width = signatureCanvasMantenimiento.offsetWidth;
+  signatureCanvasMantenimiento.height = signatureCanvasMantenimiento.offsetHeight;
+  const signaturePadMantenimiento = new SignaturePad(signatureCanvasMantenimiento);
+  const signatureModalMantenimientoEl = document.getElementById('signatureModalMantenimiento');
+  const signatureModalMantenimiento = new bootstrap.Modal(signatureModalMantenimientoEl);
+
+  signatureModalMantenimientoEl.addEventListener('shown.bs.modal', () => {
+    signatureCanvasMantenimiento.width = signatureCanvasMantenimiento.offsetWidth;
+    signatureCanvasMantenimiento.height = signatureCanvasMantenimiento.offsetHeight;
+    signaturePadMantenimiento.clear();
+  });
+
+  document.getElementById('btnClearSignatureMantenimiento').addEventListener('click', () => {
+    signaturePadMantenimiento.clear();
+  });
+
+  document.getElementById('btnSaveSignatureMantenimiento').addEventListener('click', () => {
+    if(signaturePadMantenimiento.isEmpty()) {
+      alert("Por favor, firma antes de guardar.");
+    } else {
+      const dataURL = signaturePadMantenimiento.toDataURL();
+      document.getElementById('signatureBoxMantenimiento').innerHTML = `<img src="${dataURL}" alt="Firma digital del Mantenimiento" style="max-width: 100%;">`;
+      signatureModalMantenimiento.hide();
+    }
+  });
+
+  const signatureBoxMantenimiento = document.getElementById('signatureBoxMantenimiento');
+  if(signatureBoxMantenimiento) {
+    signatureBoxMantenimiento.addEventListener('click', () => {
+      signaturePadMantenimiento.clear();
+      signatureModalMantenimiento.show();
     });
   }
 

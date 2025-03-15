@@ -11,333 +11,310 @@
 </head>
 <body>
 
-  <!-- Navbar-->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/dashboard"> <img src="img/logo.png" alt="logo" id="logo"></a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <!-- Vehículo: Dropdown -->
-          <li class="nav-item dropdown" id="navVehiculo">
-            <a
-              class="nav-link dropdown-toggle active"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="bi bi-car-front-fill"></i>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="/dashboard" class="brand">
+        <img src="img/logo.png" alt="logo" id="logo">
+    </a>
+    
+    <!-- User Info Section -->
+    <!--div class="user-info">
+      <a href="/dashboard" class="brand">
+        <img src="img/logo.png" alt="Avatar" id="user-avatar">
+        <span id="user-name">Admin</span>
+      </a>
+    </div-->
+
+    <ul class="nav">
+        <li class="nav-item" id="navVehiculo">
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVehiculo" aria-expanded="false">
+                <i class="bi bi-car-front-fill"></i>
+                Vehículo
             </a>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="/detallevehiculoTodos.html">Todos</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/detalleVehiculoArgos.html">ARGOS</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/historialVehicular.html">Historial Vehicular</a>
-              </li>
-            </ul>
-          </li>
-  
-          <!-- Proveedores: enlace simple -->
-          <li class="nav-item" id="navProveedores">
-            <a class="nav-link active" aria-current="page" href="/proveedores.html">
-              <i class="bi bi-truck"></i>
-            </a>
-          </li>
-  
-          <!-- Inventario: enlace simple -->
-          <li class="nav-item" id="navInventario">
-            <a class="nav-link active" aria-current="page" href="/inventario.html">
-              <i class="bi bi-box-seam"></i>
-            </a>
-          </li>
-  
-          <!-- Clientes: Dropdown -->
-          <li class="nav-item dropdown" id="navClientes">
-            <a
-              class="nav-link dropdown-toggle active"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="bi bi-people"></i>
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="/crearClientes.html">Crear Clientes</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="/fichaClientes.html">Ficha de Clientes</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container my-4">
-    <!-- Encabezado principal -->
-    <div class="text-center mb-3">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cementos_Argos_logo.svg/800px-Cementos_Argos_logo.svg.png"
-           alt="Logo Argos" class="argos-logo" />
-      <h4 class="mt-2">RECIBO DE SERVICIOS DE MANTENIMIENTO</h4>
-      <h5 class="text-muted">CONCRETOS Y AGREGADOS</h5>
-    </div>
-
-    <!-- Datos de cabecera: Ejecutor, Equipo, Fechas -->
-    <div class="card">
-      <div class="card-header">
-        <strong>Datos de Cabecera</strong>
-      </div>
-      <div class="card-body row g-3">
-        <div class="col-md-3">
-          <label for="ejecutor" class="form-label fw-bold">Ejecutor</label>
-          <input type="text" class="form-control" id="ejecutor" />
-        </div>
-        <div class="col-md-3">
-          <label for="equipo" class="form-label fw-bold">Equipo</label>
-          <input type="text" class="form-control" id="equipo" />
-        </div>
-        <div class="col-md-3">
-          <label for="fechaProgramada" class="form-label fw-bold">Fecha Programada Entrega</label>
-          <input type="date" class="form-control" id="fechaProgramada" />
-        </div>
-        <div class="col-md-3">
-          <label for="horaProgramada" class="form-label fw-bold">Hora Programada Entrega</label>
-          <input type="time" class="form-control" id="horaProgramada" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Tabla de Reportes / OT / Trabajo MITTO -->
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <strong>Reportes</strong>
-        <button id="agregarReporte" class="btn btn-primary btn-sm">
-          <i class="bi bi-plus-circle"></i> Agregar Reporte
-        </button>
-      </div>
-      <div class="card-body p-0">
-        <table class="table mb-0" id="tablaReportes">
-          <thead>
-            <tr>
-              <th style="width: 50px;">#</th>
-              <th>Reporte Inicial</th>
-              <th>OT</th>
-              <th>Trabajo Ordenado MTTO</th>
-              <th>Trabajo Ejecutado</th>
-              <th>Cumple (S/N)</th>
-              <th>Comentarios</th>
-              <th style="width: 50px;"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Ejemplo de una fila inicial -->
-            <tr>
-              <td class="align-middle text-center">1</td>
-              <td>
-                <textarea class="form-control" rows="2"></textarea>
-              </td>
-              <td>
-                <input type="text" class="form-control" />
-              </td>
-              <td>
-                <textarea class="form-control" rows="2"></textarea>
-              </td>
-              <td>
-                <textarea class="form-control" rows="2"></textarea>
-              </td>
-              <td>
-                <input type="text" class="form-control" placeholder="S/N" />
-              </td>
-              <td>
-                <textarea class="form-control" rows="2"></textarea>
-              </td>
-              <td class="text-center align-middle">
-                <button class="btn btn-sm btn-danger eliminarReporte">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Tabla de Servicios (cálculo de costos) -->
-    <div class="card">
-      <div class="card-header">
-        <strong>Servicios / Productos</strong>
-      </div>
-      <div class="card-body p-0">
-        <table class="table mb-0" id="tablaServicios">
-          <thead>
-            <tr>
-              <th>Descripción</th>
-              <th>Cant.</th>
-              <th>Precio U.</th>
-              <th class="text-end">Subtotal</th>
-              <th style="width: 50px;"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><input type="text" class="form-control" placeholder="Nuevo servicio" /></td>
-              <td><input type="number" class="form-control" value="1" min="1" /></td>
-              <td><input type="number" class="form-control" value="100" min="0" /></td>
-              <td class="align-middle text-end">$100.00</td>
-              <td class="text-center align-middle">
-                <button class="btn btn-sm btn-danger eliminarFila">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card-footer d-flex justify-content-between align-items-center">
-        <button id="agregarFila" class="btn btn-primary btn-sm">
-          <i class="bi bi-plus-circle"></i> Agregar
-        </button>
-        <div>
-          <strong>Total: </strong>
-          <span id="totalServicios" style="font-size: 1.2rem;">$100.00</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección de Entrega / Recibe / Evaluación -->
-    <div class="card">
-      <div class="card-header">
-        <strong>Entrega / Recibe / Evaluación</strong>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <!-- Entrega por el ejecutor -->
-          <div class="col-md-4 mb-3">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="fw-bold">Entrega por el Ejecutor</h6>
-                <div class="mb-2">
-                  <label class="form-label">Nombre</label>
-                  <input type="text" class="form-control" id="entregaNombre" />
-                </div>
-                <div class="mb-2">
-                  <label class="form-label">Firma</label>
-                  <!-- Se asigna el ID para usar la misma lógica de firma -->
-                  <div class="signature-box" id="signatureBoxEjecutor" style="cursor:pointer;"></div>
-                </div>
-                <div class="mb-2">
-                  <label class="form-label">Hora real entrega</label>
-                  <input type="time" class="form-control" id="entregaHora" />
-                </div>
-              </div>
+            <div class="collapse" id="collapseVehiculo">
+                <ul class="sub-menu">
+                    <li><a href="detallevehiculoTodos.html">Crear Orden</a></li>
+                    <li><a href="detalleVehiculoArgos.html">ARGOS</a></li>
+                    <li><a href="historialVehicular.html">Historial Vehicular</a></li>
+                </ul>
             </div>
-          </div>
-          <!-- Recibe por Argos -->
-          <div class="col-md-4 mb-3">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="fw-bold">Recibe por Argos</h6>
-                <div class="mb-2">
-                  <label class="form-label">Nombre</label>
-                  <input type="text" class="form-control" id="recibeNombre" />
-                </div>
-                <div class="mb-2">
-                  <label class="form-label">Firma</label>
-                  <!-- Se asigna el ID para usar la misma lógica de firma -->
-                  <div class="signature-box" id="signatureBoxRecibe" style="cursor:pointer;"></div>
-                </div>
-                <div class="mb-2">
-                  <label class="form-label">Hora real entrega</label>
-                  <input type="time" class="form-control" id="recibeHora" />
-                </div>
-              </div>
+        </li>
+        <!--
+        <li class="nav-item" id="navProveedores">
+            <a class="nav-link" href="/proveedores.html">
+                <i class="bi bi-truck"></i>
+                Proveedores
+            </a>
+        </li>
+        -->
+        <li class="nav-item" id="navInventario">
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false">
+                <i class="bi bi-box-seam"></i>
+                Inventario
+            </a>
+            <div class="collapse" id="collapseInventario">
+                <ul class="sub-menu">
+                    <li><a href="/inventario.html">Productos</a></li>
+                    <li><a href="/tempario.html">Tempario</a></li>
+                </ul>
             </div>
-          </div>
-          <!-- Evaluación del servicio -->
-          <div class="col-md-4 mb-3">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="fw-bold">Evaluación del servicio</h6>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="checkSeguridad" />
-                  <label class="form-check-label" for="checkSeguridad">Seguridad Industrial</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="checkAmbiente" />
-                  <label class="form-check-label" for="checkAmbiente">Cuidado Ambiental</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="checkCalidad" />
-                  <label class="form-check-label" for="checkCalidad">Calidad</label>
-                </div>
-              </div>
+        </li>
+        <li class="nav-item" id="navClientes">
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseClientes" aria-expanded="false">
+                <i class="bi bi-people"></i>
+                Clientes
+            </a>
+            <div class="collapse" id="collapseClientes">
+                <ul class="sub-menu">
+                    <li><a href="/crearClientes.html">Crear Clientes</a></li>
+                    <li><a href="/fichaClientes.html">Ficha de Clientes</a></li>
+                </ul>
             </div>
-          </div>
-        </div>
-      </div> <!-- card-body -->
-    </div>
-
-    <!-- Botón Guardar / Imprimir -->
-    <div class="text-end mt-3">
-      <button id="btnGuardar" class="btn btn-success">
-        <i class="bi bi-check-circle"></i> Guardar / Imprimir
-      </button>
+        </li>
+    </ul>
+    
+    
+    <!-- Logout Button -->
+    <div class="logout-btn" id="logout-btn">
+        <i class="bi bi-box-arrow-left"></i> Log out
     </div>
   </div>
 
-  <!-- MODALES PARA FIRMA DIGITAL -->
-  <!-- Modal para Firma Digital del Ejecutor -->
-  <div class="modal fade" id="signatureModalEjecutor" tabindex="-1" aria-labelledby="signatureModalEjecutorLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="signatureModalEjecutorLabel">Firma Digital - Ejecutor</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+  <div class="main-content">
+    <div class="container my-4">
+      <!-- Encabezado principal -->
+      <div class="text-center mb-3">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cementos_Argos_logo.svg/800px-Cementos_Argos_logo.svg.png"
+            alt="Logo Argos" class="argos-logo" />
+        <h4 class="mt-2">RECIBO DE SERVICIOS DE MANTENIMIENTO</h4>
+        <h5 class="text-muted">CONCRETOS Y AGREGADOS</h5>
+      </div>
+
+      <!-- Datos de cabecera: Ejecutor, Equipo, Fechas -->
+      <div class="card">
+        <div class="card-header">
+          <strong>Datos de Cabecera</strong>
         </div>
-        <div class="modal-body">
-          <canvas id="signatureCanvasEjecutor" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+        <div class="card-body row g-3">
+          <div class="col-md-3">
+            <label for="ejecutor" class="form-label fw-bold">Ejecutor</label>
+            <input type="text" class="form-control" id="ejecutor" />
+          </div>
+          <div class="col-md-3">
+            <label for="equipo" class="form-label fw-bold">Equipo</label>
+            <input type="text" class="form-control" id="equipo" />
+          </div>
+          <div class="col-md-3">
+            <label for="fechaProgramada" class="form-label fw-bold">Fecha Programada Entrega</label>
+            <input type="date" class="form-control" id="fechaProgramada" />
+          </div>
+          <div class="col-md-3">
+            <label for="horaProgramada" class="form-label fw-bold">Hora Programada Entrega</label>
+            <input type="time" class="form-control" id="horaProgramada" />
+          </div>
         </div>
-        <div class="modal-footer">
-          <button id="btnClearSignatureEjecutor" type="button" class="btn btn-warning">Limpiar</button>
-          <button id="btnSaveSignatureEjecutor" type="button" class="btn btn-primary">Guardar Firma</button>
+      </div>
+
+      <!-- Tabla de Reportes / OT / Trabajo MITTO -->
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Reportes</strong>
+          <button id="agregarReporte" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-circle"></i> Agregar Reporte
+          </button>
+        </div>
+        <div class="card-body p-0">
+          <table class="table mb-0" id="tablaReportes">
+            <thead>
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th>Reporte Inicial</th>
+                <th>OT</th>
+                <th>Trabajo Ordenado MTTO</th>
+                <th>Trabajo Ejecutado</th>
+                <th>Cumple (S/N)</th>
+                <th>Comentarios</th>
+                <th style="width: 50px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Ejemplo de una fila inicial -->
+              <tr>
+                <td class="align-middle text-center">1</td>
+                <td>
+                  <textarea class="form-control" rows="2"></textarea>
+                </td>
+                <td>
+                  <input type="text" class="form-control" />
+                </td>
+                <td>
+                  <textarea class="form-control" rows="2"></textarea>
+                </td>
+                <td>
+                  <textarea class="form-control" rows="2"></textarea>
+                </td>
+                <td>
+                  <input type="text" class="form-control" placeholder="S/N" />
+                </td>
+                <td>
+                  <textarea class="form-control" rows="2"></textarea>
+                </td>
+                <td class="text-center align-middle">
+                  <button class="btn btn-sm btn-danger eliminarReporte">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sección de Entrega / Recibe / Evaluación -->
+      <div class="card">
+        <div class="card-header">
+          <strong>Entrega / Recibe / Evaluación</strong>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <!-- Entrega por el ejecutor -->
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="fw-bold">Entrega por el Ejecutor</h6>
+                  <div class="mb-2">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="entregaNombre" />
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Firma</label>
+                    <!-- Se asigna el ID para usar la misma lógica de firma -->
+                    <div class="signature-box" id="signatureBoxEjecutor" style="cursor:pointer;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Recibe por Argos -->
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="fw-bold">Recibe por Argos</h6>
+                  <div class="mb-2">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="recibeNombre" />
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Firma</label>
+                    <!-- Se asigna el ID para usar la misma lógica de firma -->
+                    <div class="signature-box" id="signatureBoxRecibe" style="cursor:pointer;"></div>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Fecha real entrega</label>
+                    <input type="date" class="form-control" id="recibeHora" />
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Hora real entrega</label>
+                    <input type="time" class="form-control" id="entregaHora" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Evaluación del servicio -->
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="fw-bold">Evaluación del servicio</h6>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="checkSeguridad" />
+                    <label class="form-check-label" for="checkSeguridad">Seguridad Industrial</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="checkAmbiente" />
+                    <label class="form-check-label" for="checkAmbiente">Cuidado Ambiental</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="checkCalidad" />
+                    <label class="form-check-label" for="checkCalidad">Calidad</label>
+                  </div>
+                  <div class="mb-2"></div>
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="recibeMantenimiento" />
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Firma</label>
+                    <!-- Se asigna el ID para usar la misma lógica de firma -->
+                    <div class="signature-box" id="signatureBoxMantenimiento" style="cursor:pointer;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- card-body -->
+      </div>
+
+      <!-- Botón Guardar / Imprimir -->
+      <div class="text-end mt-3">
+        <button id="btnGuardar" class="btn btn-success">
+          <i class="bi bi-check-circle"></i> Guardar / Imprimir
+        </button>
+      </div>
+    </div>
+
+    <!-- MODALES PARA FIRMA DIGITAL -->
+    <!-- Modal para Firma Digital del Ejecutor -->
+    <div class="modal fade" id="signatureModalEjecutor" tabindex="-1" aria-labelledby="signatureModalEjecutorLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signatureModalEjecutorLabel">Firma Digital - Ejecutor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <canvas id="signatureCanvasEjecutor" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button id="btnClearSignatureEjecutor" type="button" class="btn btn-warning">Limpiar</button>
+            <button id="btnSaveSignatureEjecutor" type="button" class="btn btn-primary">Guardar Firma</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Firma Digital del Recibe -->
+    <div class="modal fade" id="signatureModalRecibe" tabindex="-1" aria-labelledby="signatureModalRecibeLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signatureModalRecibeLabel">Firma Digital - Recibe</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <canvas id="signatureCanvasRecibe" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button id="btnClearSignatureRecibe" type="button" class="btn btn-warning">Limpiar</button>
+            <button id="btnSaveSignatureRecibe" type="button" class="btn btn-primary">Guardar Firma</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal para Firma Digital del Recibe -->
-  <div class="modal fade" id="signatureModalRecibe" tabindex="-1" aria-labelledby="signatureModalRecibeLabel" aria-hidden="true">
+  <!-- Modal para Firma Digital del Mantenimiento -->
+  <div class="modal fade" id="signatureModalMantenimiento" tabindex="-1" aria-labelledby="signatureModalMantenimientoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="signatureModalRecibeLabel">Firma Digital - Recibe</h5>
+          <h5 class="modal-title" id="signatureModalMantenimientoLabel">Firma Digital - Evaluacion del servicio</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <canvas id="signatureCanvasRecibe" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+          <canvas id="signatureCanvasMantenimiento" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
         </div>
         <div class="modal-footer">
-          <button id="btnClearSignatureRecibe" type="button" class="btn btn-warning">Limpiar</button>
-          <button id="btnSaveSignatureRecibe" type="button" class="btn btn-primary">Guardar Firma</button>
+          <button id="btnClearSignatureMantenimiento" type="button" class="btn btn-warning">Limpiar</button>
+          <button id="btnSaveSignatureMantenimiento" type="button" class="btn btn-primary">Guardar Firma</button>
+        </div>
         </div>
       </div>
     </div>
@@ -349,5 +326,6 @@
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
   <!-- Script propio -->
   <script src="js/detalleVehiculoArgos.js"></script>
+  <script src="js/logout.js"></script>
 </body>
 </html>
