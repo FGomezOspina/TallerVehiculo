@@ -10,23 +10,19 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <!-- Hoja de estilos principal -->
   <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
-   <!-- Sidebar -->
+  <!-- Sidebar -->
   <div class="sidebar">
     <a href="/dashboard" class="brand">
         <img src="img/logo.png" alt="logo" id="logo">
     </a>
-    
-    <!-- User Info Section -->
-    <!--div class="user-info">
-      <a href="/dashboard" class="brand">
-        <img src="img/logo.png" alt="Avatar" id="user-avatar">
-        <span id="user-name">Admin</span>
-      </a>
-    </div-->
 
-  <ul class="nav">
+    <!-- Secciones de tu sidebar, enlaces de navegación, etc. -->
+    <ul class="nav">
       <li class="nav-item" id="navVehiculo">
           <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVehiculo" aria-expanded="false">
               <i class="bi bi-car-front-fill"></i>
@@ -40,14 +36,6 @@
               </ul>
           </div>
       </li>
-      <!--
-      <li class="nav-item" id="navProveedores">
-          <a class="nav-link" href="/proveedores.html">
-              <i class="bi bi-truck"></i>
-              Proveedores
-          </a>
-      </li>
-      -->
       <li class="nav-item" id="navInventario">
           <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false">
               <i class="bi bi-box-seam"></i>
@@ -72,9 +60,8 @@
               </ul>
           </div>
       </li>
-  </ul>
-  
-    
+    </ul>
+
     <!-- Logout Button -->
     <div class="logout-btn" id="logout-btn">
         <i class="bi bi-box-arrow-left"></i> Log out
@@ -116,7 +103,7 @@
         </div>
       </div>
 
-      <!-- Tabla de Tempario (visible solo para admin) -->
+      <!-- Tabla de Tempario -->
       <div id="temparioTableContainer" class="col-lg-8 mb-4">
         <div class="card">
           <div class="card-header">
@@ -132,7 +119,22 @@
                 </tr>
               </thead>
               <tbody id="temparioTableBody">
-                <!-- Aquí se llenarán las filas dinámicamente -->
+                <!-- Ejemplo de fila estática para ilustrar el uso de select; normalmente se llena dinámicamente -->
+                <tr>
+                  <td>
+                    <!-- Select para TEMPARIO con clase tempario-select -->
+                    <select class="form-select tempario-select">
+                      <option value="">Seleccione un servicio</option>
+                      <!-- Opciones dinámicas vendrán de tu JS -->
+                    </select>
+                  </td>
+                  <td><input type="number" class="form-control" value="0" min="0" readonly /></td>
+                  <td class="text-center align-middle">
+                    <button class="btn btn-sm btn-danger">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -168,10 +170,13 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <!-- Fila de ejemplo -->
                   <tr>
                     <td>
+                      <!-- Select para Productos/Servicios con clase product-select -->
                       <select class="form-select product-select">
                         <option value="">Seleccione un producto</option>
+                        <!-- Opciones dinámicas vendrán de tu JS -->
                       </select>
                     </td>
                     <td><input type="number" class="form-control quantity-input" value="1" min="1" /></td>
@@ -183,6 +188,7 @@
                       </button>
                     </td>
                   </tr>
+                  <!-- Más filas dinámicas según tu JS -->
                 </tbody>
               </table>
             </div>
@@ -261,7 +267,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> <!-- row -->
 
       <!-- Sección de Firmas -->
       <div class="row mt-4">
@@ -276,6 +282,7 @@
           <div class="signature-box" id="signatureBoxTaller" style="cursor:pointer;"></div>
         </div>
       </div>
+
       <!-- Zona de Acciones -->
       <div class="text-end mt-4" id="accionesEdicion">
         <button id="btnActualizar" class="btn btn-success">
@@ -294,7 +301,7 @@
     </div>
   </div>
 
-  <!-- Modal para editar datos del vehículo (opcional, se mantiene igual que en detallevehiculoTodos) -->
+  <!-- Modal para editar datos del vehículo -->
   <div class="modal fade" id="editVehicleModal" tabindex="-1" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -380,11 +387,36 @@
     </div>
   </div>
 
+  <!-- jQuery (si no lo has incluido) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Select2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
   <!-- Signature Pad -->
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Tu JavaScript principal -->
   <script src="js/actualizarVehiculo.js"></script>
   <script src="js/logout.js"></script>
+
+  <!-- Inicialización de Select2 -->
+  <script>
+    $(document).ready(function() {
+      // Para los productos/servicios
+      $('.product-select').select2({
+        placeholder: "Seleccione un producto",
+        allowClear: true
+      });
+
+      // Para los servicios de tempario
+      $('.tempario-select').select2({
+        placeholder: "Seleccione un servicio",
+        allowClear: true
+      });
+    });
+  </script>
 </body>
 </html>
-
