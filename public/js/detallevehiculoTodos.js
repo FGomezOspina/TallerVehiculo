@@ -788,7 +788,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const vehAnio = localStorage.getItem('vehAnio') || urlParams.get('anio');
     const vehColor = localStorage.getItem('vehColor') || urlParams.get('color');
     const vehPlaca = localStorage.getItem('vehPlaca') || urlParams.get('placa');
-    
+  
     // Recuperar los valores de kilometraje y combustible de localStorage
     const vehKilometraje = localStorage.getItem('vehKilometraje') || urlParams.get('kilometraje');
     const vehCombustible = localStorage.getItem('vehCombustible') || urlParams.get('combustible');
@@ -802,6 +802,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Si falta algún dato de vehículo, mostrar un error
     if (!vehMarca || !vehModelo || !vehAnio || !vehColor || !vehPlaca || !vehKilometraje || !vehCombustible) {
       alert('Faltan datos del vehículo');
+      return;
+    }
+  
+    // Obtener el valor del campo OT
+    const otValue = document.getElementById('otField').value.trim();
+    
+    // Verificar si el campo OT tiene un valor
+    if (otValue === "") {
+      alert('Por favor, ingrese un número de OT');
       return;
     }
   
@@ -835,7 +844,8 @@ document.addEventListener('DOMContentLoaded', function() {
         taller: document.getElementById('signatureBoxTaller').querySelector('img') ? document.getElementById('signatureBoxTaller').querySelector('img').src : ''
       },
       fecha: new Date().toISOString(),
-      sede: sede
+      sede: sede,
+      ot: otValue // Aquí se agrega el valor de OT al objeto
     };
   
     // Enviar los datos al backend
@@ -856,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error("Error en la petición:", err);
       alert("Error al conectar con el servidor.");
     });
-  });  
+  });
   
   // -------------------------------------------------------
   // INICIALIZACIÓN FINAL

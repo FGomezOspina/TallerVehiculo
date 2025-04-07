@@ -605,6 +605,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
           // Cargar descripción
           document.getElementById('descripcionVehiculo').value = detalle.descripcion || '';
+
+          // Cargar OT
+          document.getElementById('otField').value = detalle.ot || ''; // Cargar el OT
   
           // ===============================
           //  CARGAR TABLA DE SERVICIOS
@@ -796,6 +799,7 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       vehiculo: vehicleData, // Se asume que vehicleData se actualiza mediante la edición de la pestaña Vehículo
       descripcion: document.getElementById('descripcionVehiculo').value,
+      ot: document.getElementById('otField').value.trim(), // Obtener el valor de OT
       servicios: obtenerServiciosDesdeTabla(),
       tempario: obtenerTemparioDesdeTabla(),
       fotos: {
@@ -828,6 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
       alert("Error al conectar con el servidor.");
     });
   });
+
 
   // -------------------------------------------------------
   // REFERENCIAS Y LÓGICA DE LA PESTAÑA VEHÍCULO

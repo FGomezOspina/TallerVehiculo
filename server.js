@@ -349,9 +349,6 @@ app.post('/guardarDetalle', (req, res) => {
     });
 });
 
-
-
-
 // Obtener todos los detalles vehiculares filtrando por sede
 app.get('/detallesVehiculo', (req, res) => {
   const sede = req.query.sede;
