@@ -590,6 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
               </div>
               <p class="mb-1">Cédula: ${cliente.cedula} | Email: ${cliente.email}</p>
             `;
+            // Dentro de la función que maneja la selección del cliente
             item.addEventListener("click", () => {
               currentClient = cliente;
               searchResults.innerHTML = "";
@@ -598,12 +599,20 @@ document.addEventListener('DOMContentLoaded', function() {
               document.getElementById("clienteCedulaDisplay").textContent = cliente.cedula;
               document.getElementById("clienteTelefonoDisplay").textContent = cliente.telefono;
               document.getElementById("clienteEmpresaDisplay").textContent = cliente.empresa;
-              
+
               // Si el cliente tiene vehículos
               if (cliente.vehiculos && cliente.vehiculos.length > 0) {
                 if (cliente.vehiculos.length === 1) {
                   // Solo tiene un vehículo, se muestra la información directamente
                   vehicleData = cliente.vehiculos[0];
+                  // Guardar todos los datos del vehículo en localStorage
+                  localStorage.setItem('vehMarca', vehicleData.marca);
+                  localStorage.setItem('vehModelo', vehicleData.modelo);
+                  localStorage.setItem('vehAnio', vehicleData.anio); // Asegúrate de que "anio" esté presente en los datos
+                  localStorage.setItem('vehColor', vehicleData.color); // Asegúrate de que "color" esté presente en los datos
+                  localStorage.setItem('vehPlaca', vehicleData.placa); // Asegúrate de que "placa" esté presente en los datos
+                  localStorage.setItem('vehKilometraje', vehicleData.kilometraje);
+                  localStorage.setItem('vehCombustible', vehicleData.combustible);
                   updateVehicleTab();
                   clientVehicleSelectContainer.style.display = "none"; // Ocultar la selección de vehículos
                 } else {
@@ -623,6 +632,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert("Este cliente no tiene vehículos registrados.");
               }
             });
+
             searchResults.appendChild(item);
           });
         } else {
@@ -758,16 +768,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   document.getElementById('btnGuardar').addEventListener('click', () => {
-    // Capturar parámetros de la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const vehiculoInfo = {
-        marca: urlParams.get('marca'),
-        modelo: urlParams.get('modelo'),
-        anio: urlParams.get('anio'),
-        color: urlParams.get('color'),
-        placa: urlParams.get('placa')
-    };
-
+    // Capturar parámetros de la URL o de localStorage
+    const vehMarca = localStorage.getItem('vehMarca') || urlParams.get('marca');
+    const vehModelo = localStorage.getItem('vehModelo') || urlParams.get('modelo');
+    const vehAnio = localStorage.getItem('vehAnio') || urlParams.get('anio');
+    const vehColor = localStorage.getItem('vehColor') || urlParams.get('color');
+    const vehPlaca = localStorage.getItem('vehPlaca') || urlParams.get('placa');
+    const vehKilometraje = localStorage.getItem('vehKilometraje') || urlParams.get('kilometraje');
+    const vehCombustible = localStorage.getItem('vehCombustible') || urlParams.get('combustible');
+  
+    // Si falta algún dato de vehículo, mostrar un error
+    if (!vehMarca || !vehModelo || !vehAnio || !vehColor || !vehPlaca || !vehKilometraje || !vehCombustible) {
+      alert('Faltan datos del vehículo');
+      return;
+    }
+  
     // Obtener los datos del cliente
     const detalleData = {
       cliente: {
@@ -776,9 +791,18 @@ document.addEventListener('DOMContentLoaded', function() {
         telefono: document.getElementById("clienteTelefonoDisplay").textContent,
         empresa: document.getElementById("clienteEmpresaDisplay").textContent
       },
-      vehiculo: vehiculoInfo, // Agregar la información del vehículo
-      tempario: obtenerTemparioDesdeTabla(), // Aquí estamos obteniendo los temparios
-      servicios: obtenerServiciosDesdeTabla(), // Aquí estamos obteniendo los productos/servicios
+      vehiculo: {
+        marca: vehMarca,
+        modelo: vehModelo,
+        anio: vehAnio,
+        color: vehColor,
+        placa: vehPlaca,
+        kilometraje: vehKilometraje,
+        combustible: vehCombustible
+      },
+      // Otros datos como tempario, servicios, fotos y firmas
+      tempario: obtenerTemparioDesdeTabla(),
+      servicios: obtenerServiciosDesdeTabla(),
       descripcion: document.querySelector("textarea").value,
       fotos: {
         antes: Array.from(previewFotosAntes.querySelectorAll('img')).map(img => img.src),
@@ -800,7 +824,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => response.json())
     .then(data => {
-      if(data.success){
+      if (data.success) {
         alert("Detalle guardado correctamente con ID: " + data.id);
       } else {
         alert("Error guardando el detalle: " + data.error);
@@ -811,6 +835,8 @@ document.addEventListener('DOMContentLoaded', function() {
       alert("Error al conectar con el servidor.");
     });
   });
+  
+  
 
 
 
