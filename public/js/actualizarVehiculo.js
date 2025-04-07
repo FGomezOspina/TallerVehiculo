@@ -386,8 +386,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('totalServicios').textContent = `$${total.toFixed(2)}`;
   }
   
-  
-
   // 4) Agregar una nueva fila a la tabla de servicios
   function agregarFila() {
     const tbody = tablaServicios.querySelector('tbody');
@@ -436,10 +434,6 @@ document.addEventListener('DOMContentLoaded', function() {
     recalcularTotal();
   }
   
-  
-  
-
-
   // Delegar eliminación de filas en la tabla de servicios
   document.querySelector('#tablaServicios tbody').addEventListener('click', (e) => {
     if(e.target.closest('.eliminarFila')) {
@@ -833,6 +827,92 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error(err);
       alert("Error al conectar con el servidor.");
     });
+  });
+
+  // -------------------------------------------------------
+  // REFERENCIAS Y LÓGICA DE LA PESTAÑA VEHÍCULO
+  // -------------------------------------------------------
+  const vehTitle = document.getElementById('vehTitle');
+  const vehSubtitle = document.getElementById('vehSubtitle');
+  const vehKilometrajeDisplay = document.getElementById('vehKilometrajeDisplay');
+  const fuelProgress = document.getElementById('fuelProgress');
+
+  // Botón "Editar" y Modal para editar vehículo
+  const btnEditarVehiculo = document.getElementById('btnEditarVehiculo');
+  const editVehicleModalEl = document.getElementById('editVehicleModal');
+  const editVehicleModal = new bootstrap.Modal(editVehicleModalEl);
+  const modalVehMarca = document.getElementById('modalVehMarca');
+  const modalVehModelo = document.getElementById('modalVehModelo');
+  const modalVehAnio = document.getElementById('modalVehAnio');
+  const modalVehColor = document.getElementById('modalVehColor');
+  const modalVehPlaca = document.getElementById('modalVehPlaca');
+  const modalVehKilometraje = document.getElementById('modalVehKilometraje');
+  const modalVehCombustible = document.getElementById('modalVehCombustible');
+  const btnGuardarVehiculo = document.getElementById('btnGuardarVehiculo');
+
+  // Funciones para actualizar la pestaña Vehículo
+  function updateVehicleTab() {
+    const urlParams = new URLSearchParams(window.location.search);
+  
+    // Obtener los parámetros de la URL o usar los valores de vehicleData como respaldo
+    const marca = urlParams.get('marca') || vehicleData.marca;
+    const modelo = urlParams.get('modelo') || vehicleData.modelo;
+    const anio = urlParams.get('anio') || vehicleData.anio;
+    const color = urlParams.get('color') || vehicleData.color;
+    const placa = urlParams.get('placa') || vehicleData.placa;
+    const kilometraje = urlParams.get('kilometraje') || vehicleData.kilometraje;
+    const combustible = urlParams.get('combustible') || vehicleData.combustible;
+  
+    if (vehicleData) {
+      vehTitle.textContent = `${marca} ${modelo}`;
+      vehSubtitle.textContent = `${placa} - ${anio} - ${color}`;
+      let kms = parseFloat(kilometraje) || 0;
+      vehKilometrajeDisplay.textContent = kms.toLocaleString() + ' Kms';
+      fuelProgress.style.width = combustible + '%';
+      fuelProgress.setAttribute('aria-valuenow', combustible);
+      fuelProgress.textContent = combustible + '%';
+    }
+  }
+  
+  
+  function fillModalFields() {
+    const urlParams = new URLSearchParams(window.location.search);
+  
+    // Obtener los parámetros de la URL o usar los valores de vehicleData como respaldo
+    const marca = urlParams.get('marca') || vehicleData.marca;
+    const modelo = urlParams.get('modelo') || vehicleData.modelo;
+    const anio = urlParams.get('anio') || vehicleData.anio;
+    const color = urlParams.get('color') || vehicleData.color;
+    const placa = urlParams.get('placa') || vehicleData.placa;
+    const kilometraje = urlParams.get('kilometraje') || vehicleData.kilometraje;
+    const combustible = urlParams.get('combustible') || vehicleData.combustible;
+  
+    // Asignar los valores a los campos del formulario de edición
+    document.getElementById('modalVehMarca').value = marca;
+    document.getElementById('modalVehModelo').value = modelo;
+    document.getElementById('modalVehAnio').value = anio;
+    document.getElementById('modalVehColor').value = color;
+    document.getElementById('modalVehPlaca').value = placa;
+    document.getElementById('modalVehKilometraje').value = kilometraje;
+    document.getElementById('modalVehCombustible').value = combustible;
+  }
+  
+
+  btnEditarVehiculo.addEventListener('click', () => {
+    fillModalFields();
+    editVehicleModal.show();
+  });
+
+  btnGuardarVehiculo.addEventListener('click', () => {
+    vehicleData.marca = modalVehMarca.value;
+    vehicleData.modelo = modalVehModelo.value;
+    vehicleData.anio = parseInt(modalVehAnio.value) || 0;
+    vehicleData.color = modalVehColor.value;
+    vehicleData.placa = modalVehPlaca.value;
+    vehicleData.kilometraje = parseInt(modalVehKilometraje.value) || 0;
+    vehicleData.combustible = parseInt(modalVehCombustible.value) || 0;
+    updateVehicleTab();
+    editVehicleModal.hide();
   });
 
 
