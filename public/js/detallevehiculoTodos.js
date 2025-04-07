@@ -222,14 +222,28 @@ document.addEventListener('DOMContentLoaded', function() {
     editVehicleModal.show();
   });
 
+  // Evento para guardar los valores cuando el usuario los ingresa
   btnGuardarVehiculo.addEventListener('click', () => {
+    // Obtener los valores de los campos de kilometraje y combustible
+    const kilometraje = modalVehKilometraje.value;
+    const combustible = modalVehCombustible.value;
+
+    // Guardar esos valores en localStorage para su uso posterior
+    localStorage.setItem('vehKilometraje', kilometraje);
+    localStorage.setItem('vehCombustible', combustible);
+
+    // Actualizar los datos en el objeto de vehículo
+    vehicleData.kilometraje = parseFloat(kilometraje);
+    vehicleData.combustible = parseFloat(combustible);
+
+    // Continuar con el guardado de los otros datos del vehículo
     vehicleData.marca = modalVehMarca.value;
     vehicleData.modelo = modalVehModelo.value;
     vehicleData.anio = parseInt(modalVehAnio.value) || 0;
     vehicleData.color = modalVehColor.value;
     vehicleData.placa = modalVehPlaca.value;
-    vehicleData.kilometraje = parseInt(modalVehKilometraje.value) || 0;
-    vehicleData.combustible = parseInt(modalVehCombustible.value) || 0;
+
+    // Luego, actualizamos la vista con los datos
     updateVehicleTab();
     editVehicleModal.hide();
   });
@@ -611,8 +625,9 @@ document.addEventListener('DOMContentLoaded', function() {
                   localStorage.setItem('vehAnio', vehicleData.anio); // Asegúrate de que "anio" esté presente en los datos
                   localStorage.setItem('vehColor', vehicleData.color); // Asegúrate de que "color" esté presente en los datos
                   localStorage.setItem('vehPlaca', vehicleData.placa); // Asegúrate de que "placa" esté presente en los datos
-                  localStorage.setItem('vehKilometraje', vehicleData.kilometraje);
-                  localStorage.setItem('vehCombustible', vehicleData.combustible);
+                  // Convertimos los valores a números antes de guardarlos
+                  localStorage.setItem('vehKilometraje', parseFloat(vehicleData.kilometraje)); // Guardamos el kilometraje como número
+                  localStorage.setItem('vehCombustible', parseFloat(vehicleData.combustible)); // Guardamos el combustible como número
                   updateVehicleTab();
                   clientVehicleSelectContainer.style.display = "none"; // Ocultar la selección de vehículos
                 } else {
@@ -632,7 +647,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert("Este cliente no tiene vehículos registrados.");
               }
             });
-
             searchResults.appendChild(item);
           });
         } else {
@@ -774,8 +788,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const vehAnio = localStorage.getItem('vehAnio') || urlParams.get('anio');
     const vehColor = localStorage.getItem('vehColor') || urlParams.get('color');
     const vehPlaca = localStorage.getItem('vehPlaca') || urlParams.get('placa');
+    
+    // Recuperar los valores de kilometraje y combustible de localStorage
     const vehKilometraje = localStorage.getItem('vehKilometraje') || urlParams.get('kilometraje');
     const vehCombustible = localStorage.getItem('vehCombustible') || urlParams.get('combustible');
+  
+    // Si no se encuentran kilometraje o combustible, mostrar un mensaje de error
+    if (vehKilometraje === null || vehCombustible === null) {
+      alert('Kilometraje o combustible no especificados.');
+      return;
+    }
   
     // Si falta algún dato de vehículo, mostrar un error
     if (!vehMarca || !vehModelo || !vehAnio || !vehColor || !vehPlaca || !vehKilometraje || !vehCombustible) {
@@ -797,8 +819,8 @@ document.addEventListener('DOMContentLoaded', function() {
         anio: vehAnio,
         color: vehColor,
         placa: vehPlaca,
-        kilometraje: vehKilometraje,
-        combustible: vehCombustible
+        kilometraje: parseFloat(vehKilometraje), // Convertir a número
+        combustible: parseFloat(vehCombustible) // Convertir a número
       },
       // Otros datos como tempario, servicios, fotos y firmas
       tempario: obtenerTemparioDesdeTabla(),
@@ -834,12 +856,8 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error("Error en la petición:", err);
       alert("Error al conectar con el servidor.");
     });
-  });
+  });  
   
-  
-
-
-
   // -------------------------------------------------------
   // INICIALIZACIÓN FINAL
   // -------------------------------------------------------
