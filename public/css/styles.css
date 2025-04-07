@@ -268,6 +268,12 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
+#otField {
+  width: 20%;          /* Ancho del 20% */
+  border-radius: 10px; /* Radio de borde de 10px */
+}
+
+
 /* ----------------------------------------------------
    TABLA DE SERVICIOS
 ---------------------------------------------------- */
