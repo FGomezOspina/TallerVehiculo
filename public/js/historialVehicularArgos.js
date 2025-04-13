@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function() {
   // ---------------------------------------------------------
-  // OBTENCIÓN DE LA SEDE Y ROL
+  // OBTENCIÓN DE SEDE Y ROL
   // ---------------------------------------------------------
   const sede = localStorage.getItem('sede') || 'pereira';
   const role = localStorage.getItem('role') || 'admin';
@@ -64,10 +64,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (data.success) {
       let detalles = data.detalles;
       
-      // Filtrar registros para usuarios con rol "patio" (mostrar solo su sede)
-      if (role === 'patio') {
-        detalles = detalles.filter(detalle => detalle.sede && detalle.sede.toLowerCase() === sede.toLowerCase());
-      }
+      // Filtrar registros por sede: mostrar solo los documentos cuya sede
+      // coincida (ignorando mayúsculas/minúsculas) con la sede actual del usuario.
+      detalles = detalles.filter(detalle => detalle.sede && detalle.sede.toLowerCase() === sede.toLowerCase());
       
       if (detalles.length === 0) {
         tablaBody.innerHTML = '<tr><td colspan="7" class="text-center">No se encontraron registros.</td></tr>';
@@ -96,3 +95,4 @@ document.addEventListener('DOMContentLoaded', async function() {
     tablaBody.innerHTML = '<tr><td colspan="7" class="text-center">Error al cargar los datos.</td></tr>';
   }
 });
+
