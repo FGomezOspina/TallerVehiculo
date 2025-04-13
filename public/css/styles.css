@@ -118,7 +118,7 @@ p, label, span, a, li, input, textarea {
 
 .sidebar .sub-menu a {
   color: #d1d1d1;
-  padding: 8px 15px;
+  padding: 8px 1px;
   text-decoration: none;
   border-radius: 20px;
   transition: background-color var(--transition-speed), transform var(--transition-speed);
