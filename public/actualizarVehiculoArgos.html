@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Actualizar Vehicular Argos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="/dashboard" class="brand">
+          <img src="img/logo.png" alt="logo" id="logo">
+      </a>
+      
+      <!-- User Info Section (opcional) -->
+      <!--div class="user-info">
+        <a href="/dashboard" class="brand">
+          <img src="img/logo.png" alt="Avatar" id="user-avatar">
+          <span id="user-name">Admin</span>
+        </a>
+      </div-->
+  
+      <ul class="nav">
+          <li class="nav-item" id="navVehiculo">
+              <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVehiculo" aria-expanded="false">
+                  <i class="bi bi-car-front-fill"></i>
+                  Vehículo
+              </a>
+              <div class="collapse" id="collapseVehiculo">
+                  <ul class="sub-menu">
+                      <li><a href="detallevehiculoTodos.html">Crear Orden</a></li>
+                      <li><a href="detalleVehiculoArgos.html">ARGOS</a></li>
+                      <li><a href="historialVehicular.html">Historial Vehicular</a></li>
+                      <li><a href="historialVehicularArgos.html">Historial Vehicular Argos</a></li>
+                  </ul>
+              </div>
+          </li>
+          <!-- Otras opciones del sidebar -->
+          <li class="nav-item" id="navInventario">
+              <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false">
+                  <i class="bi bi-box-seam"></i>
+                  Inventario
+              </a>
+              <div class="collapse" id="collapseInventario">
+                  <ul class="sub-menu">
+                      <li><a href="/inventario.html">Productos</a></li>
+                      <li><a href="/tempario.html">Tempario</a></li>
+                  </ul>
+              </div>
+          </li>
+          <li class="nav-item" id="navClientes">
+              <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseClientes" aria-expanded="false">
+                  <i class="bi bi-people"></i>
+                  Clientes
+              </a>
+              <div class="collapse" id="collapseClientes">
+                  <ul class="sub-menu">
+                      <li><a href="/crearClientes.html">Crear Clientes</a></li>
+                      <li><a href="/fichaClientes.html">Ficha de Clientes</a></li>
+                  </ul>
+              </div>
+          </li>
+      </ul>
+      
+      <!-- Logout Button -->
+      <div class="logout-btn" id="logout-btn">
+          <i class="bi bi-box-arrow-left"></i> Log out
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <div class="container my-4">
+        <!-- Encabezado principal -->
+        <div class="text-center mb-3">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cementos_Argos_logo.svg/800px-Cementos_Argos_logo.svg.png"
+              alt="Logo Argos" class="argos-logo" />
+          <h4 class="mt-2">RECIBO DE SERVICIOS DE MANTENIMIENTO</h4>
+          <h5 class="text-muted">CONCRETOS Y AGREGADOS</h5>
+        </div>
+
+        <form id="formActualizarArgos">
+          <!-- Datos de Cabecera -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <strong>Datos de Cabecera</strong>
+            </div>
+            <div class="card-body row g-3">
+              <div class="col-md-3">
+                <label for="ejecutor" class="form-label fw-bold">Ejecutor</label>
+                <input type="text" class="form-control" id="ejecutor" name="ejecutor" />
+              </div>
+              <div class="col-md-3">
+                <label for="equipo" class="form-label fw-bold">Equipo</label>
+                <input type="text" class="form-control" id="equipo" name="equipo" />
+              </div>
+              <div class="col-md-3">
+                <label for="fechaProgramada" class="form-label fw-bold">Fecha Programada Entrega</label>
+                <input type="date" class="form-control" id="fechaProgramada" name="fechaProgramada" />
+              </div>
+              <div class="col-md-3">
+                <label for="horaProgramada" class="form-label fw-bold">Hora Programada Entrega</label>
+                <input type="time" class="form-control" id="horaProgramada" name="horaProgramada" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabla de Reportes / OT / Trabajo MITTO -->
+          <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <strong>Reportes</strong>
+              <button id="agregarReporte" type="button" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle"></i> Agregar Reporte
+              </button>
+            </div>
+            <div class="card-body p-0">
+              <table class="table mb-0" id="tablaReportes">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>Reporte Inicial</th>
+                    <th>OT</th>
+                    <th>Trabajo Ordenado MTTO</th>
+                    <th>Trabajo Ejecutado</th>
+                    <th>Cumple (S/N)</th>
+                    <th>Comentarios</th>
+                    <th style="width: 50px;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Se poblará dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Sección de Entrega / Recibe / Evaluación -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <strong>Entrega / Recibe / Evaluación</strong>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <!-- Entrega por el ejecutor -->
+                <div class="col-md-4 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="fw-bold">Entrega por el Ejecutor</h6>
+                      <div class="mb-2">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="entregaNombre" name="entregaNombre" />
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label">Firma</label>
+                        <div class="signature-box" id="signatureBoxEjecutor" style="cursor:pointer;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Recibe por Argos -->
+                <div class="col-md-4 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="fw-bold">Recibe por Argos</h6>
+                      <div class="mb-2">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="recibeNombre" name="recibeNombre" />
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label">Firma</label>
+                        <div class="signature-box" id="signatureBoxRecibe" style="cursor:pointer;"></div>
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label">Fecha real entrega</label>
+                        <input type="date" class="form-control" id="recibeHora" name="recibeHora" />
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label">Hora real entrega</label>
+                        <input type="time" class="form-control" id="entregaHora" name="entregaHora" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Evaluación del servicio -->
+                <div class="col-md-4 mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="fw-bold">Evaluación del servicio</h6>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="checkSeguridad" name="checkSeguridad" />
+                        <label class="form-check-label" for="checkSeguridad">Seguridad Industrial</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="checkAmbiente" name="checkAmbiente" />
+                        <label class="form-check-label" for="checkAmbiente">Cuidado Ambiental</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="checkCalidad" name="checkCalidad" />
+                        <label class="form-check-label" for="checkCalidad">Calidad</label>
+                      </div>
+                      <div class="mb-2 mt-2">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="recibeMantenimiento" name="recibeMantenimiento" />
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label">Firma</label>
+                        <div class="signature-box" id="signatureBoxMantenimiento" style="cursor:pointer;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- card-body -->
+          </div>
+
+          <!-- Botón Guardar / Imprimir -->
+          <div class="text-end mt-3">
+            <button type="submit" id="btnGuardar" class="btn btn-success">
+              <i class="bi bi-check-circle"></i> Guardar / Imprimir
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODALES PARA FIRMA DIGITAL -->
+    <!-- Modal para Firma Digital del Ejecutor -->
+    <div class="modal fade" id="signatureModalEjecutor" tabindex="-1" aria-labelledby="signatureModalEjecutorLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signatureModalEjecutorLabel">Firma Digital - Ejecutor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <canvas id="signatureCanvasEjecutor" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button id="btnClearSignatureEjecutor" type="button" class="btn btn-warning">Limpiar</button>
+            <button id="btnSaveSignatureEjecutor" type="button" class="btn btn-primary">Guardar Firma</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Firma Digital del Recibe -->
+    <div class="modal fade" id="signatureModalRecibe" tabindex="-1" aria-labelledby="signatureModalRecibeLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signatureModalRecibeLabel">Firma Digital - Recibe</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <canvas id="signatureCanvasRecibe" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button id="btnClearSignatureRecibe" type="button" class="btn btn-warning">Limpiar</button>
+            <button id="btnSaveSignatureRecibe" type="button" class="btn btn-primary">Guardar Firma</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Firma Digital del Mantenimiento -->
+    <div class="modal fade" id="signatureModalMantenimiento" tabindex="-1" aria-labelledby="signatureModalMantenimientoLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signatureModalMantenimientoLabel">Firma Digital - Evaluación del Servicio</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <canvas id="signatureCanvasMantenimiento" style="border: 1px solid #ccc; width: 100%; height: 200px;"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button id="btnClearSignatureMantenimiento" type="button" class="btn btn-warning">Limpiar</button>
+            <button id="btnSaveSignatureMantenimiento" type="button" class="btn btn-primary">Guardar Firma</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/actualizarVehiculoArgos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

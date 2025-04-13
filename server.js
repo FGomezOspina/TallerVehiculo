@@ -462,6 +462,117 @@ app.put('/detallesVehiculo/:id/cerrar', (req, res) => {
     });
 });
 
+// ---------------------------------------------------------
+// Guardar el detalle del servicio Argos
+// ---------------------------------------------------------
+app.post('/guardarDetalleArgos', async (req, res) => {
+  try {
+    // Se espera que se reciba un objeto con la siguiente estructura
+    // {
+    //   ejecutor: <string>,
+    //   equipo: <string>,
+    //   fechaProgramada: <string>,
+    //   horaProgramada: <string>,
+    //   reportes: [ { reporteInicial, OT, trabajoOrdenado, trabajoEjecutado, cumple, comentarios }, ... ],
+    //   firmaEjecutor: <dataURL string>,
+    //   firmaRecibe: <dataURL string>,
+    //   firmaMantenimiento: <dataURL string>,
+    //   sede: <string>,
+    //   role: <string>
+    // }
+    const {
+      ejecutor,
+      equipo,
+      fechaProgramada,
+      horaProgramada,
+      reportes,
+      firmaEjecutor,
+      firmaRecibe,
+      firmaMantenimiento,
+      sede,
+      role
+    } = req.body;
+
+    // Construir el objeto a guardar, agregando un timestamp de creación
+    const detalleArgos = {
+      ejecutor,
+      equipo,
+      fechaProgramada,
+      horaProgramada,
+      reportes: Array.isArray(reportes) ? reportes : [],
+      firmaEjecutor: firmaEjecutor || '',
+      firmaRecibe: firmaRecibe || '',
+      firmaMantenimiento: firmaMantenimiento || '',
+      sede,
+      role,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    // Guardar el documento en la colección "detallesVehiculoArgos"
+    const docRef = await db.collection("detallesVehiculoArgos").add(detalleArgos);
+    console.log("Detalle Argos guardado con ID: ", docRef.id);
+    res.json({ success: true, id: docRef.id });
+    
+  } catch (err) {
+    console.error("Error guardando detalle Argos:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ---------------------------------------------------------
+// Obtener todos los documentos de detallesVehiculoArgos
+// ---------------------------------------------------------
+app.get('/detallesVehiculoArgos', async (req, res) => {
+  try {
+    const snapshot = await db.collection("detallesVehiculoArgos").get();
+    let detalles = [];
+    snapshot.forEach(doc => {
+      detalles.push({ id: doc.id, ...doc.data() });
+    });
+    res.json({ success: true, detalles });
+  } catch (err) {
+    console.error("Error al obtener detallesVehiculoArgos:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ---------------------------------------------------------
+// Obtener un documento específico de detallesVehiculoArgos por ID
+// ---------------------------------------------------------
+app.get('/detallesVehiculoArgos/:id', async (req, res) => {
+  try {
+    const docRef = await db.collection("detallesVehiculoArgos").doc(req.params.id).get();
+    if (!docRef.exists) {
+      return res.status(404).json({ success: false, error: "Documento no encontrado" });
+    }
+    res.json({ success: true, detalle: { id: docRef.id, ...docRef.data() } });
+  } catch (err) {
+    console.error("Error al obtener el documento:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ---------------------------------------------------------
+// Actualizar un documento específico de detallesVehiculoArgos por ID
+// ---------------------------------------------------------
+app.put('/detallesVehiculoArgos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+    const docRef = db.collection("detallesVehiculoArgos").doc(id);
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).json({ success: false, error: "Documento no encontrado" });
+    }
+    await docRef.update(updatedData);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error al actualizar el documento:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

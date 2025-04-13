@@ -54,10 +54,51 @@ document.addEventListener('DOMContentLoaded', function() {
   // BOTÓN GUARDAR / IMPRIMIR
   // ---------------------------------------------------------
   const btnGuardar = document.getElementById('btnGuardar');
-  btnGuardar.addEventListener('click', () => {
-    console.log('Datos listos para guardar o imprimir...');
-    window.print();
+  btnGuardar.addEventListener('click', async () => {
+    // Ejemplo de extracción de datos del formulario
+    const data = {
+      ejecutor: document.getElementById('ejecutor').value,
+      equipo: document.getElementById('equipo').value,
+      fechaProgramada: document.getElementById('fechaProgramada').value,
+      horaProgramada: document.getElementById('horaProgramada').value,
+      reportes: Array.from(tablaReportes.querySelectorAll('tbody tr')).map(tr => {
+        const celdas = tr.querySelectorAll('td');
+        return {
+          reporteInicial: celdas[1].querySelector('textarea')?.value || '',
+          OT: celdas[2].querySelector('input')?.value || '',
+          trabajoOrdenado: celdas[3].querySelector('textarea')?.value || '',
+          trabajoEjecutado: celdas[4].querySelector('textarea')?.value || '',
+          cumple: celdas[5].querySelector('input')?.value || '',
+          comentarios: celdas[6].querySelector('textarea')?.value || ''
+        };
+      }),
+      firmaEjecutor: document.getElementById('signatureBoxEjecutor').querySelector('img')?.src || '',
+      firmaRecibe: document.getElementById('signatureBoxRecibe').querySelector('img')?.src || '',
+      firmaMantenimiento: document.getElementById('signatureBoxMantenimiento').querySelector('img')?.src || '',
+      sede: localStorage.getItem('sede') || 'pereira',
+      role: localStorage.getItem('role') || 'admin'
+    };
+  
+    try {
+      const response = await fetch('/guardarDetalleArgos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        const result = await response.json();
+        alert('Datos guardados correctamente, ID: ' + result.id);
+        // Opcional: se puede llamar a window.print() o realizar otra acción
+        //window.print();
+      } else {
+        alert('Error al guardar los datos');
+      }
+    } catch (err) {
+      console.error('Error en la conexión', err);
+      alert('Error en la conexión al servidor.');
+    }
   });
+  
 
   // ---------------------------------------------------------
   // SIGNATURE PAD: Implementación para firmas (Ejecutor, Recibe y Mantenimiento)

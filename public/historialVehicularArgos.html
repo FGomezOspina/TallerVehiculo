@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Historial Vehicular Argos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="/dashboard" class="brand">
+          <img src="img/logo.png" alt="logo" id="logo">
+      </a>
+      
+      <!-- User Info Section (opcional) -->
+      <!--div class="user-info">
+        <a href="/dashboard" class="brand">
+          <img src="img/logo.png" alt="Avatar" id="user-avatar">
+          <span id="user-name">Admin</span>
+        </a>
+      </div-->
+  
+      <ul class="nav">
+          <li class="nav-item" id="navVehiculo">
+              <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVehiculo" aria-expanded="false">
+                  <i class="bi bi-car-front-fill"></i>
+                  Vehículo
+              </a>
+              <div class="collapse" id="collapseVehiculo">
+                  <ul class="sub-menu">
+                      <li><a href="detallevehiculoTodos.html">Crear Orden</a></li>
+                      <li><a href="detalleVehiculoArgos.html">ARGOS</a></li>
+                      <li><a href="historialVehicular.html">Historial Vehicular</a></li>
+                      <!-- Agregamos el nuevo enlace para Argos -->
+                      <li><a href="historialVehicularArgos.html">Historial Vehicular Argos</a></li>
+                  </ul>
+              </div>
+          </li>
+          <!-- Otras opciones del sidebar (Inventario, Clientes, etc.) -->
+          <li class="nav-item" id="navInventario">
+              <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false">
+                  <i class="bi bi-box-seam"></i>
+                  Inventario
+              </a>
+              <div class="collapse" id="collapseInventario">
+                  <ul class="sub-menu">
+                      <li><a href="/inventario.html">Productos</a></li>
+                      <li><a href="/tempario.html">Tempario</a></li>
+                  </ul>
+              </div>
+          </li>
+          <li class="nav-item" id="navClientes">
+              <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseClientes" aria-expanded="false">
+                  <i class="bi bi-people"></i>
+                  Clientes
+              </a>
+              <div class="collapse" id="collapseClientes">
+                  <ul class="sub-menu">
+                      <li><a href="/crearClientes.html">Crear Clientes</a></li>
+                      <li><a href="/fichaClientes.html">Ficha de Clientes</a></li>
+                  </ul>
+              </div>
+          </li>
+      </ul>
+      
+      <!-- Logout Button -->
+      <div class="logout-btn" id="logout-btn">
+          <i class="bi bi-box-arrow-left"></i> Log out
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <div class="container my-4">
+        <h2 class="mb-4">Historial Vehicular Argos</h2>
+        <table class="table table-bordered" id="tablaHistorialArgos">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Ejecutor</th>
+              <th>Equipo</th>
+              <th>Fecha Programada</th>
+              <th>Hora Programada</th>
+              <th>Sede</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Las filas se cargarán mediante historialVehicularArgos.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/historialVehicularArgos.js"></script>
+  </body>
+</html>
