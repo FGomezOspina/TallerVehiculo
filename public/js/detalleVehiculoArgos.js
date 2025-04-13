@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // ---------------------------------------------------------
   const btnGuardar = document.getElementById('btnGuardar');
   btnGuardar.addEventListener('click', async () => {
-    // Ejemplo de extracción de datos del formulario
+    // Se extraen los datos del formulario, incluyendo la sede y el rol
     const data = {
       ejecutor: document.getElementById('ejecutor').value,
       equipo: document.getElementById('equipo').value,
@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
       firmaEjecutor: document.getElementById('signatureBoxEjecutor').querySelector('img')?.src || '',
       firmaRecibe: document.getElementById('signatureBoxRecibe').querySelector('img')?.src || '',
       firmaMantenimiento: document.getElementById('signatureBoxMantenimiento').querySelector('img')?.src || '',
-      sede: localStorage.getItem('sede') || 'pereira',
-      role: localStorage.getItem('role') || 'admin'
+      sede: sede, // Se agrega la sede obtenida
+      role: role  // Se agrega el rol obtenido
     };
   
     try {
@@ -99,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-
   // ---------------------------------------------------------
   // SIGNATURE PAD: Implementación para firmas (Ejecutor, Recibe y Mantenimiento)
   // ---------------------------------------------------------
