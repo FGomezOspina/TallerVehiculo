@@ -176,6 +176,117 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       console.warn("El botón de agregar reporte o la tabla no se encontraron. Verifica el HTML.");
     }
+
+    // ---------------------------------------------------------
+  // SIGNATURE PAD: Implementación para firmas (Ejecutor, Recibe y Mantenimiento)
+  // ---------------------------------------------------------
+  // Firma del Ejecutor
+  const signatureCanvasEjecutor = document.getElementById('signatureCanvasEjecutor');
+  signatureCanvasEjecutor.width = signatureCanvasEjecutor.offsetWidth;
+  signatureCanvasEjecutor.height = signatureCanvasEjecutor.offsetHeight;
+  const signaturePadEjecutor = new SignaturePad(signatureCanvasEjecutor);
+  const signatureModalEjecutorEl = document.getElementById('signatureModalEjecutor');
+  const signatureModalEjecutor = new bootstrap.Modal(signatureModalEjecutorEl);
+
+  signatureModalEjecutorEl.addEventListener('shown.bs.modal', () => {
+    signatureCanvasEjecutor.width = signatureCanvasEjecutor.offsetWidth;
+    signatureCanvasEjecutor.height = signatureCanvasEjecutor.offsetHeight;
+    signaturePadEjecutor.clear();
+  });
+  
+  document.getElementById('btnClearSignatureEjecutor').addEventListener('click', () => {
+    signaturePadEjecutor.clear();
+  });
+  
+  document.getElementById('btnSaveSignatureEjecutor').addEventListener('click', () => {
+    if(signaturePadEjecutor.isEmpty()) {
+      alert("Por favor, firma antes de guardar.");
+    } else {
+      const dataURL = signaturePadEjecutor.toDataURL();
+      document.getElementById('signatureBoxEjecutor').innerHTML = `<img src="${dataURL}" alt="Firma digital del Ejecutor" style="max-width: 100%;">`;
+      signatureModalEjecutor.hide();
+    }
+  });
+  
+  const signatureBoxEjecutor = document.getElementById('signatureBoxEjecutor');
+  if(signatureBoxEjecutor) {
+    signatureBoxEjecutor.addEventListener('click', () => {
+      signaturePadEjecutor.clear();
+      signatureModalEjecutor.show();
+    });
+  }
+
+  // Firma de Recibe
+  const signatureCanvasRecibe = document.getElementById('signatureCanvasRecibe');
+  signatureCanvasRecibe.width = signatureCanvasRecibe.offsetWidth;
+  signatureCanvasRecibe.height = signatureCanvasRecibe.offsetHeight;
+  const signaturePadRecibe = new SignaturePad(signatureCanvasRecibe);
+  const signatureModalRecibeEl = document.getElementById('signatureModalRecibe');
+  const signatureModalRecibe = new bootstrap.Modal(signatureModalRecibeEl);
+
+  signatureModalRecibeEl.addEventListener('shown.bs.modal', () => {
+    signatureCanvasRecibe.width = signatureCanvasRecibe.offsetWidth;
+    signatureCanvasRecibe.height = signatureCanvasRecibe.offsetHeight;
+    signaturePadRecibe.clear();
+  });
+  
+  document.getElementById('btnClearSignatureRecibe').addEventListener('click', () => {
+    signaturePadRecibe.clear();
+  });
+  
+  document.getElementById('btnSaveSignatureRecibe').addEventListener('click', () => {
+    if(signaturePadRecibe.isEmpty()) {
+      alert("Por favor, firma antes de guardar.");
+    } else {
+      const dataURL = signaturePadRecibe.toDataURL();
+      document.getElementById('signatureBoxRecibe').innerHTML = `<img src="${dataURL}" alt="Firma digital del Recibe" style="max-width: 100%;">`;
+      signatureModalRecibe.hide();
+    }
+  });
+  
+  const signatureBoxRecibe = document.getElementById('signatureBoxRecibe');
+  if(signatureBoxRecibe) {
+    signatureBoxRecibe.addEventListener('click', () => {
+      signaturePadRecibe.clear();
+      signatureModalRecibe.show();
+    });
+  }
+
+  // Firma del Mantenimiento
+  const signatureCanvasMantenimiento = document.getElementById('signatureCanvasMantenimiento');
+  signatureCanvasMantenimiento.width = signatureCanvasMantenimiento.offsetWidth;
+  signatureCanvasMantenimiento.height = signatureCanvasMantenimiento.offsetHeight;
+  const signaturePadMantenimiento = new SignaturePad(signatureCanvasMantenimiento);
+  const signatureModalMantenimientoEl = document.getElementById('signatureModalMantenimiento');
+  const signatureModalMantenimiento = new bootstrap.Modal(signatureModalMantenimientoEl);
+
+  signatureModalMantenimientoEl.addEventListener('shown.bs.modal', () => {
+    signatureCanvasMantenimiento.width = signatureCanvasMantenimiento.offsetWidth;
+    signatureCanvasMantenimiento.height = signatureCanvasMantenimiento.offsetHeight;
+    signaturePadMantenimiento.clear();
+  });
+
+  document.getElementById('btnClearSignatureMantenimiento').addEventListener('click', () => {
+    signaturePadMantenimiento.clear();
+  });
+
+  document.getElementById('btnSaveSignatureMantenimiento').addEventListener('click', () => {
+    if(signaturePadMantenimiento.isEmpty()) {
+      alert("Por favor, firma antes de guardar.");
+    } else {
+      const dataURL = signaturePadMantenimiento.toDataURL();
+      document.getElementById('signatureBoxMantenimiento').innerHTML = `<img src="${dataURL}" alt="Firma digital del Mantenimiento" style="max-width: 100%;">`;
+      signatureModalMantenimiento.hide();
+    }
+  });
+
+  const signatureBoxMantenimiento = document.getElementById('signatureBoxMantenimiento');
+  if(signatureBoxMantenimiento) {
+    signatureBoxMantenimiento.addEventListener('click', () => {
+      signaturePadMantenimiento.clear();
+      signatureModalMantenimiento.show();
+    });
+  }
   
     // Enviar el formulario actualizando el documento
     const btnGuardar = document.getElementById('btnGuardar');
