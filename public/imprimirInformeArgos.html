@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Imprimir Informe Argos</title>
+  <style>
+    /* Ajusta estilos para que se parezca más al formato físico que deseas.
+       Este es un CSS base de ejemplo que puedes mejorar según tu diseño. */
+
+    body {
+      margin: 20px;
+      font-family: Arial, sans-serif;
+      color: #000;
+    }
+
+    h1, h2, h3, h4 {
+      margin: 5px 0;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    thead th {
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 8px;
+      border: 1px solid #ccc;
+    }
+
+    tbody td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .col {
+      flex: 1 1 48%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .section-title {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .btn-print {
+      display: block;
+      margin: 20px auto;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Estilos para impresión */
+    @media print {
+      .btn-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>RECIBO DE SERVICIOS DE MANTENIMIENTO</h2>
+    <h4>CONCRETOS Y AGREGADOS - ARGOS</h4>
+    <hr/>
+
+    <div class="row">
+      <div class="col">
+        <label>Ejecutor:</label>
+        <span id="ejecutor"></span>
+      </div>
+      <div class="col">
+        <label>Equipo:</label>
+        <span id="equipo"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label>Fecha Programada Entrega:</label>
+        <span id="fechaProgramadaEntrega"></span>
+      </div>
+      <div class="col">
+        <label>Hora Programada Entrega:</label>
+        <span id="horaProgramadaEntrega"></span>
+      </div>
+    </div>
+
+    <!-- Tabla de Reportes -->
+    <h3 class="section-title">Reportes</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>REPORTE INICIAL</th>
+          <th>OT</th>
+          <th>TRABAJO ORDENADO POR ITTO</th>
+          <th>TRABAJO EJECUTADO</th>
+          <th>CUMPLE (S/N)</th>
+          <th>COMENTARIOS DE QUIEN RECIBE</th>
+        </tr>
+      </thead>
+      <tbody id="reportesBody">
+        <!-- Se llenará dinámicamente -->
+      </tbody>
+    </table>
+
+    <!-- Datos de Entrega y Recibo -->
+    <h3 class="section-title">Entrega/Recibo</h3>
+    <div class="row">
+      <!-- Entrega por el Ejecutor -->
+      <div class="col" style="border:1px solid #ccc; margin-right: 5px; padding: 10px;">
+        <h4>ENTREGA POR EL EJECUTOR</h4>
+        <p><strong>Nombre:</strong> <span id="entregaNombre"></span></p>
+        <p><strong>Firma:</strong> <span id="firmaEjecutor"></span></p>
+        <p><strong>Fecha/Hora Entrega:</strong> <span id="entregaHora"></span></p>
+      </div>
+
+      <!-- Recibe por Argos -->
+      <div class="col" style="border:1px solid #ccc; margin-left: 5px; padding: 10px;">
+        <h4>RECIBE POR ARGOS</h4>
+        <p><strong>Nombre:</strong> <span id="recibeNombre"></span></p>
+        <p><strong>Firma:</strong> <span id="firmaRecibe"></span></p>
+        <p><strong>Hora Recibido:</strong> <span id="recibeHora"></span></p>
+      </div>
+    </div>
+
+    <!-- Evaluación del servicio -->
+    <h3 class="section-title">Evaluación del servicio por parte de Mantenimiento Argos</h3>
+    <div style="border:1px solid #ccc; padding: 10px;">
+      <p><strong>Seguridad:</strong> <span id="checkSeguridad"></span></p>
+      <p><strong>Ambiente:</strong> <span id="checkAmbiente"></span></p>
+      <p><strong>Calidad:</strong> <span id="checkCalidad"></span></p>
+      <p><strong>Recibe Mantenimiento (Nombre):</strong> <span id="recibeMantenimiento"></span></p>
+      <p><strong>Firma Mantenimiento:</strong> <span id="firmaMantenimiento"></span></p>
+    </div>
+
+    <!-- Botón de impresión -->
+    <button class="btn-print" id="btnImprimir" onclick="window.print()">Imprimir</button>
+  </div>
+
+  <!-- Script para rellenar la información dinámicamente -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Obtener el ID del detalle desde la URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const detalleId = urlParams.get('detalleId');
+      
+      if (!detalleId) {
+        alert("No se proporcionó el ID del informe.");
+        return;
+      }
+
+      try {
+        // Hacer el fetch al endpoint correspondiente
+        const response = await fetch(`/detallesVehiculoArgos/${detalleId}`);
+        if (!response.ok) {
+          throw new Error("Error al obtener los datos del informe Argos.");
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          const detalle = data.detalle;
+
+          // Asignar valores a los campos principales
+          document.getElementById('ejecutor').textContent = detalle.ejecutor || '';
+          document.getElementById('equipo').textContent = detalle.equipo || '';
+          // Corrección: se usan las propiedades que coinciden con los IDs del HTML
+          document.getElementById('fechaProgramadaEntrega').textContent = detalle.fechaProgramadaEntrega || '';
+          document.getElementById('horaProgramadaEntrega').textContent = detalle.horaProgramadaEntrega || '';
+
+          // Llenar la tabla de reportes
+          const reportesBody = document.getElementById('reportesBody');
+          reportesBody.innerHTML = '';
+          if (detalle.reportes && Array.isArray(detalle.reportes)) {
+            detalle.reportes.forEach((rep) => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${rep.reporteInicial || ''}</td>
+                <td>${rep.OT || ''}</td>
+                <td>${rep.trabajoOrdenado || ''}</td>
+                <td>${rep.trabajoEjecutado || ''}</td>
+                <td>${rep.cumple || ''}</td>
+                <td>${rep.comentarios || ''}</td>
+              `;
+              reportesBody.appendChild(row);
+            });
+          }
+
+          // Datos de Entrega/Recibo
+          document.getElementById('entregaNombre').textContent = detalle.entregaNombre || '';
+          document.getElementById('entregaHora').textContent = detalle.entregaHora || '';
+          document.getElementById('recibeNombre').textContent = detalle.recibeNombre || '';
+          document.getElementById('recibeHora').textContent = detalle.recibeHora || '';
+
+          // Campos de evaluación
+          document.getElementById('checkSeguridad').textContent = detalle.checkSeguridad ? 'Sí' : 'No';
+          document.getElementById('checkAmbiente').textContent = detalle.checkAmbiente ? 'Sí' : 'No';
+          document.getElementById('checkCalidad').textContent = detalle.checkCalidad ? 'Sí' : 'No';
+          document.getElementById('recibeMantenimiento').textContent = detalle.recibeMantenimiento || '';
+
+          // Firmas (imágenes)
+          if (detalle.firmaEjecutor) {
+            document.getElementById('firmaEjecutor').innerHTML = `
+              <img src="${detalle.firmaEjecutor}" alt="Firma Ejecutor" style="max-width: 150px;">
+            `;
+          }
+          if (detalle.firmaRecibe) {
+            document.getElementById('firmaRecibe').innerHTML = `
+              <img src="${detalle.firmaRecibe}" alt="Firma Recibe" style="max-width: 150px;">
+            `;
+          }
+          if (detalle.firmaMantenimiento) {
+            document.getElementById('firmaMantenimiento').innerHTML = `
+              <img src="${detalle.firmaMantenimiento}" alt="Firma Mantenimiento" style="max-width: 150px;">
+            `;
+          }
+
+        } else {
+          alert("No se encontró el detalle con el ID proporcionado.");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Error al cargar los datos del informe Argos.");
+      }
+    });
+  </script>
+</body>
+</html>
