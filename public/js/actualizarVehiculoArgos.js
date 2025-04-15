@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Función para cargar datos y rellenar el formulario
+  // Función para cargar datos y rellenar el formulario
   async function loadData() {
     try {
       const response = await fetch(`/detallesVehiculoArgos/${id}`);
@@ -96,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!tbody) {
           console.error("No se encontró el elemento tbody en la tabla de reportes.");
         } else {
-          tbody.innerHTML = ''; // Limpiar filas existentes
+          tbody.innerHTML = '';
           if (detalle.reportes && Array.isArray(detalle.reportes) && detalle.reportes.length > 0) {
             detalle.reportes.forEach((reporte, index) => {
               const tr = document.createElement('tr');
@@ -129,7 +130,6 @@ document.addEventListener('DOMContentLoaded', async () => {
               tbody.appendChild(tr);
             });
           } else {
-            // Si no existen reportes, agregar una fila de ejemplo
             const tr = document.createElement('tr');
             tr.innerHTML = `
               <td class="align-middle text-center">1</td>
@@ -181,6 +181,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (detalle.firmaMantenimiento) {
           document.getElementById('signatureBoxMantenimiento').innerHTML = `<img src="${detalle.firmaMantenimiento}" alt="Firma digital del Mantenimiento" style="max-width: 100%;">`;
         }
+        
+        // ---------------------
+        // APLICAR LÓGICA DE "VER"
+        // ---------------------
+        if (detalle.estado && detalle.estado === 'Cerrado') {
+          // Deshabilitar todos los inputs, selects, textareas y botones de edición
+          document.querySelectorAll('input, select, textarea, button').forEach(el => {
+            el.disabled = true;
+          });
+          
+          // Ocultar el botón de guardar para evitar envíos accidentales
+          const btnGuardar = document.getElementById('btnGuardar');
+          if (btnGuardar) {
+            btnGuardar.style.display = 'none';
+          }
+          
+          // Mostrar un mensaje informativo
+          const mensaje = document.createElement('div');
+          mensaje.className = 'alert alert-info mt-3';
+          mensaje.textContent = 'Este informe está cerrado y no puede ser editado.';
+          const container = document.querySelector('.container') || document.body;
+          container.prepend(mensaje);
+        }
+
       } else {
         alert("No se encontró el documento.");
       }

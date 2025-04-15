@@ -73,6 +73,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       } else {
         detalles.forEach((detalle, index) => {
           const tr = document.createElement('tr');
+          // Se extrae o define el estado, por defecto "Abierto"
+          const estado = detalle.estado || 'Abierto';
+        
           tr.innerHTML = `
             <td>${index + 1}</td>
             <td>${detalle.ejecutor || ''}</td>
@@ -80,12 +83,69 @@ document.addEventListener('DOMContentLoaded', async function() {
             <td>${detalle.fechaProgramada || ''}</td>
             <td>${detalle.horaProgramada || ''}</td>
             <td>${detalle.sede || ''}</td>
-            <td>
-              <a href="actualizarVehiculoArgos.html?id=${detalle.id}&sede=${sede}&role=${role}" class="btn btn-primary btn-sm">Editar</a>
-            </td>
+            <td></td>
           `;
+        
+          const actionsCell = tr.querySelector('td:last-child');
+        
+          if (estado === 'Abierto') {
+            // Botón "Cerrar"
+            const cerrarBtn = document.createElement('button');
+            cerrarBtn.className = 'btn btn-sm btn-danger me-2';
+            cerrarBtn.textContent = 'Cerrar';
+            cerrarBtn.addEventListener('click', () => {
+              if (confirm("¿Estás seguro de que deseas cerrar este informe?")) {
+                fetch(`/detallesVehiculoArgos/${detalle.id}/cerrar`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ estado: 'Cerrado' })
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    alert("El informe se ha cerrado correctamente.");
+                    // Recargar la página o volver a cargar los datos del historial
+                    location.reload();
+                  } else {
+                    alert("Error al cerrar el informe: " + data.error);
+                  }
+                })
+                .catch(err => {
+                  console.error(err);
+                  alert("Error al conectar con el servidor.");
+                });
+              }
+            });
+            actionsCell.appendChild(cerrarBtn);
+        
+            // Botón "Editar" para informes abiertos
+            const editBtn = document.createElement('a');
+            editBtn.href = `actualizarVehiculoArgos.html?id=${detalle.id}&sede=${sede}&role=${role}`;
+            editBtn.className = 'btn btn-sm btn-primary';
+            editBtn.textContent = 'Editar';
+            actionsCell.appendChild(editBtn);
+          } else if (estado === 'Cerrado') {
+            // Botón "Imprimir" para informes cerrados
+            const imprimirBtn = document.createElement('button');
+            imprimirBtn.className = 'btn btn-sm btn-info me-2';
+            imprimirBtn.textContent = 'Imprimir';
+            imprimirBtn.addEventListener('click', () => {
+              window.location.href = `/imprimirInformeArgos.html?detalleId=${detalle.id}&sede=${sede}`;
+            });
+            actionsCell.appendChild(imprimirBtn);
+        
+            // Botón "Ver" para informes cerrados
+            const verBtn = document.createElement('button');
+            verBtn.className = 'btn btn-sm btn-secondary';
+            verBtn.textContent = 'Ver';
+            verBtn.addEventListener('click', () => {
+              window.location.href = `actualizarVehiculoArgos.html?id=${detalle.id}&sede=${sede}`;
+            });
+            actionsCell.appendChild(verBtn);
+          }
+        
           tablaBody.appendChild(tr);
-        });
+        });        
       }
     } else {
       tablaBody.innerHTML = '<tr><td colspan="7" class="text-center">No se encontraron registros.</td></tr>';

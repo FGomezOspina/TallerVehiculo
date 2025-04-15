@@ -572,6 +572,53 @@ app.put('/detallesVehiculoArgos/:id', async (req, res) => {
   }
 });
 
+// Actualizar el estado a "Cerrado" (cerrar informe) para detallesVehiculoArgos
+app.put('/detallesVehiculoArgos/:id/cerrar', async (req, res) => {
+  const detalleId = req.params.id;
+  const docRef = db.collection("detallesVehiculoArgos").doc(detalleId);
+  
+  try {
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      return res.status(404).json({ success: false, error: "Documento no encontrado" });
+    }
+    const detalleData = doc.data();
+    if (detalleData.estado && detalleData.estado === 'Cerrado') {
+      return res.status(400).json({ success: false, error: "El informe ya está cerrado" });
+    }
+    // Actualiza el estado a "Cerrado"
+    await docRef.update({ estado: 'Cerrado' });
+    
+    // Si en el detalle existen servicios y se requiere actualizar stock, agregar la lógica similar:
+    if (detalleData.servicios && Array.isArray(detalleData.servicios)) {
+      const promises = detalleData.servicios.map(serv => {
+        if (serv.productoId && serv.cantidad) {
+          const productRef = db.collection("productos").doc(serv.productoId);
+          return productRef.get().then(productDoc => {
+            if (productDoc.exists) {
+              const productData = productDoc.data();
+              const currentStock = productData.stock?.cantidadDisponible || 0;
+              const newStock = currentStock - parseInt(serv.cantidad);
+              return productRef.update({
+                'stock.cantidadDisponible': newStock
+              });
+            }
+            return Promise.resolve();
+          });
+        }
+        return Promise.resolve();
+      });
+      await Promise.all(promises);
+    }
+    
+    res.json({ success: true, mensaje: "Informe Argos cerrado correctamente y stock actualizado (si aplica)." });
+  } catch (err) {
+    console.error("Error al cerrar el informe Argos:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+
 
 // Iniciar el servidor
 app.listen(PORT, () => {
