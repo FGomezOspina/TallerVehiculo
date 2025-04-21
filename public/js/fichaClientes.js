@@ -1,6 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Obtener el parámetro "sede" de la URL, con valor por defecto "pereira" si no existe
   const sede = localStorage.getItem('sede') || 'pereira';
+  
+
+  // ——— AÑADIR: Ajustar sidebar según rol ———
+  const role = localStorage.getItem('role') || 'admin';
+  if (role === 'patio') {
+      // Ocultar módulos que el "patio" no debe ver
+      ['navProveedores', 'navInventario', /* si tienes más IDs, agrégalas aquí */]
+        .forEach(id => {
+          const el = document.getElementById(id);
+         if (el) el.style.display = 'none';
+        });
+
+      // DEJAR navClientes visible, pero ocultar solo el enlace "Crear Clientes"
+      document
+        .querySelectorAll('#collapseClientes a[href$="crearClientes.html"]')
+        .forEach(link => {
+          const li = link.closest('li');
+          if (li) li.style.display = 'none';
+        });
+  }
+  // ———————————————————————————————
+
+  // -------------------------------------------------------
+  // CONFIGURACIÓN DEL LOGO
+  // -------------------------------------------------------
+  // Al hacer clic en el logo, se redirige:
+  // - Si es usuario patio: a /dashboard?sede=<sede>&role=patio
+  // - Si es admin: a /dashboard?role=admin
+  const logo = document.getElementById('logo');
+  if (logo) {
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (role === 'patio') {
+        window.location.href = `/dashboard?sede=${sede}&role=patio`;
+      } else {
+        window.location.href = '/dashboard?role=admin';
+      }
+    });
+  }
 
   // Referencias a elementos del DOM
   const clientesContainer = document.getElementById("clientesContainer");
@@ -130,6 +169,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
             // Botón para eliminar cliente
             const eliminarClienteBtn = item.querySelector(".eliminarClienteBtn");
+            // ocultar en patio
+            if (role === 'patio') {
+              eliminarClienteBtn.style.display = 'none';
+            }
             eliminarClienteBtn.addEventListener("click", () => {
               if (confirm(`¿Seguro que desea eliminar el cliente ${cliente.nombre}?`)) {
                 fetch(`/clientes/${cliente.id}`, { method: "DELETE" })
@@ -170,6 +213,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("editTelefono").value = cliente.telefono || "";
     document.getElementById("editCedula").value = cliente.cedula || "";
     document.getElementById("editEmail").value = cliente.email || "";
+
+    // ——— NUEVO: si es patio, bloquear edición de datos de cliente ———
+    if (role === 'patio') {
+      ['editEmpresa','editNombre','editTelefono','editCedula','editEmail']
+        .forEach(id => document.getElementById(id).disabled = true);
+    } else {
+      ['editEmpresa','editNombre','editTelefono','editCedula','editEmail']
+        .forEach(id => document.getElementById(id).disabled = false);
+    }
+       // ——————————————————————————————————————————————
     
     // Limpiar contenedor de vehículos
     editVehiculosContainer.innerHTML = "";
