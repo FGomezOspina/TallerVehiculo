@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <title>Imprimir Informe Argos</title>
   <style>
-    /* Ajusta estilos para que se parezca más al formato físico que deseas.
-       Este es un CSS base de ejemplo que puedes mejorar según tu diseño. */
+    /* Ajustes generales */
+    @page {
+      size: A4; /* Puedes cambiar a Letter u otro tamaño si lo requieres */
+      margin: 20px;
+    }
 
     body {
       margin: 20px;
@@ -13,59 +16,41 @@
       color: #000;
     }
 
-    h1, h2, h3, h4 {
-      margin: 5px 0;
-      text-align: center;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    table {
+    /* Tablas base (encabezado, reporte, firmas, evaluación) */
+    .header-table,
+    .report-table,
+    .signature-table,
+    .evaluation-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-bottom: 10px;
     }
 
-    thead th {
-      background-color: #f2f2f2;
-      text-align: center;
-      padding: 8px;
-      border: 1px solid #ccc;
-    }
-
-    tbody td {
-      border: 1px solid #ccc;
-      padding: 8px;
+    /* Bordes en tablas y celdas */
+    .header-table td, .header-table th,
+    .report-table td, .report-table th,
+    .signature-table td, .signature-table th,
+    .evaluation-table td, .evaluation-table th {
+      border: 1px solid #000;
+      padding: 5px;
       vertical-align: top;
     }
 
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      margin-bottom: 10px;
+    /* Alineaciones y estilos de apoyo */
+    .center {
+      text-align: center;
+      vertical-align: middle;
     }
 
-    .col {
-      flex: 1 1 48%;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-    }
-
-    label {
+    .bold {
       font-weight: bold;
     }
 
-    .section-title {
-      margin-top: 20px;
-      margin-bottom: 10px;
-      font-weight: bold;
-      text-decoration: underline;
+    .small-text {
+      font-size: 12px;
     }
 
+    /* Botón de impresión (no aparece al imprimir) */
     .btn-print {
       display: block;
       margin: 20px auto;
@@ -73,8 +58,6 @@
       font-size: 16px;
       cursor: pointer;
     }
-
-    /* Estilos para impresión */
     @media print {
       .btn-print {
         display: none;
@@ -83,92 +66,126 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>RECIBO DE SERVICIOS DE MANTENIMIENTO</h2>
-    <h4>CONCRETOS Y AGREGADOS - ARGOS</h4>
-    <hr/>
+  <!-- ENCABEZADO (Logo, Título, Versión) -->
+  <table class="header-table">
+    <tr>
+      <!-- Logo Argos -->
+      <td rowspan="3" style="width: 20%;">
+        <!-- Ajusta la ruta del logo a tu necesidad -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_Argos.svg" 
+             alt="Argos Logo" style="max-width:100px;">
+      </td>
+      <!-- Título principal -->
+      <td rowspan="2" colspan="3" class="center bold">
+        RECIBO DE SERVICIOS DE MANTENIMIENTO <br>
+        CONCRETOS Y AGREGADOS
+      </td>
+      <!-- Versión -->
+      <td class="bold center">Versión 04</td>
+    </tr>
+    <tr>
+      <!-- Página / Otro texto si deseas -->
+      <td class="bold center">Página 1 de 1</td>
+    </tr>
+    <tr>
+      <!-- Información adicional (Fecha de aprobación, etc.) -->
+      <td colspan="3" class="center small-text">
+        Aplica a partir de: 14-03-23
+      </td>
+      <td></td>
+    </tr>
+  </table>
 
-    <div class="row">
-      <div class="col">
-        <label>Ejecutor:</label>
-        <span id="ejecutor"></span>
-      </div>
-      <div class="col">
-        <label>Equipo:</label>
-        <span id="equipo"></span>
-      </div>
-    </div>
+  <!-- DATOS PRINCIPALES (Ejecutor, Equipo, Fechas y Horas) -->
+  <table class="header-table">
+    <tr>
+      <td class="bold">EJECUTOR</td>
+      <td id="ejecutor"></td>
+      <td class="bold">EQUIPO</td>
+      <td id="equipo"></td>
+    </tr>
+    <tr>
+      <td class="bold">FECHA PROGRAMADA ENTREGA</td>
+      <td id="fechaProgramadaEntrega"></td>
+      <td class="bold">HORA PROGRAMADA ENTREGA</td>
+      <td id="horaProgramadaEntrega"></td>
+    </tr>
+  </table>
 
-    <div class="row">
-      <div class="col">
-        <label>Fecha Programada Entrega:</label>
-        <span id="fechaProgramadaEntrega"></span>
-      </div>
-      <div class="col">
-        <label>Hora Programada Entrega:</label>
-        <span id="horaProgramadaEntrega"></span>
-      </div>
-    </div>
+  <!-- TABLA CENTRAL (Reportes) -->
+  <table class="report-table">
+    <thead>
+      <tr class="center bold">
+        <th>REPORTE INICIAL</th>
+        <th>OT</th>
+        <th>TRABAJO ORDENADO POR ITTO</th>
+        <th>TRABAJO EJECUTADO</th>
+        <th>CUMPLE (S/N)</th>
+        <th>COMENTARIOS DE QUIEN RECIBE</th>
+      </tr>
+    </thead>
+    <tbody id="reportesBody">
+      <!-- Se llenará dinámicamente con JavaScript -->
+    </tbody>
+  </table>
 
-    <!-- Tabla de Reportes -->
-    <h3 class="section-title">Reportes</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>REPORTE INICIAL</th>
-          <th>OT</th>
-          <th>TRABAJO ORDENADO POR ITTO</th>
-          <th>TRABAJO EJECUTADO</th>
-          <th>CUMPLE (S/N)</th>
-          <th>COMENTARIOS DE QUIEN RECIBE</th>
-        </tr>
-      </thead>
-      <tbody id="reportesBody">
-        <!-- Se llenará dinámicamente -->
-      </tbody>
-    </table>
+  <!-- FIRMAS (Entrega y Recibo) -->
+  <table class="signature-table">
+    <tr class="center bold">
+      <td colspan="2">ENTREGA POR EL EJECUTOR</td>
+      <td colspan="2">RECIBE POR ARGOS</td>
+    </tr>
+    <tr>
+      <td class="bold">Nombre:</td>
+      <td id="entregaNombre"></td>
+      <td class="bold">Nombre:</td>
+      <td id="recibeNombre"></td>
+    </tr>
+    <tr>
+      <td class="bold">Firma:</td>
+      <td id="firmaEjecutor"></td>
+      <td class="bold">Firma:</td>
+      <td id="firmaRecibe"></td>
+    </tr>
+    <tr>
+      <td class="bold">Fecha/Hora Entrega:</td>
+      <td id="entregaHora"></td>
+      <td class="bold">Hora Recibido:</td>
+      <td id="recibeHora"></td>
+    </tr>
+  </table>
 
-    <!-- Datos de Entrega y Recibo -->
-    <h3 class="section-title">Entrega/Recibo</h3>
-    <div class="row">
-      <!-- Entrega por el Ejecutor -->
-      <div class="col" style="border:1px solid #ccc; margin-right: 5px; padding: 10px;">
-        <h4>ENTREGA POR EL EJECUTOR</h4>
-        <p><strong>Nombre:</strong> <span id="entregaNombre"></span></p>
-        <p><strong>Firma:</strong> <span id="firmaEjecutor"></span></p>
-        <p><strong>Fecha/Hora Entrega:</strong> <span id="entregaHora"></span></p>
-      </div>
+  <!-- EVALUACIÓN DEL SERVICIO -->
+  <table class="evaluation-table">
+    <tr class="center bold">
+      <td colspan="5">EVALUACIÓN DEL SERVICIO POR PARTE DE MANTENIMIENTO ARGOS</td>
+    </tr>
+    <tr class="center bold">
+      <td>Seguridad</td>
+      <td>Ambiente</td>
+      <td>Calidad</td>
+      <td>Recibe Mantenimiento (Nombre)</td>
+      <td>Firma Mantenimiento</td>
+    </tr>
+    <tr class="center">
+      <td id="checkSeguridad"></td>
+      <td id="checkAmbiente"></td>
+      <td id="checkCalidad"></td>
+      <td id="recibeMantenimiento"></td>
+      <td id="firmaMantenimiento"></td>
+    </tr>
+  </table>
 
-      <!-- Recibe por Argos -->
-      <div class="col" style="border:1px solid #ccc; margin-left: 5px; padding: 10px;">
-        <h4>RECIBE POR ARGOS</h4>
-        <p><strong>Nombre:</strong> <span id="recibeNombre"></span></p>
-        <p><strong>Firma:</strong> <span id="firmaRecibe"></span></p>
-        <p><strong>Hora Recibido:</strong> <span id="recibeHora"></span></p>
-      </div>
-    </div>
+  <!-- BOTÓN DE IMPRESIÓN -->
+  <button class="btn-print" id="btnImprimir" onclick="window.print()">Imprimir</button>
 
-    <!-- Evaluación del servicio -->
-    <h3 class="section-title">Evaluación del servicio por parte de Mantenimiento Argos</h3>
-    <div style="border:1px solid #ccc; padding: 10px;">
-      <p><strong>Seguridad:</strong> <span id="checkSeguridad"></span></p>
-      <p><strong>Ambiente:</strong> <span id="checkAmbiente"></span></p>
-      <p><strong>Calidad:</strong> <span id="checkCalidad"></span></p>
-      <p><strong>Recibe Mantenimiento (Nombre):</strong> <span id="recibeMantenimiento"></span></p>
-      <p><strong>Firma Mantenimiento:</strong> <span id="firmaMantenimiento"></span></p>
-    </div>
-
-    <!-- Botón de impresión -->
-    <button class="btn-print" id="btnImprimir" onclick="window.print()">Imprimir</button>
-  </div>
-
-  <!-- Script para rellenar la información dinámicamente -->
+  <!-- SCRIPT PARA CARGAR DATOS DINÁMICAMENTE -->
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       // Obtener el ID del detalle desde la URL
       const urlParams = new URLSearchParams(window.location.search);
       const detalleId = urlParams.get('detalleId');
-      
+
       if (!detalleId) {
         alert("No se proporcionó el ID del informe.");
         return;
@@ -188,7 +205,6 @@
           // Asignar valores a los campos principales
           document.getElementById('ejecutor').textContent = detalle.ejecutor || '';
           document.getElementById('equipo').textContent = detalle.equipo || '';
-          // Corrección: se usan las propiedades que coinciden con los IDs del HTML
           document.getElementById('fechaProgramadaEntrega').textContent = detalle.fechaProgramadaEntrega || '';
           document.getElementById('horaProgramadaEntrega').textContent = detalle.horaProgramadaEntrega || '';
 
@@ -196,7 +212,7 @@
           const reportesBody = document.getElementById('reportesBody');
           reportesBody.innerHTML = '';
           if (detalle.reportes && Array.isArray(detalle.reportes)) {
-            detalle.reportes.forEach((rep) => {
+            detalle.reportes.forEach(rep => {
               const row = document.createElement('tr');
               row.innerHTML = `
                 <td>${rep.reporteInicial || ''}</td>
@@ -210,32 +226,32 @@
             });
           }
 
-          // Datos de Entrega/Recibo
+          // Entrega y Recibo
           document.getElementById('entregaNombre').textContent = detalle.entregaNombre || '';
           document.getElementById('entregaHora').textContent = detalle.entregaHora || '';
           document.getElementById('recibeNombre').textContent = detalle.recibeNombre || '';
           document.getElementById('recibeHora').textContent = detalle.recibeHora || '';
 
-          // Campos de evaluación
+          // Evaluación del servicio
           document.getElementById('checkSeguridad').textContent = detalle.checkSeguridad ? 'Sí' : 'No';
           document.getElementById('checkAmbiente').textContent = detalle.checkAmbiente ? 'Sí' : 'No';
           document.getElementById('checkCalidad').textContent = detalle.checkCalidad ? 'Sí' : 'No';
           document.getElementById('recibeMantenimiento').textContent = detalle.recibeMantenimiento || '';
 
-          // Firmas (imágenes)
+          // Firmas (si son imágenes base64 o rutas)
           if (detalle.firmaEjecutor) {
             document.getElementById('firmaEjecutor').innerHTML = `
-              <img src="${detalle.firmaEjecutor}" alt="Firma Ejecutor" style="max-width: 150px;">
+              <img src="${detalle.firmaEjecutor}" alt="Firma Ejecutor" style="max-width: 100px;">
             `;
           }
           if (detalle.firmaRecibe) {
             document.getElementById('firmaRecibe').innerHTML = `
-              <img src="${detalle.firmaRecibe}" alt="Firma Recibe" style="max-width: 150px;">
+              <img src="${detalle.firmaRecibe}" alt="Firma Recibe" style="max-width: 100px;">
             `;
           }
           if (detalle.firmaMantenimiento) {
             document.getElementById('firmaMantenimiento').innerHTML = `
-              <img src="${detalle.firmaMantenimiento}" alt="Firma Mantenimiento" style="max-width: 150px;">
+              <img src="${detalle.firmaMantenimiento}" alt="Firma Mantenimiento" style="max-width: 100px;">
             `;
           }
 

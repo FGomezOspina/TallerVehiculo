@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <td>${prod.nombre}</td>
             <td>${prod.stock.cantidadDisponible}</td>
             <td>${parseFloat(prod.precio.precioBase).toFixed(2)}</td>
+            <td>${parseFloat(prod.precio.precioVenta || 0).toFixed(2)}</td>
             <td>
               <button class="btn btn-primary btn-sm editar" data-id="${prod.id}">Editar</button>
               <button class="btn btn-danger btn-sm eliminar" data-id="${prod.id}">Eliminar</button>
@@ -90,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
           document.getElementById('stockMinimo').value = prod.stock.stockMinimo;
           document.getElementById('stockMaximo').value = prod.stock.stockMaximo;
           document.getElementById('precioBase').value = prod.precio.precioBase;
+          document.getElementById('precioVenta').value = prod.precio.precioVenta || '';
           document.getElementById('ivaProducto').value = prod.precio.iva;
           // Cambiar el título del modal para edición
           document.getElementById('modalProductoLabel').textContent = "Editar Producto";
@@ -115,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         precio: {
           precioBase: parseFloat(document.getElementById('precioBase').value) || 0,
+          precioVenta: parseFloat(document.getElementById('precioVenta').value) || 0,
           iva: document.getElementById('ivaProducto').value
         }
       };

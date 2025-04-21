@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const option = document.createElement('option');
       option.value = product.id;
       option.textContent = product.nombre || 'Sin nombre';
-      option.setAttribute('data-precio-base', product.precio.precioBase || 0);
+      option.setAttribute('data-precio-base', product.precio.precioVenta || 0);
       selectElement.appendChild(option);
     });
   }
