@@ -39,11 +39,18 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0.5rem;
 }
 
-p, label, span, a, li, input, textarea {
+p, label, span, a, input, textarea {
   color: var(--dark-color);
   font-size: 1rem;
   margin: 0;
 }
+
+li {
+  color: white;
+  font-size: 1rem;
+  margin: 0;
+}
+
 
 /* ----------------------------------------------------
    SIDEBAR
@@ -151,6 +158,8 @@ p, label, span, a, li, input, textarea {
 .sidebar .logout-btn:hover {
   background-color: var(--primary-color);
 }
+
+
 
 /* Para pantallas tipo tablet (max-width: 768px) */
 @media screen and (max-width: 768px) {

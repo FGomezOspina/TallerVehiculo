@@ -34,12 +34,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   ];
 
   if (role === 'patio') {
-    // Para usuarios tipo "patio", ocultar los elementos que solo deben verse para admin.
-    elementosARestrigir.forEach(id => {
-      const elem = document.getElementById(id);
-      if (elem) {
-        elem.style.display = 'none';
-      }
+    // Ocultar módulos completos
+    ['navProveedores', 'navInventario', 'cardProveedores', 'cardInventario']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+
+    // Ocultar únicamente los enlaces "Crear Clientes"
+    document.querySelectorAll('a[href$="crearClientes.html"]').forEach(link => {
+      const li = link.closest('li');
+      if (li) li.style.display = 'none';
     });
   } else {
     // Para admin, asegurar que se muestren

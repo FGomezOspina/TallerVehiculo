@@ -18,12 +18,17 @@ document.addEventListener('DOMContentLoaded', async function() {
   ];
 
   if (role === 'patio') {
-    // Ocultar los elementos que solo deben verse para administradores.
-    elementosARestrigir.forEach(id => {
-      const elem = document.getElementById(id);
-      if (elem) {
-        elem.style.display = 'none';
-      }
+    // Ocultar módulos completos
+    ['navProveedores', 'navInventario', 'cardProveedores', 'cardInventario']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+
+    // Ocultar únicamente los enlaces "Crear Clientes"
+    document.querySelectorAll('a[href$="crearClientes.html"]').forEach(link => {
+      const li = link.closest('li');
+      if (li) li.style.display = 'none';
     });
   } else {
     // Asegurarse de mostrar todos los elementos para admin.
